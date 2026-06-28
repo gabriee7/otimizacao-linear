@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercícios — Otimização Linear</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Sidebar de exercícios ── */
+    .ex-layout {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.2rem 3rem;
+    }
+    @media (max-width: 640px) {
+      .ex-layout { grid-template-columns: 1fr; }
+      .ex-sidebar { display: none; }
+    }
+
+    .ex-sidebar {
+      position: sticky;
+      top: 72px;
+      align-self: start;
+    }
+
+    .ex-sidebar-label {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 .5rem .5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: .4rem;
+    }
+
+    .ex-sidebar a {
+      display: flex;
+      align-items: flex-start;
+      gap: .6rem;
+      padding: .55rem .6rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: .85rem;
+      border-left: 3px solid transparent;
+      transition: all .12s;
+    }
+    .ex-sidebar a:hover { background: #eff6ff; color: var(--text); }
+    .ex-sidebar a.active {
+      background: #eff6ff;
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 600;
+    }
+    .ex-num {
+      background: var(--border);
+      color: var(--text-muted);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: .75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .ex-sidebar a.active .ex-num {
+      background: var(--primary);
+      color: #fff;
+    }
+    .ex-sidebar-meta { font-size: .75rem; color: var(--text-muted); margin-top: 1px; }
+
+    /* ── Phase header ── */
+    .phase { margin-bottom: 2.4rem; }
+    .phase-head {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1rem;
+    }
+    .phase-tag {
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1px solid #bfdbfe;
+      border-radius: 5px;
+      padding: 2px 9px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      font-family: 'Courier New', monospace;
+      flex-shrink: 0;
+    }
+    .phase-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .phase-line { flex: 1; height: 1px; background: var(--border); }
+    .phase-body { padding-left: 2px; }
+
+    /* ── Pills ── */
+    .pills { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .8rem; }
+    .pill {
+      font-size: .78rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid;
+    }
+    .pill-ok    { background: #dcfce7; color: #15803d; border-color: #86efac; }
+    .pill-warn  { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
+    .pill-done  { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* ── Ratio table ── */
+    table.rtbl {
+      border-collapse: collapse;
+      font-size: .87rem;
+      font-family: 'Courier New', monospace;
+      margin: .8rem 0;
+    }
+    table.rtbl th {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    table.rtbl td {
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      text-align: center;
+      color: var(--text);
+    }
+    table.rtbl tr.winner td { background: #eff6ff; color: var(--primary); font-weight: 700; }
+    table.rtbl td.skip { color: var(--text-muted); font-style: italic; }
+
+    /* ── Tableau com coluna de base separada ── */
+    .t-outer { display: flex; align-items: stretch; overflow-x: auto; margin: .8rem 0; }
+    .t-base-col {
+      display: flex;
+      flex-direction: column;
+      border-right: 2px solid var(--primary);
+      padding-right: 10px;
+      flex-shrink: 0;
+    }
+    .t-base-spacer { height: 36px; }
+    .t-base-cell {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      font-family: 'Courier New', monospace;
+      font-size: .88rem;
+      font-weight: 700;
+      color: var(--primary);
+      height: 38px;
+      padding: 0 6px;
+    }
+    table.tgrid { border-collapse: collapse; font-family: 'Courier New', monospace; font-size: .9rem; }
+    table.tgrid th {
+      background: var(--primary);
+      color: #fff;
+      padding: 7px 18px;
+      text-align: center;
+      border: 1px solid #1240a8;
+      font-size: .8rem;
+      letter-spacing: .03em;
+      height: 36px;
+      white-space: nowrap;
+    }
+    table.tgrid td {
+      padding: 8px 18px;
+      text-align: center;
+      border: 1px solid var(--border);
+      color: var(--text);
+      height: 38px;
+      white-space: nowrap;
+    }
+    table.tgrid td.t-z    { color: var(--text-muted); background: #f8fafc; font-size: .8rem; }
+    table.tgrid td.t-pc   { background: #fffbeb; }
+    table.tgrid td.t-pr   { background: #eff6ff; }
+    table.tgrid td.t-pv   { background: var(--primary); color: #fff; font-weight: 700; font-size: 1rem; }
+    table.tgrid td.t-neg  { color: var(--danger); font-weight: 700; background: #fef2f2; }
+    table.tgrid td.t-opt  { color: var(--success); font-weight: 700; background: #f0fdf4; }
+    table.tgrid td.t-dim  { color: var(--text-muted); }
+
+    /* ── Pivot info row ── */
+    .pv-row { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: .7rem 0; }
+    .pv-item { display: flex; align-items: center; gap: .4rem; font-size: .88rem; color: var(--text); }
+    .pv-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── Operations block ── */
+    .ops-block {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: .7rem 1rem;
+      margin: .6rem 0 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: .88rem;
+      line-height: 2;
+      color: var(--text-muted);
+    }
+
+    /* ── Legend grid ── */
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: .5rem;
+      margin: .8rem 0 1.2rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: .5rem; font-size: .82rem; color: var(--text-muted); }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 3px; border: 1px solid var(--border); flex-shrink: 0; }
+
+    /* ── Result box ── */
+    .result-box {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      margin: 1rem 0;
+    }
+    .result-box h4 { font-size: 1rem; font-weight: 600; color: var(--success); margin-bottom: .6rem; }
+    .result-vars { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+    .rv { font-family: 'Courier New', monospace; font-size: .95rem; color: var(--text); }
+    .rv span { color: var(--success); font-weight: 700; }
+
+    /* ── Verify rows ── */
+    .v-row {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      font-family: 'Courier New', monospace;
+      font-size: .88rem;
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .v-row:last-child { border-bottom: none; }
+
+    /* ── Questão header ── */
+    .q-header {
+      padding-bottom: 1.2rem;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .q-label { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); margin-bottom: .3rem; }
+    .q-title { font-size: 1.7rem; font-weight: 700; color: var(--text); margin-bottom: .7rem; }
+    .q-tags  { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .q-tag   { font-size: .78rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; border: 1px solid; }
+    .qt-method { background: #eff6ff; color: var(--primary); border-color: #bfdbfe; }
+    .qt-result { background: #dcfce7; color: #15803d; border-color: #86efac; font-family: 'Courier New', monospace; }
+
+    .divider { height: 1px; background: var(--border); margin: 1.8rem 0; }
+    .iter-title { font-size: 1.05rem; font-weight: 600; color: var(--text); margin: 1.4rem 0 .8rem; }
+
+    /* ── Generic table inside card ── */
+    table.gtbl { width: 100%; border-collapse: collapse; font-size: .87rem; }
+    table.gtbl th { background: #f1f5f9; color: var(--text-muted); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    table.gtbl td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+    table.gtbl tr:last-child td { border-bottom: none; }
+    table.gtbl tr.hl td { background: #eff6ff; }
+    table.gtbl tr.hl td:first-child { border-left: 2px solid var(--primary); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">📐 Otimização Linear</a>
+  <a href="teoria.html">Teoria</a>
+  <a href="exercicios.html" class="active">Exercícios</a>
+  <a href="solver.html">Solver</a>
+  <a href="grafico.html">Gráfico</a>
+</nav>
+
+<div class="ex-layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="ex-sidebar">
+    <div class="ex-sidebar-label">Exercícios</div>
+    <a href="#q9" class="active">
+      <span class="ex-num">9</span>
+      <div>
+        <div>Dual Simplex</div>
+        <div class="ex-sidebar-meta">MAX · restrições ≥</div>
+      </div>
+    </a>
+    <a href="#" style="opacity:.4; pointer-events:none; margin-top:.2rem;">
+      <span class="ex-num">···</span>
+      <div style="font-size:.78rem; font-style:italic;">Próximos</div>
+    </a>
+  </aside>
+
+  <!-- ── Conteúdo principal ── -->
+  <div id="q9">
+
+    <!-- Cabeçalho da questão -->
+    <div class="q-header">
+      <div class="q-label">Questão 9</div>
+      <div class="q-title">Método Dual Simplex</div>
+      <div class="q-tags">
+        <span class="q-tag qt-method">Dual Simplex</span>
+        <span class="q-tag qt-result">z* = −16 · x₁=1,5 · x₂=1,667 · x₃=0</span>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MAX &nbsp; z = −4x₁ − 6x₂ − 18x₃<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;2x₁ + 0x₂ + 3x₃ ≥ 3 &nbsp;&nbsp;(R1)<br>
+        &nbsp;&nbsp;0x₁ + 3x₂ + 2x₃ ≥ 5 &nbsp;&nbsp;(R2)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃ ≥ 0
+      </div>
+    </div>
+
+    <!-- ===== R1 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R1</span>
+        <span class="phase-title">Leitura e Extração de Dados</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Problema de <strong>maximização</strong> com 3 variáveis de decisão (x₁, x₂, x₃), todas não-negativas, e 2 restrições do tipo <strong>≥</strong>. Não há variáveis irrestritas em sinal.</p>
+      </div>
+    </div>
+
+    <!-- ===== R2 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R2</span>
+        <span class="phase-title">Classificação — Por que Dual Simplex?</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>O Dual Simplex é aplicável quando o tableau satisfaz <strong>simultaneamente</strong> duas condições:</p>
+        <div class="tableau-wrap" style="margin-top:.6rem">
+          <table class="gtbl">
+            <thead><tr><th>Condição</th><th>Significado</th><th>Este problema</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>Dual viável</strong></td><td>Todos os custos reduzidos na linha z são ≥ 0 (operando como MIN)</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
+              <tr class="hl"><td><strong>Primal inviável</strong></td><td>Existe pelo menos um b &lt; 0 na coluna RHS</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-info" style="margin-top:.8rem">
+          <strong>📌 Por que não Simplex Primal?</strong> Restrições ≥ geram b negativos após pré-processamento. O Simplex Primal exige todos os b ≥ 0 para iniciar — condição não satisfeita sem variáveis artificiais.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== R3 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R3</span>
+        <span class="phase-title">Pré-processamento</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <h3>3.1 — Converter MAX para MIN</h3>
+        <p>O método Simplex é formulado para minimização. Multiplicamos a função objetivo por −1:</p>
+        <div class="math-block">
+          MAX &nbsp;z = −4x₁ − 6x₂ − 18x₃<br>
+          <span style="color:var(--text-muted); font-size:.85rem;">× (−1) ↓</span><br>
+          MIN &nbsp;−z = 4x₁ + 6x₂ + 18x₃
+        </div>
+        <div class="alert alert-warning">
+          <strong>⚠️ Atenção na leitura final:</strong> o tableau opera com −z. Se −z = −16, então <strong>z = −16</strong>. Não inverta o sinal para +16.
+        </div>
+
+        <h3 style="margin-top:1.4rem">3.2 — Adicionar variáveis de folga e preparar a base</h3>
+        <p>Restrições ≥ → subtraímos uma variável de folga (excesso). Uma folga com coeficiente −1 não pode entrar na base pois geraria valor negativo. Por isso, multiplicamos cada restrição por −1, obtendo +1 na folga:</p>
+        <div class="math-block">
+          R1: &nbsp;2x₁ + 3x₃ − x₄ = 3 &nbsp; <span style="color:var(--text-muted)">×(−1)</span> &nbsp;→ &nbsp; −2x₁ − 3x₃ + x₄ = −3<br>
+          R2: &nbsp;3x₂ + 2x₃ − x₅ = 5 &nbsp; <span style="color:var(--text-muted)">×(−1)</span> &nbsp;→ &nbsp; −3x₂ − 2x₃ + x₅ = −5
+        </div>
+        <p>x₄ e x₅ entram na base com b = <strong style="color:var(--danger)">−3</strong> e <strong style="color:var(--danger)">−5</strong> — ambos negativos → primal inviável, condição necessária para o Dual Simplex.</p>
+
+        <h3 style="margin-top:1.4rem">3.3 — Verificar viabilidade dual</h3>
+        <p>Para aplicar o Dual Simplex, todos os custos reduzidos das variáveis não-básicas devem ser ≥ 0 (operando como MIN):</p>
+        <div class="tableau-wrap">
+          <table class="gtbl" style="width:auto">
+            <thead><tr><th>Variável não-básica</th><th>Custo reduzido</th><th>Condição ≥ 0</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td style="font-family:monospace">4</td><td><span class="badge badge-green">✓</span></td></tr>
+              <tr><td>x₂</td><td style="font-family:monospace">6</td><td><span class="badge badge-green">✓</span></td></tr>
+              <tr><td>x₃</td><td style="font-family:monospace">18</td><td><span class="badge badge-green">✓</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-success">
+          <strong>✅ Pronto para iterar:</strong> Dual viável (todos os custos ≥ 0) + Primal inviável (b₁ = −3, b₂ = −5) → <strong>Dual Simplex aplicável.</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== R4 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R4</span>
+        <span class="phase-title">Tableau Inicial</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="legend-grid">
+          <div class="legend-item"><div class="legend-swatch" style="background:#1a56db;border-color:#1a56db"></div>Base (coluna à esquerda)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#fffbeb;border-color:#fcd34d"></div>Coluna pivô (entra)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#eff6ff;border-color:#93c5fd"></div>Linha pivô (sai)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#1a56db;border-color:#1a56db"></div>Elemento pivô</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#fef2f2;border-color:#fca5a5"></div>b negativo (primal inviável)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#f0fdf4;border-color:#86efac"></div>Solução ótima</div>
+        </div>
+
+        <div class="pills">
+          <span class="pill pill-ok">✅ Dual viável</span>
+          <span class="pill pill-warn">❌ Primal inviável</span>
+        </div>
+
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">−z</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₅</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td>4</td><td class="t-pc">6</td><td>18</td><td class="t-dim">0</td><td class="t-dim">0</td><td class="t-dim">0</td></tr>
+                <tr><td class="t-z">0</td><td>−2</td><td class="t-pc">0</td><td>−3</td><td>1</td><td class="t-dim">0</td><td class="t-neg">−3</td></tr>
+                <tr><td class="t-z">0</td><td class="t-pr">0</td><td class="t-pv">−3</td><td class="t-pr">−2</td><td class="t-pr t-dim">0</td><td class="t-pr">1</td><td class="t-pr t-neg">−5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== R5 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R5</span>
+        <span class="phase-title">Iterações do Dual Simplex</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <p class="iter-title">Iteração 1</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Critério de saída</strong> — escolher a linha com o b mais negativo:<br>
+            <div class="math-block" style="margin-top:.5rem">b₁ = −3 &nbsp;&nbsp; b₂ = −5 ← mais negativo<br><span style="color:var(--text-muted)">→ x₅ sai da base (linha 2)</span></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Critério de entrada</strong> — calcular a razão |custo reduzido| ÷ |coeficiente| somente para coeficientes <em>negativos</em> da linha pivô. Escolher a menor razão:
+            <div class="tableau-wrap" style="margin-top:.6rem">
+              <table class="rtbl">
+                <thead><tr><th>Coluna</th><th>Custo reduzido (linha z)</th><th>Coef. linha x₅</th><th>Razão</th><th>Escolha?</th></tr></thead>
+                <tbody>
+                  <tr><td>x₁</td><td>4</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
+                  <tr class="winner"><td>x₂</td><td>6</td><td>−3</td><td>|6| ÷ |−3| = <strong>2,0</strong></td><td>✓ menor</td></tr>
+                  <tr><td>x₃</td><td>18</td><td>−2</td><td>|18| ÷ |−2| = 9,0</td><td class="skip">não</td></tr>
+                  <tr><td>x₄</td><td>0</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pv-row">
+              <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₅</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₂</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Elemento pivô: <strong>−3</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <strong>Operações de linha</strong> — dividir a linha pivô pelo elemento pivô e eliminar x₂ das demais linhas:
+            <div class="ops-block">
+              L₂ ← L₂ ÷ (−3) &nbsp;→&nbsp; [ 0 | 0 | 1 | 0,667 | 0 | −0,333 | 1,667 ]<br>
+              L₀ ← L₀ − 6·L₂ &nbsp;→&nbsp; [ 1 | 4 | 0 | 14 | 0 | 2 | −10 ]<br>
+              L₁ ← sem alteração &nbsp;→&nbsp; [ 0 | −2 | 0 | −3 | 1 | 0 | −3 ]
+            </div>
+          </div>
+        </div>
+
+        <div class="pills">
+          <span class="pill pill-ok">✅ Dual viável</span>
+          <span class="pill pill-warn">❌ Primal inviável — b₁ = −3</span>
+        </div>
+
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">−z</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₂</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td class="t-pc">4</td><td class="t-dim">0</td><td>14</td><td class="t-dim">0</td><td>2</td><td>−10</td></tr>
+                <tr><td class="t-z">0</td><td class="t-pv">−2</td><td class="t-dim">0</td><td>−3</td><td>1</td><td class="t-dim">0</td><td class="t-neg">−3</td></tr>
+                <tr><td class="t-z">0</td><td class="t-pr">0</td><td class="t-pr">1</td><td class="t-pr">0,667</td><td class="t-pr t-dim">0</td><td class="t-pr">−0,333</td><td class="t-pr">1,667</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <p class="iter-title">Iteração 2</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Critério de saída</strong> — único b negativo restante:
+            <div class="math-block" style="margin-top:.5rem">b₁ = −3 ← único b negativo<br><span style="color:var(--text-muted)">→ x₄ sai da base (linha 1)</span></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Critério de entrada</strong> — razões para os coeficientes negativos da linha x₄:
+            <div class="tableau-wrap" style="margin-top:.6rem">
+              <table class="rtbl">
+                <thead><tr><th>Coluna</th><th>Custo reduzido (linha z)</th><th>Coef. linha x₄</th><th>Razão</th><th>Escolha?</th></tr></thead>
+                <tbody>
+                  <tr class="winner"><td>x₁</td><td>4</td><td>−2</td><td>|4| ÷ |−2| = <strong>2,0</strong></td><td>✓ menor</td></tr>
+                  <tr><td>x₃</td><td>14</td><td>−3</td><td>|14| ÷ |−3| = 4,667</td><td class="skip">não</td></tr>
+                  <tr><td>x₄</td><td>0</td><td>1</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
+                  <tr><td>x₅</td><td>2</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pv-row">
+              <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₄</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₁</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Elemento pivô: <strong>−2</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <strong>Operações de linha:</strong>
+            <div class="ops-block">
+              L₁ ← L₁ ÷ (−2) &nbsp;→&nbsp; [ 0 | 1 | 0 | 1,5 | −0,5 | 0 | 1,5 ]<br>
+              L₀ ← L₀ − 4·L₁ &nbsp;→&nbsp; [ 1 | 0 | 0 | 8 | 2 | 2 | −16 ]<br>
+              L₂ ← sem alteração &nbsp;→&nbsp; [ 0 | 0 | 1 | 0,667 | 0 | −0,333 | 1,667 ]
+            </div>
+          </div>
+        </div>
+
+        <div class="pills">
+          <span class="pill pill-ok">✅ Dual viável</span>
+          <span class="pill pill-ok">✅ Primal viável</span>
+          <span class="pill pill-done">🏁 Ótimo</span>
+        </div>
+
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">−z</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₂</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td class="t-dim">0</td><td class="t-dim">0</td><td>8</td><td>2</td><td>2</td><td class="t-opt">−16</td></tr>
+                <tr><td class="t-z">0</td><td>1</td><td class="t-dim">0</td><td>1,5</td><td>−0,5</td><td class="t-dim">0</td><td class="t-opt">1,5</td></tr>
+                <tr><td class="t-z">0</td><td class="t-dim">0</td><td>1</td><td>0,667</td><td class="t-dim">0</td><td>−0,333</td><td class="t-opt">1,667</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== R6 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R6</span>
+        <span class="phase-title">Leitura da Solução</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="math-block">
+          Variáveis <strong>na base</strong> → leia a coluna b:<br>
+          &nbsp;&nbsp;x₁ = 1,5 &nbsp;&nbsp; x₂ = 1,667<br><br>
+          Variáveis <strong>fora da base</strong> → valor = 0:<br>
+          &nbsp;&nbsp;x₃ = 0 &nbsp;&nbsp; x₄ = 0 &nbsp;&nbsp; x₅ = 0<br><br>
+          Linha z: −z = −16 &nbsp;→&nbsp; z* = −16
+        </div>
+
+        <div class="result-box">
+          <h4>✅ Solução Ótima</h4>
+          <div class="result-vars">
+            <span class="rv">x₁ = <span>1,5</span></span>
+            <span class="rv">x₂ = <span>1,667</span></span>
+            <span class="rv">x₃ = <span>0</span></span>
+            <span class="rv">z* = <span>−16</span></span>
+          </div>
+        </div>
+
+        <h3 style="margin-top:1.4rem">Tipo de solução ótima</h3>
+        <p>A solução é <strong>única</strong> quando todos os custos reduzidos das variáveis não-básicas são <em>estritamente positivos</em> (> 0) no tableau final. Isso significa que qualquer movimento saindo da solução atual piora o valor de z.</p>
+        <div class="tableau-wrap" style="margin-top:.6rem">
+          <table class="gtbl" style="width:auto">
+            <thead><tr><th>Variável não-básica</th><th>Custo reduzido</th><th>Condição</th></tr></thead>
+            <tbody>
+              <tr><td>x₃</td><td style="font-family:monospace">8</td><td><span class="badge badge-green">8 &gt; 0 ✓</span></td></tr>
+              <tr><td>x₄</td><td style="font-family:monospace">2</td><td><span class="badge badge-green">2 &gt; 0 ✓</span></td></tr>
+              <tr><td>x₅</td><td style="font-family:monospace">2</td><td><span class="badge badge-green">2 &gt; 0 ✓</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-success">Todos estritamente positivos → <strong>ótimo único confirmado</strong>. Não existe outra combinação que produza z = −16.</div>
+
+        <h3 style="margin-top:1.4rem">Todos os tipos de conclusão possíveis</h3>
+        <div class="tableau-wrap">
+          <table class="gtbl">
+            <thead><tr><th>Tipo</th><th>Condição no tableau</th><th>O que significa</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><span class="badge badge-blue">Ótimo único</span></td><td>Todos os custos reduzidos das variáveis não-básicas são <strong>&gt; 0</strong></td><td>Um único ponto ótimo. <em>Este caso.</em></td></tr>
+              <tr><td><span class="badge" style="background:#dbeafe;color:#1e40af">Ótimo alternativo</span></td><td>Algum custo reduzido de variável não-básica é <strong>= 0</strong></td><td>Infinitos pontos ótimos ao longo de uma aresta da região viável. Pivotear nessa coluna revela a segunda solução.</td></tr>
+              <tr><td><span class="badge" style="background:#fee2e2;color:#b91c1c">Inviável</span></td><td>Linha pivô (b mais negativo) sem nenhum coeficiente negativo</td><td>O Dual Simplex não encontra variável entrante. As restrições são contraditórias.</td></tr>
+              <tr><td><span class="badge badge-orange">Ilimitado</span></td><td>No Simplex Primal: coluna pivô com todos os coeficientes ≤ 0</td><td>A FO pode crescer indefinidamente. Não há valor ótimo finito.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== R7 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R7</span>
+        <span class="phase-title">Verificação</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="card">
+          <div class="v-row"><span>✅</span><span>R1: 2·(1,5) + 3·(0) = 3,0 ≥ 3 ✓</span></div>
+          <div class="v-row"><span>✅</span><span>R2: 3·(1,667) + 2·(0) = 5,001 ≅ 5 ≥ 5 ✓</span></div>
+          <div class="v-row"><span>✅</span><span>FO: −4·(1,5) − 6·(1,667) − 18·(0) = −6 − 10,002 ≅ −16 ✓</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== R8 ===== -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R8</span>
+        <span class="phase-title">Generalização</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="tableau-wrap">
+          <table class="gtbl">
+            <thead><tr><th>Condição</th><th>Neste problema</th><th>Se fosse diferente</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td>Restrições ≥ com b > 0</td><td>Gera b negativo após ×(−1) → Dual Simplex ✅</td><td>b já negativo no enunciado: mesmo caminho</td></tr>
+              <tr><td>FO com coeficientes negativos (MAX)</td><td>Após MIN: todos positivos → dual viável ✅</td><td>Coef. negativo na linha z → Dual Simplex não aplicável direto</td></tr>
+              <tr><td>Nenhuma variável irrestrita</td><td>Sem substituição x′ − x″ ✅</td><td>Se houvesse: substituir em toda a formulação antes do tableau</td></tr>
+              <tr><td>Linha pivô sem coef. negativo</td><td>Não ocorreu ✅</td><td>Se ocorresse: primal inviável — reportar e encerrar</td></tr>
+              <tr><td>Custo reduzido = 0 no ótimo</td><td>Não ocorreu — ótimo único ✅</td><td>Se ocorresse: ótimos alternativos — pivotear para encontrar a segunda solução</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert" style="background:#fef2f2; border-left:4px solid var(--danger); margin-top:.8rem">
+          <strong>❗ Armadilha clássica de prova:</strong> no critério de entrada do Dual Simplex, use <strong>apenas os coeficientes negativos</strong> da linha pivô. Positivos e zeros são ignorados. Quem usa todos os coeficientes (como no Simplex Primal) erra a variável entrante e pode concluir erroneamente que o problema é inviável.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /ex-layout -->
+
+<footer>Material de estudo — Otimização Linear</footer>
+
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solver Simplex — Otimização Linear</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .constraint-row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; }
+    .constraint-row input { max-width: 70px; }
+    .constraint-row select { max-width: 70px; }
+    .constraint-row span { font-weight: 600; color: var(--text-muted); font-size: .9rem; min-width: 14px; text-align: center; }
+    .iteration-header { font-weight: 700; color: var(--primary); margin: 1.4rem 0 .4rem; font-size: 1rem; }
+    .obj-row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+    .obj-row input { max-width: 70px; }
+    #result-box { display: none; }
+    .var-coef-grid { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .var-coef-group { display: flex; flex-direction: column; align-items: center; gap: .25rem; }
+    .var-coef-group label { font-size: .78rem; color: var(--text-muted); font-weight: 600; }
+    .var-coef-group input { max-width: 65px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">📐 Otimização Linear</a>
+  <a href="teoria.html">Teoria</a>
+  <a href="exercicios.html">Exercícios</a>
+  <a href="solver.html" class="active">Solver</a>
+  <a href="grafico.html">Gráfico</a>
+</nav>
+
+<main>
+  <h1>⚙️ Solver Simplex Interativo</h1>
+  <p>Insira seu PL abaixo. O solver mostra o tableau completo em cada iteração.</p>
+
+  <!-- Configuração -->
+  <div class="card">
+    <div class="card-title">Configuração do PL</div>
+    <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem;">
+      <div>
+        <label class="solver-label">Nº de variáveis</label>
+        <select id="num-vars" style="max-width:90px">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+      <div>
+        <label class="solver-label">Nº de restrições</label>
+        <select id="num-constrs" style="max-width:90px">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div>
+        <label class="solver-label">Objetivo</label>
+        <select id="obj-type" style="max-width:110px">
+          <option value="max">Maximizar</option>
+          <option value="min">Minimizar</option>
+        </select>
+      </div>
+      <div style="align-self:flex-end">
+        <button class="btn btn-outline btn-sm" onclick="buildForm()">Gerar formulário</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulário dinâmico -->
+  <div id="pl-form" style="display:none">
+    <div class="card">
+      <div class="card-title" id="obj-label">Função Objetivo — Maximizar z =</div>
+      <div class="var-coef-grid" id="obj-coefs"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Restrições</div>
+      <div id="constrs-container"></div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="solve()">▶ Resolver</button>
+      <button class="btn btn-outline" onclick="loadExample()">Carregar exemplo</button>
+      <button class="btn btn-outline" onclick="clearForm()">Limpar</button>
+    </div>
+  </div>
+
+  <!-- Resultado -->
+  <div id="result-box">
+    <h2>Resolução passo a passo</h2>
+    <div id="result-content"></div>
+  </div>
+</main>
+
+<footer>Material de estudo — Otimização Linear</footer>
+
+<script>
+// ─────────────────────────────────────────────
+//  Construção do formulário
+// ─────────────────────────────────────────────
+function buildForm() {
+  const nv = parseInt(document.getElementById('num-vars').value);
+  const nc = parseInt(document.getElementById('num-constrs').value);
+  const objType = document.getElementById('obj-type').value;
+
+  document.getElementById('obj-label').textContent =
+    `Função Objetivo — ${objType === 'max' ? 'Maximizar' : 'Minimizar'} z =`;
+
+  // Coeficientes da FO
+  const objDiv = document.getElementById('obj-coefs');
+  objDiv.innerHTML = '';
+  for (let j = 0; j < nv; j++) {
+    const g = document.createElement('div');
+    g.className = 'var-coef-group';
+    g.innerHTML = `<label>c<sub>${j+1}</sub> (x<sub>${j+1}</sub>)</label>
+                   <input type="number" id="c${j}" value="1" step="any">`;
+    objDiv.appendChild(g);
+  }
+
+  // Restrições
+  const cDiv = document.getElementById('constrs-container');
+  cDiv.innerHTML = '';
+  for (let i = 0; i < nc; i++) {
+    const row = document.createElement('div');
+    row.className = 'constraint-row';
+    let html = `<span style="font-size:.78rem;color:var(--text-muted);min-width:24px">${i+1})</span>`;
+    for (let j = 0; j < nv; j++) {
+      html += `<input type="number" id="a${i}_${j}" value="1" step="any" style="max-width:65px">
+               <span>${j < nv-1 ? 'x'+(j+1)+' +' : 'x'+(j+1)}</span>`;
+    }
+    html += `<select id="sign${i}" style="max-width:70px">
+               <option value="le">≤</option>
+               <option value="ge">≥</option>
+               <option value="eq">=</option>
+             </select>
+             <input type="number" id="b${i}" value="10" step="any" style="max-width:70px">`;
+    row.innerHTML = html;
+    cDiv.appendChild(row);
+  }
+
+  document.getElementById('pl-form').style.display = 'block';
+  document.getElementById('result-box').style.display = 'none';
+}
+
+function loadExample() {
+  document.getElementById('num-vars').value = '2';
+  document.getElementById('num-constrs').value = '2';
+  document.getElementById('obj-type').value = 'max';
+  buildForm();
+  // z = 5x1 + 4x2
+  document.getElementById('c0').value = 5;
+  document.getElementById('c1').value = 4;
+  // 6x1 + 4x2 <= 24
+  document.getElementById('a0_0').value = 6;
+  document.getElementById('a0_1').value = 4;
+  document.getElementById('sign0').value = 'le';
+  document.getElementById('b0').value = 24;
+  // x1 + 2x2 <= 6
+  document.getElementById('a1_0').value = 1;
+  document.getElementById('a1_1').value = 2;
+  document.getElementById('sign1').value = 'le';
+  document.getElementById('b1').value = 6;
+}
+
+function clearForm() {
+  document.getElementById('result-box').style.display = 'none';
+}
+
+// ─────────────────────────────────────────────
+//  Solver principal
+// ─────────────────────────────────────────────
+function solve() {
+  const nv = parseInt(document.getElementById('num-vars').value);
+  const nc = parseInt(document.getElementById('num-constrs').value);
+  const isMax = document.getElementById('obj-type').value === 'max';
+
+  // Lê coeficientes
+  const c = [];
+  for (let j = 0; j < nv; j++) c.push(parseFloat(document.getElementById('c'+j).value) || 0);
+
+  const A = [], b = [], signs = [];
+  for (let i = 0; i < nc; i++) {
+    const row = [];
+    for (let j = 0; j < nv; j++) row.push(parseFloat(document.getElementById(`a${i}_${j}`).value) || 0);
+    A.push(row);
+    b.push(parseFloat(document.getElementById('b'+i).value) || 0);
+    signs.push(document.getElementById('sign'+i).value);
+  }
+
+  // Converte para maximização (se minimização, nega c)
+  const objC = isMax ? [...c] : c.map(v => -v);
+
+  // Monta tableau aumentado com folgas/excessos/artificiais
+  // Variáveis: x0..x(nv-1), folgas/excessos, artificiais
+  // Formato interno: tableau[i] = linha com colunas [x0..xnv, e/s vars, b]
+  const M = 1e6; // Big-M
+  let ncols = nv;
+  const slackCols = []; // índice global de cada variável de folga/excesso
+  const artCols = [];   // índice global de cada variável artificial
+  const signMap = [];   // 'le' | 'ge' | 'eq'
+
+  for (let i = 0; i < nc; i++) {
+    signMap.push(signs[i]);
+    if (signs[i] === 'le') {
+      slackCols.push({ row: i, col: ncols, type: 'slack' });
+      ncols++;
+    } else if (signs[i] === 'ge') {
+      slackCols.push({ row: i, col: ncols, type: 'excess' });
+      ncols++;
+      artCols.push({ row: i, col: ncols });
+      ncols++;
+    } else { // eq
+      artCols.push({ row: i, col: ncols });
+      ncols++;
+    }
+  }
+
+  // Linhas do tableau: nc restrições + 1 linha z
+  const T = [];
+  for (let i = 0; i < nc; i++) {
+    const row = new Array(ncols + 1).fill(0);
+    for (let j = 0; j < nv; j++) row[j] = A[i][j];
+    row[ncols] = b[i]; // RHS
+    T.push(row);
+  }
+
+  // Atribui folgas/excessos
+  for (const s of slackCols) {
+    T[s.row][s.col] = s.type === 'slack' ? 1 : -1;
+  }
+  // Atribui artificiais
+  for (const a of artCols) {
+    T[a.row][a.col] = 1;
+  }
+
+  // Linha z (coeficientes negativos para maximização)
+  const zRow = new Array(ncols + 1).fill(0);
+  for (let j = 0; j < nv; j++) zRow[j] = -objC[j];
+  // Penalidade Big-M nas artificiais
+  for (const a of artCols) zRow[a.col] = M;
+  T.push(zRow);
+
+  // Eliminar artificiais da linha z (subtrai M × linha da artificial)
+  for (const a of artCols) {
+    for (let k = 0; k <= ncols; k++) {
+      T[nc][k] += M * T[a.row][k];
+    }
+  }
+
+  // Base inicial
+  const basis = new Array(nc);
+  for (let i = 0; i < nc; i++) basis[i] = -1;
+  for (const s of slackCols) { if (s.type === 'slack') basis[s.row] = s.col; }
+  for (const a of artCols) basis[a.row] = a.col;
+
+  // Nomes das variáveis
+  const varNames = [];
+  for (let j = 0; j < nv; j++) varNames.push(`x${j+1}`);
+  for (const s of slackCols) varNames[s.col] = s.type === 'slack' ? `s${s.row+1}` : `e${s.row+1}`;
+  for (const a of artCols) varNames[a.col] = `a${a.row+1}`;
+
+  // ── Iterações ──
+  const history = [];
+  let iter = 0;
+  const MAX_ITER = 30;
+
+  history.push({ tableau: deepCopy(T), basis: [...basis], msg: 'Tableau inicial' });
+
+  while (iter < MAX_ITER) {
+    iter++;
+    // Encontrar coluna pivô (mais negativo na linha z)
+    let pivCol = -1, minVal = -1e-9;
+    for (let j = 0; j < ncols; j++) {
+      if (T[nc][j] < minVal) { minVal = T[nc][j]; pivCol = j; }
+    }
+    if (pivCol === -1) break; // Ótimo
+
+    // Encontrar linha pivô (razão mínima)
+    let pivRow = -1, minRatio = Infinity;
+    for (let i = 0; i < nc; i++) {
+      if (T[i][pivCol] > 1e-9) {
+        const ratio = T[i][ncols] / T[i][pivCol];
+        if (ratio < minRatio - 1e-9) { minRatio = ratio; pivRow = i; }
+      }
+    }
+
+    if (pivRow === -1) {
+      history.push({ msg: '⚠️ Problema ILIMITADO — nenhuma razão finita encontrada.', tableau: null });
+      break;
+    }
+
+    // Pivoteamento
+    const pivEl = T[pivRow][pivCol];
+    for (let k = 0; k <= ncols; k++) T[pivRow][k] /= pivEl;
+    for (let i = 0; i <= nc; i++) {
+      if (i !== pivRow && Math.abs(T[i][pivCol]) > 1e-12) {
+        const factor = T[i][pivCol];
+        for (let k = 0; k <= ncols; k++) T[i][k] -= factor * T[pivRow][k];
+      }
+    }
+    basis[pivRow] = pivCol;
+
+    history.push({
+      tableau: deepCopy(T),
+      basis: [...basis],
+      pivRow, pivCol,
+      msg: `Iteração ${iter}: ${varNames[pivCol]} entra, ${varNames[basis[pivRow]]} sai`
+    });
+  }
+
+  // Verifica artificiais na base
+  let infeasible = false;
+  for (let i = 0; i < nc; i++) {
+    if (artCols.some(a => a.col === basis[i]) && Math.abs(T[i][ncols]) > 1e-6) {
+      infeasible = true; break;
+    }
+  }
+
+  // Renderiza
+  renderResult(history, T, basis, varNames, ncols, nc, nv, isMax, infeasible, c, artCols);
+}
+
+function renderResult(history, T, basis, varNames, ncols, nc, nv, isMax, infeasible, c, artCols) {
+  const box = document.getElementById('result-box');
+  const content = document.getElementById('result-content');
+  box.style.display = 'block';
+  content.innerHTML = '';
+
+  history.forEach((h, idx) => {
+    const hdr = document.createElement('div');
+    hdr.className = 'iteration-header';
+    hdr.textContent = h.msg;
+    content.appendChild(hdr);
+
+    if (!h.tableau) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'tableau-wrap';
+
+    // Cabeçalho
+    let html = '<table class="tableau"><thead><tr><th>Base</th>';
+    for (let j = 0; j < ncols; j++) html += `<th>${varNames[j]}</th>`;
+    html += '<th>b</th></tr></thead><tbody>';
+
+    for (let i = 0; i < nc; i++) {
+      html += `<tr><td class="basis">${varNames[h.basis[i]] ?? '?'}</td>`;
+      for (let j = 0; j < ncols; j++) {
+        const isPivot = h.pivRow === i && h.pivCol === j;
+        const cls = isPivot ? ' class="pivot"' : '';
+        html += `<td${cls}>${fmtNum(h.tableau[i][j])}</td>`;
+      }
+      html += `<td>${fmtNum(h.tableau[i][ncols])}</td></tr>`;
+    }
+
+    // Linha z
+    const isLast = idx === history.length - 1;
+    html += `<tr${isLast ? ' class="result"' : ''}><td><strong>z</strong></td>`;
+    for (let j = 0; j < ncols; j++) html += `<td>${fmtNum(h.tableau[nc][j])}</td>`;
+    html += `<td><strong>${fmtNum(h.tableau[nc][ncols])}</strong></td></tr>`;
+
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+    content.appendChild(wrap);
+  });
+
+  // Solução final
+  const resDiv = document.createElement('div');
+  if (infeasible) {
+    resDiv.innerHTML = '<div class="alert alert-warning"><strong>Problema INVIÁVEL</strong> — variáveis artificiais permanecem na base com valor positivo.</div>';
+  } else {
+    const zFinal = T[nc][ncols];
+    const zVal = isMax ? zFinal : -zFinal;
+    let sol = `<div class="alert alert-success"><strong>✅ Solução Ótima Encontrada</strong><br><br>`;
+    for (let j = 0; j < nv; j++) {
+      const bIdx = basis.indexOf(j);
+      const val = bIdx >= 0 ? T[bIdx][ncols] : 0;
+      sol += `x${j+1} = ${fmtNum(val)}<br>`;
+    }
+    sol += `<br><strong>z* = ${fmtNum(zVal)}</strong>`;
+
+    // Preços sombra (valores na linha z nas colunas de folga originais)
+    const slacks = [];
+    for (let j = ncols - 1; j >= 0; j--) {
+      if (varNames[j] && varNames[j].startsWith('s')) slacks.push(j);
+    }
+    if (slacks.length > 0) {
+      sol += `<br><br><strong>Preços sombra:</strong> `;
+      slacks.reverse().forEach((col, i) => {
+        const ps = isMax ? T[nc][col] : -T[nc][col];
+        sol += `y${i+1} = ${fmtNum(ps)}  `;
+      });
+    }
+    sol += '</div>';
+    resDiv.innerHTML = sol;
+  }
+  content.appendChild(resDiv);
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function fmtNum(v) {
+  if (Math.abs(v) < 1e-9) return '0';
+  if (Number.isInteger(v)) return v.toString();
+  // Tenta simplificar como fração
+  const fr = toFraction(v);
+  if (fr) return fr;
+  return parseFloat(v.toFixed(4)).toString();
+}
+
+function toFraction(x) {
+  const MAX_D = 64;
+  let bestNum = Math.round(x), bestDen = 1, bestErr = Math.abs(x - bestNum);
+  for (let d = 2; d <= MAX_D; d++) {
+    const n = Math.round(x * d);
+    const err = Math.abs(x - n / d);
+    if (err < bestErr - 1e-10) { bestErr = err; bestNum = n; bestDen = d; }
+  }
+  if (bestErr < 1e-7 && bestDen > 1) return `${bestNum}/${bestDen}`;
+  return null;
+}
+
+function deepCopy(arr) { return arr.map(r => [...r]); }
+
+// Gera o formulário ao carregar
+buildForm();
+</script>
+
+</body>
+</html>

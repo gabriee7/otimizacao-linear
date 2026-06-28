@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualização Gráfica — Otimização Linear</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    canvas { display: block; width: 100%; height: auto; }
+    #canvas-wrapper { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 1rem 0; }
+    .constr-row { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; }
+    .constr-row input { max-width: 65px; }
+    .constr-row select { max-width: 68px; }
+    .constr-row span  { font-weight: 600; font-size: .88rem; color: var(--text-muted); }
+    .legend-color { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+    #vertices-table { display: none; }
+    #vertices-table.visible { display: block; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">📐 Otimização Linear</a>
+  <a href="teoria.html">Teoria</a>
+  <a href="exercicios.html">Exercícios</a>
+  <a href="solver.html">Solver</a>
+  <a href="grafico.html" class="active">Gráfico</a>
+</nav>
+
+<main>
+  <h1>📊 Visualização Gráfica (2D)</h1>
+  <p>Para PLs com 2 variáveis de decisão. Insira a função objetivo, as restrições e clique em <strong>Plotar</strong>.</p>
+
+  <div class="card">
+    <div class="card-title">Função Objetivo</div>
+    <div style="display:flex; gap:.5rem; align-items:center; flex-wrap:wrap;">
+      <select id="obj-type" style="max-width:120px">
+        <option value="max">Maximizar</option>
+        <option value="min">Minimizar</option>
+      </select>
+      <span>z =</span>
+      <input type="number" id="c1" value="5" step="any" style="max-width:65px">
+      <span>x₁ +</span>
+      <input type="number" id="c2" value="4" step="any" style="max-width:65px">
+      <span>x₂</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Restrições <span id="n-constrs-label" style="font-weight:400;font-size:.85rem;color:var(--text-muted)"></span></div>
+    <div id="constrs-container"></div>
+    <div class="btn-group" style="margin-top:.6rem;">
+      <button class="btn btn-outline btn-sm" onclick="addConstraint()">+ Restrição</button>
+      <button class="btn btn-outline btn-sm" onclick="removeConstraint()">− Restrição</button>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="plot()">▶ Plotar</button>
+    <button class="btn btn-outline" onclick="loadExample()">Carregar exemplo</button>
+  </div>
+
+  <div id="canvas-wrapper">
+    <canvas id="myCanvas" width="700" height="560"></canvas>
+  </div>
+
+  <div id="vertices-table" class="card">
+    <div class="card-title">Vértices da Região Viável</div>
+    <div class="tableau-wrap">
+      <table class="tableau" id="vtbl">
+        <thead><tr><th>#</th><th>x₁</th><th>x₂</th><th>z</th><th>Status</th></tr></thead>
+        <tbody id="vtbl-body"></tbody>
+      </table>
+    </div>
+    <div id="opt-result" class="alert alert-success" style="margin-top:.8rem; display:none"></div>
+  </div>
+</main>
+
+<footer>Material de estudo — Otimização Linear</footer>
+
+<script>
+// ─── Constraints management ───────────────────────────────────
+let numConstrs = 2;
+const COLORS = ['#e63946','#2a9d8f','#e76f51','#264653','#457b9d','#a8dadc'];
+
+function buildConstraints() {
+  const c = document.getElementById('constrs-container');
+  c.innerHTML = '';
+  for (let i = 0; i < numConstrs; i++) {
+    const row = document.createElement('div');
+    row.className = 'constr-row';
+    row.id = `cr${i}`;
+    row.innerHTML = `
+      <span style="min-width:20px;color:${COLORS[i%COLORS.length]};font-size:1rem;">●</span>
+      <input type="number" id="a${i}1" value="1" step="any">
+      <span>x₁ +</span>
+      <input type="number" id="a${i}2" value="1" step="any">
+      <span>x₂</span>
+      <select id="sg${i}">
+        <option value="le">≤</option>
+        <option value="ge">≥</option>
+        <option value="eq">=</option>
+      </select>
+      <input type="number" id="b${i}" value="10" step="any">
+    `;
+    c.appendChild(row);
+  }
+}
+
+function addConstraint() { if (numConstrs < 6) { numConstrs++; buildConstraints(); } }
+function removeConstraint() { if (numConstrs > 1) { numConstrs--; buildConstraints(); } }
+
+function loadExample() {
+  numConstrs = 3;
+  buildConstraints();
+  document.getElementById('obj-type').value = 'max';
+  document.getElementById('c1').value = 5;
+  document.getElementById('c2').value = 4;
+  // 2x1 + x2 <= 8
+  document.getElementById('a01').value = 2;
+  document.getElementById('a02').value = 1;
+  document.getElementById('sg0').value = 'le';
+  document.getElementById('b0').value = 8;
+  // x1 + 3x2 <= 9
+  document.getElementById('a11').value = 1;
+  document.getElementById('a12').value = 3;
+  document.getElementById('sg1').value = 'le';
+  document.getElementById('b1').value = 9;
+  // x1 >= 0  →  -x1 <= 0 (implícita, usamos não-negatividade)
+  // x2 <= 5
+  document.getElementById('a21').value = 0;
+  document.getElementById('a22').value = 1;
+  document.getElementById('sg2').value = 'le';
+  document.getElementById('b2').value = 5;
+  plot();
+}
+
+// ─── Core geometry ────────────────────────────────────────────
+function getConstraints() {
+  const cs = [];
+  // Non-negativity
+  cs.push({ a1: -1, a2: 0, b: 0, type: 'le', label: 'x₁≥0', color: '#94a3b8' });
+  cs.push({ a1: 0,  a2: -1, b: 0, type: 'le', label: 'x₂≥0', color: '#94a3b8' });
+  for (let i = 0; i < numConstrs; i++) {
+    const a1 = parseFloat(document.getElementById(`a${i}1`).value) || 0;
+    const a2 = parseFloat(document.getElementById(`a${i}2`).value) || 0;
+    const b  = parseFloat(document.getElementById(`b${i}`).value) || 0;
+    const sg = document.getElementById(`sg${i}`).value;
+    cs.push({ a1, a2, b, type: sg, label: `R${i+1}`, color: COLORS[i % COLORS.length] });
+  }
+  return cs;
+}
+
+function satisfies(x1, x2, c) {
+  const lhs = c.a1 * x1 + c.a2 * x2;
+  if (c.type === 'le') return lhs <= c.b + 1e-9;
+  if (c.type === 'ge') return lhs >= c.b - 1e-9;
+  return Math.abs(lhs - c.b) < 1e-9;
+}
+
+function isFeasible(x1, x2, cs) {
+  return cs.every(c => satisfies(x1, x2, c));
+}
+
+function lineIntersect(c1, c2) {
+  // a1*x + a2*y = b  for both
+  const det = c1.a1 * c2.a2 - c2.a1 * c1.a2;
+  if (Math.abs(det) < 1e-12) return null;
+  const x = (c1.b * c2.a2 - c2.b * c1.a2) / det;
+  const y = (c1.a1 * c2.b - c2.a1 * c1.b) / det;
+  if (x < -1e-6 || y < -1e-6) return null; // prune if clearly outside non-neg
+  return { x1: x, x2: y };
+}
+
+function toEq(c) {
+  // return line equation as equality
+  return { a1: c.a1, a2: c.a2, b: c.b };
+}
+
+function findVertices(cs) {
+  const pts = [];
+  for (let i = 0; i < cs.length; i++) {
+    for (let j = i + 1; j < cs.length; j++) {
+      const p = lineIntersect(toEq(cs[i]), toEq(cs[j]));
+      if (p && isFeasible(p.x1, p.x2, cs)) {
+        // Deduplicate
+        const dup = pts.some(q => Math.abs(q.x1 - p.x1) < 1e-6 && Math.abs(q.x2 - p.x2) < 1e-6);
+        if (!dup) pts.push(p);
+      }
+    }
+  }
+  return pts;
+}
+
+function convexHull(pts) {
+  if (pts.length < 2) return pts;
+  const cx = pts.reduce((s, p) => s + p.x1, 0) / pts.length;
+  const cy = pts.reduce((s, p) => s + p.x2, 0) / pts.length;
+  return [...pts].sort((a, b) => Math.atan2(a.x2 - cy, a.x1 - cx) - Math.atan2(b.x2 - cy, b.x1 - cx));
+}
+
+// ─── Canvas drawing ───────────────────────────────────────────
+function plot() {
+  const cs = getConstraints();
+  const c1 = parseFloat(document.getElementById('c1').value) || 0;
+  const c2 = parseFloat(document.getElementById('c2').value) || 0;
+  const isMax = document.getElementById('obj-type').value === 'max';
+
+  const vertices = findVertices(cs);
+  const hull = convexHull(vertices);
+
+  const canvas = document.getElementById('myCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const PAD = 60;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Determine scale
+  let maxX = 12, maxY = 12;
+  vertices.forEach(v => {
+    maxX = Math.max(maxX, v.x1 * 1.2);
+    maxY = Math.max(maxY, v.x2 * 1.2);
+  });
+  maxX = Math.ceil(maxX / 2) * 2 + 2;
+  maxY = Math.ceil(maxY / 2) * 2 + 2;
+
+  function tx(x) { return PAD + (x / maxX) * (W - PAD * 2); }
+  function ty(y) { return H - PAD - (y / maxY) * (H - PAD * 2); }
+
+  // Background
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#f0f4f8';
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= maxX; x++) {
+    ctx.beginPath(); ctx.moveTo(tx(x), ty(0)); ctx.lineTo(tx(x), ty(maxY)); ctx.stroke();
+  }
+  for (let y = 0; y <= maxY; y++) {
+    ctx.beginPath(); ctx.moveTo(tx(0), ty(y)); ctx.lineTo(tx(maxX), ty(y)); ctx.stroke();
+  }
+
+  // Feasible region
+  if (hull.length >= 3) {
+    ctx.beginPath();
+    ctx.moveTo(tx(hull[0].x1), ty(hull[0].x2));
+    hull.slice(1).forEach(p => ctx.lineTo(tx(p.x1), tx === null ? 0 : ty(p.x2)));
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(26,86,219,.10)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(26,86,219,.35)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  // Constraint lines
+  const userCs = cs.filter(c => !['x₁≥0','x₂≥0'].includes(c.label));
+  userCs.forEach((c, idx) => {
+    ctx.beginPath();
+    ctx.strokeStyle = c.color;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    // parametrize line: a1*x + a2*y = b
+    let pts2 = [];
+    if (Math.abs(c.a2) > 1e-9) {
+      pts2.push({ x: 0,    y: (c.b) / c.a2 });
+      pts2.push({ x: maxX, y: (c.b - c.a1 * maxX) / c.a2 });
+    } else if (Math.abs(c.a1) > 1e-9) {
+      const x = c.b / c.a1;
+      pts2.push({ x, y: 0 });
+      pts2.push({ x, y: maxY });
+    }
+    if (pts2.length === 2) {
+      ctx.moveTo(tx(pts2[0].x), ty(pts2[0].y));
+      ctx.lineTo(tx(pts2[1].x), ty(pts2[1].y));
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = c.color;
+      ctx.font = '600 12px Segoe UI';
+      const mx = (pts2[0].x + pts2[1].x) / 2;
+      const my = (pts2[0].y + pts2[1].y) / 2;
+      ctx.fillText(c.label, tx(mx) + 6, ty(my) - 4);
+    }
+  });
+
+  // Axes
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(tx(0), ty(0)); ctx.lineTo(tx(maxX), ty(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(tx(0), ty(0)); ctx.lineTo(tx(0), ty(maxY)); ctx.stroke();
+
+  // Tick marks + labels
+  ctx.fillStyle = '#64748b';
+  ctx.font = '11px Segoe UI';
+  ctx.textAlign = 'center';
+  for (let x = 0; x <= maxX; x += 2) {
+    ctx.fillText(x, tx(x), ty(0) + 16);
+    ctx.beginPath(); ctx.moveTo(tx(x), ty(0)); ctx.lineTo(tx(x), ty(0) + 5);
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  ctx.textAlign = 'right';
+  for (let y = 0; y <= maxY; y += 2) {
+    ctx.fillText(y, tx(0) - 8, ty(y) + 4);
+    ctx.beginPath(); ctx.moveTo(tx(0), ty(y)); ctx.lineTo(tx(0) - 5, ty(y));
+    ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // Axis labels
+  ctx.fillStyle = '#1e293b';
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('x₁', tx(maxX) - 10, ty(0) - 10);
+  ctx.fillText('x₂', tx(0) + 12, ty(maxY) + 16);
+
+  // Optimal objective line (dashed)
+  if (vertices.length > 0) {
+    const zVals = vertices.map(v => c1 * v.x1 + c2 * v.x2);
+    const zOpt  = isMax ? Math.max(...zVals) : Math.min(...zVals);
+    const optPt = vertices[zVals.indexOf(zOpt)];
+
+    if (Math.abs(c1) + Math.abs(c2) > 0) {
+      ctx.setLineDash([6, 4]);
+      ctx.strokeStyle = '#16a34a';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      if (Math.abs(c2) > 1e-9) {
+        ctx.moveTo(tx(0), ty(zOpt / c2));
+        ctx.lineTo(tx(maxX), ty((zOpt - c1 * maxX) / c2));
+      } else {
+        const xv = zOpt / c1;
+        ctx.moveTo(tx(xv), ty(0)); ctx.lineTo(tx(xv), ty(maxY));
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#15803d';
+      ctx.font = '600 11px Segoe UI';
+      ctx.textAlign = 'left';
+      ctx.fillText(`z*=${fmtNum(zOpt)}`, tx(optPt.x1) + 10, ty(optPt.x2) - 10);
+    }
+  }
+
+  // Vertices
+  vertices.forEach((v, i) => {
+    const zv = c1 * v.x1 + c2 * v.x2;
+    const zVals = vertices.map(p => c1 * p.x1 + c2 * p.x2);
+    const zOpt  = isMax ? Math.max(...zVals) : Math.min(...zVals);
+    const isOpt = Math.abs(zv - zOpt) < 1e-6;
+
+    ctx.beginPath();
+    ctx.arc(tx(v.x1), ty(v.x2), isOpt ? 8 : 5, 0, 2 * Math.PI);
+    ctx.fillStyle = isOpt ? '#16a34a' : '#1a56db';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.fillStyle = '#1e293b';
+    ctx.font = '11px Segoe UI';
+    ctx.textAlign = 'left';
+    ctx.fillText(`(${fmtNum(v.x1)}, ${fmtNum(v.x2)})`, tx(v.x1) + 10, ty(v.x2) + 4);
+  });
+
+  // Populate vertices table
+  populateVertexTable(vertices, c1, c2, isMax);
+}
+
+function populateVertexTable(vertices, c1, c2, isMax) {
+  const tbody = document.getElementById('vtbl-body');
+  tbody.innerHTML = '';
+  if (vertices.length === 0) return;
+
+  const zVals = vertices.map(v => c1 * v.x1 + c2 * v.x2);
+  const zOpt  = isMax ? Math.max(...zVals) : Math.min(...zVals);
+
+  vertices.forEach((v, i) => {
+    const zv = zVals[i];
+    const isOpt = Math.abs(zv - zOpt) < 1e-6;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${fmtNum(v.x1)}</td>
+      <td>${fmtNum(v.x2)}</td>
+      <td>${fmtNum(zv)}</td>
+      <td>${isOpt ? '<span class="badge badge-green">Ótimo</span>' : ''}</td>
+    `;
+    if (isOpt) tr.classList.add('result');
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('vertices-table').classList.add('visible');
+  const optEl = document.getElementById('opt-result');
+  optEl.style.display = 'block';
+  const optV = vertices[zVals.indexOf(zOpt)];
+  optEl.innerHTML = `<strong>Solução ótima:</strong> x₁ = ${fmtNum(optV.x1)}, x₂ = ${fmtNum(optV.x2)}, <strong>z* = ${fmtNum(zOpt)}</strong>`;
+}
+
+function fmtNum(v) {
+  if (Math.abs(v) < 1e-9) return '0';
+  return parseFloat(v.toFixed(4)).toString();
+}
+
+// Init
+buildConstraints();
+loadExample();
+</script>
+
+</body>
+</html>

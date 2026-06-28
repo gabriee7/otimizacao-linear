@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teoria — Otimização Linear</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">📐 Otimização Linear</a>
+  <a href="teoria.html" class="active">Teoria</a>
+  <a href="exercicios.html">Exercícios</a>
+  <a href="solver.html">Solver</a>
+  <a href="grafico.html">Gráfico</a>
+</nav>
+
+<main>
+  <h1>Teoria de Otimização Linear</h1>
+
+  <!-- ===== 1. Definição ===== -->
+  <h2>1. Definição e Estrutura de um PL</h2>
+  <p>
+    Um <strong>Problema de Programação Linear (PL)</strong> consiste em otimizar (maximizar ou minimizar)
+    uma função linear sujeita a restrições lineares de igualdade ou desigualdade.
+  </p>
+
+  <div class="card">
+    <div class="card-title">Elementos de um PL</div>
+    <p><strong>Variáveis de decisão:</strong> x₁, x₂, …, xₙ — as incógnitas do problema.</p>
+    <p><strong>Função objetivo:</strong> f(x) = c<sup>T</sup>x que se deseja max ou min.</p>
+    <p><strong>Restrições:</strong> Ax ≤ b (ou ≥ b, ou = b) que limitam as soluções viáveis.</p>
+    <p><strong>Não-negatividade:</strong> xⱼ ≥ 0 para todo j (na maioria dos modelos práticos).</p>
+  </div>
+
+  <!-- ===== 2. Forma Padrão ===== -->
+  <h2>2. Forma Padrão</h2>
+  <p>
+    O método Simplex opera na <strong>forma padrão</strong>, em que todas as restrições são
+    <em>igualdades</em> e as variáveis são não-negativas.
+  </p>
+
+  <div class="alert alert-info">
+    <strong>Regra de conversão:</strong> Uma restrição do tipo ≤ vira igualdade adicionando uma
+    <strong>variável de folga</strong> s ≥ 0. Uma restrição ≥ vira igualdade subtraindo uma
+    <strong>variável de excesso</strong> e adicionando uma <strong>variável artificial</strong>.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Forma Padrão</div>
+    <div class="math-block">
+      Maximizar:  z = c<sup>T</sup>x<br><br>
+      Sujeito a:  Ax = b<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x ≥ 0
+    </div>
+  </div>
+
+  <h3>Exemplo de conversão</h3>
+  <p>Restrição original: <code>2x₁ + 3x₂ ≤ 12</code></p>
+  <p>Forma padrão: <code>2x₁ + 3x₂ + s₁ = 12</code>, &nbsp; s₁ ≥ 0</p>
+
+  <!-- ===== 3. Forma Canônica ===== -->
+  <h2>3. Forma Canônica e Solução Básica Viável (SBV)</h2>
+  <p>
+    Dado um sistema Ax = b com m restrições e n variáveis (n > m), escolhemos m variáveis
+    <strong>básicas</strong> que formam uma submatriz B de A invertível. As demais são
+    <strong>não-básicas</strong> (fixadas em 0).
+  </p>
+
+  <div class="card">
+    <div class="card-title">Solução Básica</div>
+    <p>
+      Fazendo as variáveis não-básicas = 0, obtemos a <strong>solução básica</strong>:
+      x<sub>B</sub> = B<sup>-1</sup>b.
+    </p>
+    <p>Se x<sub>B</sub> ≥ 0, a solução é uma <strong>Solução Básica Viável (SBV)</strong>
+    — e corresponde a um vértice da região viável.</p>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>Teorema fundamental da PL:</strong> Se existe solução ótima, ela ocorre em alguma SBV
+    (vértice da região viável). O Simplex percorre os vértices até encontrar o ótimo.
+  </div>
+
+  <!-- ===== 4. Método Simplex ===== -->
+  <h2>4. Método Simplex (Tableau)</h2>
+  <p>
+    O Simplex é um algoritmo iterativo que parte de uma SBV inicial e se move para SBVs adjacentes
+    de valor objetivo crescente (na maximização), até não haver melhora possível.
+  </p>
+
+  <h3>Passos do algoritmo</h3>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div>
+      <strong>Montar o tableau inicial</strong><br>
+      Linhas: uma para cada restrição + linha da função objetivo (z). Colunas: variáveis de decisão,
+      variáveis de folga, e coluna b (RHS).
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div>
+      <strong>Verificar otimalidade</strong><br>
+      Se todos os coeficientes na linha z forem ≥ 0 (na maximização), a solução atual é ótima. Pare.
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div>
+      <strong>Escolher a variável que entra (pivô coluna)</strong><br>
+      Selecionar a coluna com o coeficiente mais negativo na linha z (critério de Dantzig).
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div>
+      <strong>Escolher a variável que sai (pivô linha)</strong><br>
+      Para cada linha com coeficiente positivo na coluna pivô, calcular a razão b<sub>i</sub>/a<sub>ij</sub>.
+      A linha com a <em>menor razão positiva</em> é a linha pivô (teste da razão mínima).
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div>
+      <strong>Operação de pivoteamento</strong><br>
+      Dividir a linha pivô pelo elemento pivô. Usar operações de linha para zerar todos os outros
+      elementos da coluna pivô. Voltar ao passo 2.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Condições de parada</div>
+    <p><strong>Solução ótima:</strong> todos os coeficientes da linha z são ≥ 0.</p>
+    <p><strong>Problema ilimitado:</strong> coluna pivô tem todos os coeficientes ≤ 0 nas linhas de restrição.</p>
+    <p><strong>Problema inviável:</strong> nenhuma SBV inicial pode ser encontrada (variáveis artificiais na base com valor > 0 ao final da Fase I).</p>
+  </div>
+
+  <!-- ===== 5. Duas Fases / Big-M ===== -->
+  <h2>5. Método das Duas Fases e Método Big-M</h2>
+  <p>
+    Quando há restrições do tipo ≥ ou =, não há SBV imediata. Dois métodos resolvem isso:
+  </p>
+
+  <div class="card">
+    <div class="card-title">Método das Duas Fases</div>
+    <p>
+      <strong>Fase I:</strong> Minimizar a soma das variáveis artificiais. Se o mínimo = 0, temos uma SBV
+      inicial viável para o PL original. Caso contrário, o problema é inviável.
+    </p>
+    <p>
+      <strong>Fase II:</strong> Usar a SBV final da Fase I como ponto de partida para resolver o PL original.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Método Big-M</div>
+    <p>
+      Adicionar às variáveis artificiais um coeficiente M muito grande (penalidade) na função objetivo.
+      Se o problema for viável, as artificiais sairão da base naturalmente. É mais simples de implementar,
+      porém pode ter instabilidade numérica para M muito grande.
+    </p>
+  </div>
+
+  <!-- ===== 6. Dualidade ===== -->
+  <h2>6. Dualidade</h2>
+  <p>
+    Todo PL (primal) tem associado um <strong>problema dual</strong>. As soluções dos dois problemas
+    estão intimamente relacionadas pelo Teorema da Dualidade Forte.
+  </p>
+
+  <div class="card">
+    <div class="card-title">Construção do Dual</div>
+    <div class="math-block">
+      Primal (Max):          Dual (Min):<br>
+      Max c<sup>T</sup>x  ↔  Min b<sup>T</sup>y<br>
+      Ax ≤ b             ↔  A<sup>T</sup>y ≥ c<br>
+      x ≥ 0              ↔  y ≥ 0
+    </div>
+  </div>
+
+  <h3>Teoremas de dualidade</h3>
+  <div class="step">
+    <div class="step-num" style="background:#16a34a">D1</div>
+    <div><strong>Dualidade fraca:</strong> Para qualquer x viável do primal e y viável do dual: c<sup>T</sup>x ≤ b<sup>T</sup>y.</div>
+  </div>
+  <div class="step">
+    <div class="step-num" style="background:#16a34a">D2</div>
+    <div><strong>Dualidade forte:</strong> Se o primal tem solução ótima x*, então o dual tem solução ótima y*, e c<sup>T</sup>x* = b<sup>T</sup>y*.</div>
+  </div>
+  <div class="step">
+    <div class="step-num" style="background:#16a34a">D3</div>
+    <div><strong>Folgas complementares:</strong> Na solução ótima, para cada restrição: ou a restrição é ativa, ou a variável dual correspondente é zero.</div>
+  </div>
+
+  <!-- ===== 7. Análise de Sensibilidade ===== -->
+  <h2>7. Análise de Sensibilidade</h2>
+  <p>
+    Após encontrar a solução ótima, a análise de sensibilidade determina <em>em que intervalo</em>
+    os parâmetros do problema (coeficientes da função objetivo e RHS) podem variar sem que a
+    <strong>base ótima</strong> mude.
+  </p>
+
+  <div class="card">
+    <div class="card-title">Variação nos coeficientes da FO (cⱼ)</div>
+    <p>
+      Para uma variável básica x<sub>j</sub>: há um intervalo [c<sub>j</sub><sup>min</sup>, c<sub>j</sub><sup>max</sup>]
+      dentro do qual a mesma base permanece ótima.
+    </p>
+    <p>
+      Para uma variável não-básica: c<sub>j</sub> pode diminuir em no máximo o valor do custo reduzido
+      correspondente sem que ela entre na base.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Variação no RHS (bᵢ)</div>
+    <p>
+      O valor da FO muda de acordo com os <strong>preços sombra</strong> (variáveis duais y*):
+      Δz = y<sub>i</sub>* × Δb<sub>i</sub>.
+    </p>
+    <p>
+      Os preços sombra são válidos enquanto b<sub>i</sub> varia em um intervalo que mantém x<sub>B</sub> = B<sup>-1</sup>b ≥ 0.
+    </p>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>Dica:</strong> Os preços sombra aparecem automaticamente na linha z do tableau final,
+    nas colunas das variáveis de folga originais.
+  </div>
+
+  <div class="btn-group">
+    <a href="exercicios.html" class="btn btn-primary">Ver exercícios resolvidos →</a>
+    <a href="solver.html" class="btn btn-outline">Abrir Solver →</a>
+  </div>
+</main>
+
+<footer>
+  Material de estudo — Otimização Linear
+</footer>
+
+</body>
+</html>
