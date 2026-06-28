@@ -305,7 +305,7 @@
   </aside>
 
   <!-- ── Conteúdo principal ── -->
-  <div id="q6">
+  <div id="q6" style="display:none">
 
     <!-- ══════════════════════════════════════════════════════
          EXERCÍCIO 6
@@ -1053,6 +1053,45 @@
 </div><!-- /ex-layout -->
 
 <footer>Material de estudo — Otimização Linear</footer>
+
+<script>
+  (function () {
+    // Todos os ids de exercícios
+    var sections = ['q6', 'q9'];
+
+    // Links da sidebar com href="#qN"
+    var links = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
+
+    function showSection(id) {
+      sections.forEach(function (s) {
+        var el = document.getElementById(s);
+        if (el) el.style.display = (s === id) ? '' : 'none';
+      });
+      links.forEach(function (a) {
+        var target = a.getAttribute('href').slice(1); // remove '#'
+        a.classList.toggle('active', target === id);
+      });
+      // Scroll suave ao topo do conteúdo
+      var top = document.getElementById(id);
+      if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    links.forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var id = a.getAttribute('href').slice(1);
+        showSection(id);
+      });
+    });
+
+    // Mostrar a seção marcada como active no load
+    var activeLink = document.querySelector('.ex-sidebar a.active[href^="#q"]');
+    if (activeLink) {
+      var initialId = activeLink.getAttribute('href').slice(1);
+      showSection(initialId);
+    }
+  })();
+</script>
 
 </body>
 </html>
