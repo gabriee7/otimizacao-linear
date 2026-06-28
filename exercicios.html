@@ -284,7 +284,14 @@
   <!-- ── Sidebar ── -->
   <aside class="ex-sidebar">
     <div class="ex-sidebar-label">Exercícios</div>
-    <a href="#q9" class="active">
+    <a href="#q6">
+      <span class="ex-num">6</span>
+      <div>
+        <div>Dual Simplex</div>
+        <div class="ex-sidebar-meta">MIN · restrições ≥</div>
+      </div>
+    </a>
+    <a href="#q9" class="active" style="margin-top:.2rem;">
       <span class="ex-num">9</span>
       <div>
         <div>Dual Simplex</div>
@@ -298,6 +305,353 @@
   </aside>
 
   <!-- ── Conteúdo principal ── -->
+  <div id="q6">
+
+    <!-- ══════════════════════════════════════════════════════
+         EXERCÍCIO 6
+    ══════════════════════════════════════════════════════ -->
+
+    <div class="q-header">
+      <div class="q-label">Questão 6</div>
+      <div class="q-title">Método Dual Simplex</div>
+      <div class="q-tags">
+        <span class="q-tag qt-method">Dual Simplex</span>
+        <span class="q-tag qt-result">z* = 0 · x₁=0 · x₂=0 · x₃=5</span>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MIN &nbsp; z = 6x₁ + 3x₂<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;6x₁ − 3x₂ + x₃ ≥ 2 &nbsp;&nbsp;(R1)<br>
+        &nbsp;&nbsp;3x₁ + 4x₂ + x₃ ≥ 5 &nbsp;&nbsp;(R2)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃ ≥ 0
+      </div>
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R1</span>
+        <span class="phase-title">Leitura e Extração de Dados</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Problema de <strong>minimização</strong> com 3 variáveis de decisão (x₁, x₂, x₃), todas não-negativas, e 2 restrições do tipo <strong>≥</strong>. Nenhuma variável irrestrita em sinal.</p>
+        <p>Observação importante: x₃ aparece nas restrições com coeficiente 1 em ambas, mas <strong>não aparece na função objetivo</strong> — seu custo é zero. Isso terá impacto direto na solução.</p>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R2</span>
+        <span class="phase-title">Classificação — Por que Dual Simplex?</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>O Dual Simplex é aplicável quando o tableau satisfaz <strong>simultaneamente</strong> duas condições:</p>
+        <div class="tableau-wrap" style="margin-top:.6rem">
+          <table class="gtbl">
+            <thead><tr><th>Condição</th><th>Significado</th><th>Este problema</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>Dual viável</strong></td><td>Todos os custos reduzidos na linha z são ≥ 0 (para MIN)</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
+              <tr class="hl"><td><strong>Primal inviável</strong></td><td>Existe pelo menos um b &lt; 0 na coluna RHS</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-info" style="margin-top:.8rem">
+          <strong>📌 Por que não Simplex Primal?</strong> Restrições ≥ geram b negativos após pré-processamento. O Simplex Primal exige todos os b ≥ 0 para iniciar — condição não satisfeita sem variáveis artificiais.
+        </div>
+      </div>
+    </div>
+
+    <!-- R3 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R3</span>
+        <span class="phase-title">Pré-processamento</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <h3>3.1 — Verificar se é necessário converter para MIN</h3>
+        <p>O problema já está na forma de <strong>minimização</strong>, portanto nenhuma conversão é necessária. A linha z do tableau receberá diretamente os coeficientes da função objetivo:</p>
+        <div class="math-block">MIN &nbsp; z = 6x₁ + 3x₂ + 0x₃<br><span style="color:var(--text-muted);font-size:.85rem;">→ linha z: [6, 3, 0, 0, 0] para [x₁, x₂, x₃, x₄, x₅]</span></div>
+        <div class="alert alert-warning">
+          <strong>⚠️ Atenção:</strong> x₃ não aparece na função objetivo — seu custo reduzido inicial é <strong>0</strong>. Isso criará um pivô degenerado na iteração 1 (razão = 0/1 = 0), discutido em R5.
+        </div>
+
+        <h3 style="margin-top:1.4rem">3.2 — Adicionar variáveis de excesso e preparar a base</h3>
+        <p>Restrições ≥ → subtraímos variáveis de excesso x₄ e x₅. Uma variável de excesso com coeficiente −1 não pode entrar na base pois geraria valor negativo. Multiplicamos cada restrição por −1 para obter +1 na variável de excesso:</p>
+        <div class="math-block">
+          R1: &nbsp;6x₁ − 3x₂ + x₃ − x₄ = 2 &nbsp; <span style="color:var(--text-muted)">×(−1)</span> &nbsp;→ &nbsp; −6x₁ + 3x₂ − x₃ + x₄ = −2<br>
+          R2: &nbsp;3x₁ + 4x₂ + x₃ − x₅ = 5 &nbsp; <span style="color:var(--text-muted)">×(−1)</span> &nbsp;→ &nbsp; −3x₁ − 4x₂ − x₃ + x₅ = −5
+        </div>
+        <p>x₄ e x₅ entram na base com b = <strong style="color:var(--danger)">−2</strong> e <strong style="color:var(--danger)">−5</strong> — ambos negativos → primal inviável, condição necessária para o Dual Simplex.</p>
+
+        <h3 style="margin-top:1.4rem">3.3 — Verificar viabilidade dual</h3>
+        <p>Para aplicar o Dual Simplex em um problema MIN, todos os custos reduzidos das variáveis não-básicas devem ser ≥ 0:</p>
+        <div class="tableau-wrap">
+          <table class="gtbl" style="width:auto">
+            <thead><tr><th>Variável não-básica</th><th>Custo reduzido</th><th>Condição ≥ 0</th><th>Observação</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td style="font-family:monospace">6</td><td><span class="badge badge-green">✓</span></td><td>Custo original da FO</td></tr>
+              <tr><td>x₂</td><td style="font-family:monospace">3</td><td><span class="badge badge-green">✓</span></td><td>Custo original da FO</td></tr>
+              <tr><td>x₃</td><td style="font-family:monospace">0</td><td><span class="badge badge-green">✓</span></td><td>x₃ não está na FO — custo zero</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-success">
+          <strong>✅ Pronto para iterar:</strong> Dual viável (todos os custos ≥ 0) + Primal inviável (b₁ = −2, b₂ = −5) → <strong>Dual Simplex aplicável.</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- R4 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R4</span>
+        <span class="phase-title">Tableau Inicial</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="legend-grid">
+          <div class="legend-item"><div class="legend-swatch" style="background:#1a56db;border-color:#1a56db"></div>Base (coluna à esquerda)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#fffbeb;border-color:#fcd34d"></div>Coluna pivô (entra)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#eff6ff;border-color:#93c5fd"></div>Linha pivô (sai)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#1a56db;border-color:#1a56db"></div>Elemento pivô</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#fef2f2;border-color:#fca5a5"></div>b negativo (primal inviável)</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#f0fdf4;border-color:#86efac"></div>Solução ótima</div>
+        </div>
+
+        <div class="pills">
+          <span class="pill pill-ok">✅ Dual viável</span>
+          <span class="pill pill-warn">❌ Primal inviável</span>
+        </div>
+
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">z</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₅</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td>6</td><td>3</td><td class="t-pc">0</td><td class="t-dim">0</td><td class="t-dim">0</td><td class="t-dim">0</td></tr>
+                <tr><td class="t-z">0</td><td>−6</td><td>3</td><td class="t-pc">−1</td><td>1</td><td class="t-dim">0</td><td class="t-neg">−2</td></tr>
+                <tr><td class="t-z">0</td><td class="t-pr">−3</td><td class="t-pr">−4</td><td class="t-pv">−1</td><td class="t-pr t-dim">0</td><td class="t-pr">1</td><td class="t-pr t-neg">−5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R5 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R5</span>
+        <span class="phase-title">Iteração do Dual Simplex</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <p class="iter-title">Iteração 1 (única)</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Critério de saída</strong> — escolher a linha com o b mais negativo:
+            <div class="math-block" style="margin-top:.5rem">b₁ = −2 &nbsp;&nbsp; b₂ = −5 ← mais negativo<br><span style="color:var(--text-muted)">→ x₅ sai da base (linha 2)</span></div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Critério de entrada</strong> — razão |custo reduzido| ÷ |coeficiente| apenas para coeficientes <em>negativos</em> da linha pivô (L2 = [−3, −4, −1, 0, 1]):
+            <div class="tableau-wrap" style="margin-top:.6rem">
+              <table class="rtbl">
+                <thead><tr><th>Coluna</th><th>Custo reduzido (linha z)</th><th>Coef. linha x₅</th><th>Razão</th><th>Escolha?</th></tr></thead>
+                <tbody>
+                  <tr><td>x₁</td><td>6</td><td>−3</td><td>|6| ÷ |−3| = 2,0</td><td class="skip">não</td></tr>
+                  <tr><td>x₂</td><td>3</td><td>−4</td><td>|3| ÷ |−4| = 0,75</td><td class="skip">não</td></tr>
+                  <tr class="winner"><td>x₃</td><td>0</td><td>−1</td><td>|0| ÷ |−1| = <strong>0,0</strong></td><td>✓ menor</td></tr>
+                  <tr><td>x₄</td><td>0</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="alert alert-warning" style="margin:.6rem 0">
+              <strong>⚠️ Pivô degenerado:</strong> a razão mínima é <strong>0</strong> porque x₃ tem custo reduzido = 0 (não aparece na FO). Isso significa que o valor de z <em>não muda</em> nesta iteração — permanece em z = 0. O pivô é válido e necessário para restaurar a viabilidade primal.
+            </div>
+            <div class="pv-row">
+              <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₅</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₃</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Elemento pivô: <strong>−1</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <strong>Operações de linha</strong> — dividir a linha pivô pelo elemento pivô (−1) e eliminar x₃ das demais linhas:
+            <div class="ops-block">
+              L₂ ← L₂ ÷ (−1) &nbsp;&nbsp;→&nbsp; [ 0 | 3 | 4 | 1 | 0 | −1 | 5 ]<br>
+              L₀ ← L₀ − 0·L₂ &nbsp;&nbsp;→&nbsp; sem alteração &nbsp; [ 1 | 6 | 3 | 0 | 0 | 0 | 0 ]<br>
+              L₁ ← L₁ − (−1)·L₂ &nbsp;→&nbsp; L₁ + L₂ &nbsp; [ 0 | −3 | 7 | 0 | 1 | −1 | 3 ]
+            </div>
+            <p style="font-size:.85rem;color:var(--text-muted)">Detalhe de L₁: [0,−6,3,−1,1,0,−2] + [0,3,4,1,0,−1,5] = [0,−3,7,0,1,−1,3]</p>
+          </div>
+        </div>
+
+        <div class="pills">
+          <span class="pill pill-ok">✅ Dual viável</span>
+          <span class="pill pill-ok">✅ Primal viável</span>
+          <span class="pill pill-done">🏁 Ótimo</span>
+        </div>
+
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">z</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₃</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td>6</td><td>3</td><td class="t-dim">0</td><td class="t-dim">0</td><td>0</td><td class="t-opt">0</td></tr>
+                <tr><td class="t-z">0</td><td>−3</td><td>7</td><td class="t-dim">0</td><td>1</td><td>−1</td><td class="t-opt">3</td></tr>
+                <tr><td class="t-z">0</td><td>3</td><td>4</td><td>1</td><td class="t-dim">0</td><td>−1</td><td class="t-opt">5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p style="margin-top:.6rem;font-size:.88rem;color:var(--text-muted)">
+          Todos os custos reduzidos ≥ 0 (linha z) e todos os b ≥ 0 → condição de otimalidade atingida em apenas <strong>1 iteração</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- R6 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R6</span>
+        <span class="phase-title">Leitura da Solução</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="math-block">
+          Variáveis <strong>na base</strong> → leia a coluna b:<br>
+          &nbsp;&nbsp;x₃ = 5 &nbsp;&nbsp; x₄ = 3 (excesso de R1)<br><br>
+          Variáveis <strong>fora da base</strong> → valor = 0:<br>
+          &nbsp;&nbsp;x₁ = 0 &nbsp;&nbsp; x₂ = 0 &nbsp;&nbsp; x₅ = 0<br><br>
+          Linha z: z = 6·(0) + 3·(0) = <strong>0</strong>
+        </div>
+
+        <div class="result-box">
+          <h4>✅ Solução Ótima</h4>
+          <div class="result-vars">
+            <span class="rv">x₁ = <span>0</span></span>
+            <span class="rv">x₂ = <span>0</span></span>
+            <span class="rv">x₃ = <span>5</span></span>
+            <span class="rv">z* = <span>0</span></span>
+          </div>
+        </div>
+
+        <div class="alert alert-info" style="margin-top:.8rem">
+          <strong>💡 Intuição do resultado:</strong> x₃ não aparece na função objetivo, então aumentá-la custa zero. Com x₁ = x₂ = 0, basta ter x₃ ≥ 5 para satisfazer ambas as restrições (R2 exige x₃ ≥ 5). O mínimo de z = 6x₁ + 3x₂ com todas variáveis ≥ 0 é z = 0, e ele é atingível.
+        </div>
+
+        <h3 style="margin-top:1.4rem">Tipo de solução ótima</h3>
+        <p>No tableau final, inspecionamos os custos reduzidos das variáveis não-básicas:</p>
+        <div class="tableau-wrap">
+          <table class="gtbl" style="width:auto">
+            <thead><tr><th>Variável não-básica</th><th>Custo reduzido</th><th>Condição</th><th>Implicação</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td style="font-family:monospace">6</td><td><span class="badge badge-green">6 &gt; 0 ✓</span></td><td>Aumentar x₁ piora z</td></tr>
+              <tr><td>x₂</td><td style="font-family:monospace">3</td><td><span class="badge badge-green">3 &gt; 0 ✓</span></td><td>Aumentar x₂ piora z</td></tr>
+              <tr><td>x₅</td><td style="font-family:monospace">0</td><td><span class="badge badge-orange">= 0 ⚠</span></td><td>Aumentar x₅ não altera z → <strong>ótimos alternativos</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert" style="background:#fffbeb; border-left:4px solid var(--warning); margin-top:.6rem">
+          <strong>⚠️ Ótimos alternativos:</strong> x₅ (variável de excesso de R2) tem custo reduzido = 0 no tableau ótimo. Isso indica que existem <strong>infinitas soluções ótimas</strong>: qualquer ponto com x₁ = 0, x₂ = 0 e x₃ ≥ 5 satisfaz todas as restrições e alcança z = 0.
+        </div>
+
+        <h3 style="margin-top:1.4rem">Todos os tipos de conclusão possíveis</h3>
+        <div class="tableau-wrap">
+          <table class="gtbl">
+            <thead><tr><th>Tipo</th><th>Condição no tableau</th><th>O que significa</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-blue">Ótimo único</span></td><td>Todos os custos reduzidos das variáveis não-básicas são <strong>&gt; 0</strong></td><td>Um único ponto ótimo.</td></tr>
+              <tr class="hl"><td><span class="badge badge-orange">Ótimo alternativo</span></td><td>Algum custo reduzido de variável não-básica é <strong>= 0</strong></td><td>Infinitos pontos ótimos. <em>Este caso</em>: todo x₃ ≥ 5 com x₁=x₂=0 é ótimo.</td></tr>
+              <tr><td><span class="badge" style="background:#fee2e2;color:#b91c1c">Inviável</span></td><td>Linha pivô (b mais negativo) sem nenhum coef. negativo</td><td>Restrições contraditórias; Dual Simplex não encontra variável entrante.</td></tr>
+              <tr><td><span class="badge" style="background:#fef3c7;color:#92400e">Ilimitado</span></td><td>No Simplex Primal: coluna pivô com todos os coef. ≤ 0</td><td>FO pode crescer indefinidamente; sem ótimo finito.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- R7 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R7</span>
+        <span class="phase-title">Verificação</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="card">
+          <div class="v-row"><span>✅</span><span>R1: 6·(0) − 3·(0) + 5 = 5 ≥ 2 ✓ (folga = x₄ = 3)</span></div>
+          <div class="v-row"><span>✅</span><span>R2: 3·(0) + 4·(0) + 5 = 5 ≥ 5 ✓ (restrição ativa)</span></div>
+          <div class="v-row"><span>✅</span><span>FO: 6·(0) + 3·(0) = 0 = z* ✓</span></div>
+          <div class="v-row"><span>✅</span><span>x₁ = 0, x₂ = 0, x₃ = 5 ≥ 0 ✓ (não-negatividade)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R8 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R8</span>
+        <span class="phase-title">Generalização</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="tableau-wrap">
+          <table class="gtbl">
+            <thead><tr><th>Condição</th><th>Neste problema</th><th>Se fosse diferente</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td>Problema já é MIN</td><td>Sem conversão — z row recebe coeficientes diretamente ✅</td><td>Se fosse MAX: multiplicar FO por −1, operar com −z</td></tr>
+              <tr class="hl"><td>Variável com custo zero na FO (x₃)</td><td>Gera razão = 0 → pivô degenerado (z não muda) ✅</td><td>Se todos custos &gt; 0: nenhuma razão seria zero</td></tr>
+              <tr><td>Restrições ≥ com b &gt; 0</td><td>Gera b negativo após ×(−1) → Dual Simplex ✅</td><td>b já negativo no enunciado: mesmo caminho</td></tr>
+              <tr><td>Custo reduzido = 0 no ótimo (x₅)</td><td>Ótimos alternativos — infinitas soluções ótimas ⚠</td><td>Se todos &gt; 0: ótimo único</td></tr>
+              <tr><td>Convergência em 1 iteração</td><td>Porque x₃ (custo zero) já "resolve" ambas restrições ✅</td><td>Mais iterações se x₃ não existisse ou tivesse custo &gt; 0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert" style="background:#fef2f2; border-left:4px solid var(--danger); margin-top:.8rem">
+          <strong>❗ Armadilha clássica de prova:</strong> ao encontrar razão = 0 no critério de entrada, alguns alunos ignoram essa coluna achando que é inválida. Razão zero é <em>válida e deve ser escolhida</em> — indica pivô degenerado, não erro. Ignorá-la levaria a escolher x₂ (razão 0,75) e chegaria a uma solução diferente com mais iterações.
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador entre exercícios -->
+    <div style="height:3rem; border-bottom: 2px dashed var(--border); margin-bottom: 3rem;"></div>
+
+  </div><!-- /q6 -->
+
   <div id="q9">
 
     <!-- Cabeçalho da questão -->
