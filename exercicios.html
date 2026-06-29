@@ -670,7 +670,7 @@
       <div class="q-title">Método Dual Simplex</div>
       <div class="q-tags">
         <span class="q-tag qt-method">Dual Simplex</span>
-        <span class="q-tag qt-result">z* = 52/5 · x₂=17/5 · x₃=18/5</span>
+        <span class="q-tag qt-result">z* = 10,4 · x₂=3,4 · x₃=3,6</span>
       </div>
     </div>
 
@@ -909,7 +909,7 @@
                 <thead><tr><th>Coluna</th><th>Valor linha Z</th><th>Coef. linha x₄</th><th>Razão |Z| ÷ |coef.|</th><th>Escolha?</th></tr></thead>
                 <tbody>
                   <tr><td>x₁</td><td>−4</td><td>4</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
-                  <tr class="winner"><td>x₂</td><td>−1</td><td>−5</td><td>|−1| ÷ |−5| = <strong>1/5</strong></td><td>✓ único negativo</td></tr>
+                  <tr class="winner"><td>x₂</td><td>−1</td><td>−5</td><td>|−1| ÷ |−5| = <strong>0,2</strong></td><td>✓ único negativo</td></tr>
                   <tr><td>x₃</td><td>0</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
                   <tr><td>x₄</td><td>0</td><td>1</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
                   <tr><td>x₅</td><td>−1</td><td>2</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
@@ -932,13 +932,13 @@
           <div>
             <strong>Operações de linha</strong>
             <div class="ops-block">
-              Nova x₂ = L₁ ÷ (−5) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | −4/5 | 1 | 0 | −1/5 | −2/5 | 17/5 ]<br>
-              Nova Z &nbsp;= L₀ − (−1)·Nova x₂ = L₀ + Nova x₂ → [ 1 | −24/5 | 0 | 0 | −1/5 | −7/5 | 52/5 ]<br>
-              Nova x₃ = L₂ − (1)·Nova x₂ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | −1/5 | 0 | 1 | 1/5 | −3/5 | 18/5 ]
+              Nova x₂ = L₁ ÷ (−5) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | −0,8 | 1 | 0 | −0,2 | −0,4 | 3,4 ]<br>
+              Nova Z &nbsp;= L₀ − (−1)·Nova x₂ = L₀ + Nova x₂ → [ 1 | −4,8 | 0 | 0 | −0,2 | −1,4 | 10,4 ]<br>
+              Nova x₃ = L₂ − (1)·Nova x₂ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | −0,2 | 0 | 1 | 0,2 | −0,6 | 3,6 ]
             </div>
             <p style="font-size:.85rem;color:var(--text-muted)">
-              Detalhe da linha Z: [1,−4,−1,0,0,−1,7] + [0,−4/5,1,0,−1/5,−2/5,17/5] = [1,−24/5,0,0,−1/5,−7/5,52/5]<br>
-              Detalhe de x₃: [0,−1,1,1,0,−1,7] − [0,−4/5,1,0,−1/5,−2/5,17/5] = [0,−1/5,0,1,1/5,−3/5,18/5]
+              Detalhe da linha Z: [ 1 | −4 | −1 | 0 | 0 | −1 | 7 ] + [ 0 | −0,8 | 1 | 0 | −0,2 | −0,4 | 3,4 ] = [ 1 | −4,8 | 0 | 0 | −0,2 | −1,4 | 10,4 ]<br>
+              Detalhe de x₃: [ 0 | −1 | 1 | 1 | 0 | −1 | 7 ] − [ 0 | −0,8 | 1 | 0 | −0,2 | −0,4 | 3,4 ] = [ 0 | −0,2 | 0 | 1 | 0,2 | −0,6 | 3,6 ]
             </p>
           </div>
         </div>
@@ -961,9 +961,9 @@
             <table class="tgrid">
               <thead><tr><th>Z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
               <tbody>
-                <tr><td class="t-z">1</td><td>−24/5</td><td class="t-dim">0</td><td class="t-dim">0</td><td>−1/5</td><td>−7/5</td><td class="t-opt">52/5</td></tr>
-                <tr><td class="t-z">0</td><td>−4/5</td><td>1</td><td class="t-dim">0</td><td>−1/5</td><td>−2/5</td><td class="t-opt">17/5</td></tr>
-                <tr><td class="t-z">0</td><td>−1/5</td><td class="t-dim">0</td><td>1</td><td>1/5</td><td>−3/5</td><td class="t-opt">18/5</td></tr>
+                <tr><td class="t-z">1</td><td>−4,8</td><td class="t-dim">0</td><td class="t-dim">0</td><td>−0,2</td><td>−1,4</td><td class="t-opt">10,4</td></tr>
+                <tr><td class="t-z">0</td><td>−0,8</td><td>1</td><td class="t-dim">0</td><td>−0,2</td><td>−0,4</td><td class="t-opt">3,4</td></tr>
+                <tr><td class="t-z">0</td><td>−0,2</td><td class="t-dim">0</td><td>1</td><td>0,2</td><td>−0,6</td><td class="t-opt">3,6</td></tr>
               </tbody>
             </table>
           </div>
@@ -985,10 +985,10 @@
       <div class="phase-body">
         <div class="math-block">
           Variáveis <strong>na base</strong> → leia a coluna b:<br>
-          &nbsp;&nbsp;x₂ = 17/5 &nbsp;&nbsp; x₃ = 18/5<br><br>
+          &nbsp;&nbsp;x₂ = 3,4 &nbsp;&nbsp; x₃ = 3,6<br><br>
           Variáveis <strong>fora da base</strong> → valor = 0:<br>
           &nbsp;&nbsp;x₁ = 0 &nbsp;&nbsp; x₄ = 0 &nbsp;&nbsp; x₅ = 0<br><br>
-          Linha Z: b = 52/5 → Z_min = <strong>52/5 = 10,4</strong>
+          Linha Z: b = 10,4 → Z_min = <strong>10,4</strong>
         </div>
         <div class="alert alert-info" style="margin:.6rem 0">
           <strong>💡 Convenção MIN — leitura direta:</strong> Como operamos com Z (não com −Z), o valor ótimo é lido diretamente do b da linha Z, sem inverter sinal.
@@ -998,9 +998,9 @@
           <h4>✅ Solução Ótima</h4>
           <div class="result-vars">
             <span class="rv">x₁ = <span>0</span></span>
-            <span class="rv">x₂ = <span>17/5</span></span>
-            <span class="rv">x₃ = <span>18/5</span></span>
-            <span class="rv">z* = <span>52/5</span></span>
+            <span class="rv">x₂ = <span>3,4</span></span>
+            <span class="rv">x₃ = <span>3,6</span></span>
+            <span class="rv">z* = <span>10,4</span></span>
           </div>
         </div>
 
@@ -1009,9 +1009,9 @@
           <table class="gtbl" style="width:auto">
             <thead><tr><th>Variável não-básica</th><th>Valor na linha Z</th><th>Condição</th><th>Implicação</th></tr></thead>
             <tbody>
-              <tr><td>x₁</td><td style="font-family:monospace">−24/5</td><td><span class="badge badge-green">−24/5 &lt; 0 ✓</span></td><td>Aumentar x₁ piora z</td></tr>
-              <tr><td>x₄</td><td style="font-family:monospace">−1/5</td><td><span class="badge badge-green">−1/5 &lt; 0 ✓</span></td><td>Aumentar x₄ piora z</td></tr>
-              <tr><td>x₅</td><td style="font-family:monospace">−7/5</td><td><span class="badge badge-green">−7/5 &lt; 0 ✓</span></td><td>Aumentar x₅ piora z</td></tr>
+              <tr><td>x₁</td><td style="font-family:monospace">−4,8</td><td><span class="badge badge-green">−4,8 &lt; 0 ✓</span></td><td>Aumentar x₁ piora z</td></tr>
+              <tr><td>x₄</td><td style="font-family:monospace">−0,2</td><td><span class="badge badge-green">−0,2 &lt; 0 ✓</span></td><td>Aumentar x₄ piora z</td></tr>
+              <tr><td>x₅</td><td style="font-family:monospace">−1,4</td><td><span class="badge badge-green">−1,4 &lt; 0 ✓</span></td><td>Aumentar x₅ piora z</td></tr>
             </tbody>
           </table>
         </div>
@@ -1030,10 +1030,10 @@
       </div>
       <div class="phase-body">
         <div class="card">
-          <div class="v-row"><span>✅</span><span>R1: 2·(0) − 3·(17/5) + 2·(18/5) = −51/5 + 36/5 = −15/5 = −3 ≤ −3 ✓ (ativa)</span></div>
-          <div class="v-row"><span>✅</span><span>R2: −(0) + 17/5 + 18/5 = 35/5 = 7 ≥ 7 ✓ (ativa)</span></div>
-          <div class="v-row"><span>✅</span><span>FO: 3·(0) + 2·(17/5) + 18/5 = 34/5 + 18/5 = 52/5 = z* ✓</span></div>
-          <div class="v-row"><span>✅</span><span>x₁ = 0, x₂ = 17/5, x₃ = 18/5 ≥ 0 ✓</span></div>
+          <div class="v-row"><span>✅</span><span>R1: 2·(0) − 3·(3,4) + 2·(3,6) = −10,2 + 7,2 = −3 ≤ −3 ✓ (ativa)</span></div>
+          <div class="v-row"><span>✅</span><span>R2: −(0) + 3,4 + 3,6 = 7 ≥ 7 ✓ (ativa)</span></div>
+          <div class="v-row"><span>✅</span><span>FO: 3·(0) + 2·(3,4) + 3,6 = 6,8 + 3,6 = 10,4 = z* ✓</span></div>
+          <div class="v-row"><span>✅</span><span>x₁ = 0, x₂ = 3,4, x₃ = 3,6 ≥ 0 ✓</span></div>
         </div>
         <p style="font-size:.85rem;color:var(--text-muted);margin-top:.5rem">Ambas as restrições estão ativas (igualdade exata), o que é esperado quando o ótimo é um vértice com 2 variáveis básicas e 2 restrições.</p>
       </div>
