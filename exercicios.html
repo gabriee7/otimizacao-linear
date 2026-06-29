@@ -283,8 +283,44 @@
 
   <!-- ── Sidebar ── -->
   <aside class="ex-sidebar">
-    <div class="ex-sidebar-label">Exercícios</div>
-    <a href="#q6">
+    <div class="ex-sidebar-label">Modelo Dual</div>
+    <a href="#q1" style="margin-top:.2rem;">
+      <span class="ex-num">1</span>
+      <div>
+        <div>Construção do Dual</div>
+        <div class="ex-sidebar-meta">MAX · todas ≤ · x≥0</div>
+      </div>
+    </a>
+    <a href="#q2" style="margin-top:.2rem;">
+      <span class="ex-num">2</span>
+      <div>
+        <div>Construção do Dual</div>
+        <div class="ex-sidebar-meta">MIN · mista (≤ = ≥) · x≥0</div>
+      </div>
+    </a>
+    <a href="#q3" style="margin-top:.2rem;">
+      <span class="ex-num">3</span>
+      <div>
+        <div>Construção do Dual</div>
+        <div class="ex-sidebar-meta">MAX · mista · x₂ irrestrita</div>
+      </div>
+    </a>
+    <a href="#q4" style="margin-top:.2rem;">
+      <span class="ex-num">4</span>
+      <div>
+        <div>Construção do Dual</div>
+        <div class="ex-sidebar-meta">MAX · 1 restrição · c₄=0</div>
+      </div>
+    </a>
+    <a href="#q5" style="margin-top:.2rem;">
+      <span class="ex-num">5</span>
+      <div>
+        <div>Construção do Dual</div>
+        <div class="ex-sidebar-meta">MAX · x₁,x₂≤0 · x₃ irrestrita</div>
+      </div>
+    </a>
+    <div class="ex-sidebar-label" style="margin-top:.8rem;">Dual Simplex</div>
+    <a href="#q6" style="margin-top:.2rem;">
       <span class="ex-num">6</span>
       <div>
         <div>Dual Simplex</div>
@@ -312,13 +348,633 @@
         <div class="ex-sidebar-meta">MAX · restrições ≥</div>
       </div>
     </a>
-    <a href="#" style="opacity:.4; pointer-events:none; margin-top:.2rem;">
-      <span class="ex-num">···</span>
-      <div style="font-size:.78rem; font-style:italic;">Próximos</div>
-    </a>
   </aside>
 
   <!-- ── Conteúdo principal ── -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       Q1 — Modelo Dual: MAX, todas restrições ≤, xⱼ ≥ 0
+  ════════════════════════════════════════════════════════════ -->
+  <div id="q1" style="display:none">
+
+    <div class="q-header">
+      <div class="q-num">1</div>
+      <div>
+        <div class="q-title">Construção do Modelo Dual</div>
+        <div class="q-tags">
+          <span class="badge">Dualidade</span>
+          <span class="badge">MAX → MIN</span>
+          <span class="badge">Todas ≤</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="alert alert-info" style="margin-bottom:1.2rem;">
+      <strong>Enunciado</strong><br>
+      Construa o modelo dual do problema abaixo. Não é necessário resolver.<br><br>
+      Maximizar: <strong>Z = 3000x₁ + 5000x₂</strong><br>
+      Sujeito a:<br>
+      &emsp;0,5x₁ + 0,2x₂ ≤ 16<br>
+      &emsp;0,25x₁ + 0,3x₂ ≤ 11<br>
+      &emsp;0,25x₁ + 0,5x₂ ≤ 15<br>
+      &emsp;x₁, x₂ ≥ 0
+    </div>
+
+    <!-- R1 — Caracterização -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R1</div>
+        <div class="phase-title">Caracterização do Primal</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Antes de construir o dual, identificamos todas as características do primal que determinam o dual.</p>
+        <table class="tgrid gtbl" style="max-width:600px;">
+          <thead><tr><th>Elemento</th><th>Descrição</th><th>Impacto no Dual</th></tr></thead>
+          <tbody>
+            <tr><td>Objetivo</td><td>Maximizar Z</td><td>Dual será <strong>Minimizar W</strong></td></tr>
+            <tr><td>Restrição 1</td><td>0,5x₁ + 0,2x₂ ≤ 16 &nbsp;&nbsp;<em>(tipo ≤)</em></td><td>Variável dual y₁ ≥ 0</td></tr>
+            <tr><td>Restrição 2</td><td>0,25x₁ + 0,3x₂ ≤ 11 &nbsp;<em>(tipo ≤)</em></td><td>Variável dual y₂ ≥ 0</td></tr>
+            <tr><td>Restrição 3</td><td>0,25x₁ + 0,5x₂ ≤ 15 &nbsp;<em>(tipo ≤)</em></td><td>Variável dual y₃ ≥ 0</td></tr>
+            <tr><td>x₁</td><td>x₁ ≥ 0</td><td>Restrição dual para x₁: ≥ c₁</td></tr>
+            <tr><td>x₂</td><td>x₂ ≥ 0</td><td>Restrição dual para x₂: ≥ c₂</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- R2 — Regras de conversão -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R2</div>
+        <div class="phase-title">Regras de Conversão Primal → Dual (MAX)</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Para um primal de <strong>maximização</strong>, as regras gerais são:</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:700px;">
+          <table class="tgrid gtbl">
+            <thead><tr><th colspan="2">Restrição → Variável dual</th></tr>
+            <tr><th>Tipo da restrição</th><th>Sinal de yᵢ</th></tr></thead>
+            <tbody>
+              <tr><td>≤ bᵢ</td><td>yᵢ ≥ 0</td></tr>
+              <tr><td>≥ bᵢ</td><td>yᵢ ≤ 0</td></tr>
+              <tr><td>= bᵢ</td><td>yᵢ irrestrita</td></tr>
+            </tbody>
+          </table>
+          <table class="tgrid gtbl">
+            <thead><tr><th colspan="2">Variável → Restrição dual</th></tr>
+            <tr><th>Tipo de xⱼ</th><th>Tipo da restrição</th></tr></thead>
+            <tbody>
+              <tr><td>xⱼ ≥ 0</td><td>∑ aᵢⱼ yᵢ ≥ cⱼ</td></tr>
+              <tr><td>xⱼ ≤ 0</td><td>∑ aᵢⱼ yᵢ ≤ cⱼ</td></tr>
+              <tr><td>xⱼ irrestrita</td><td>∑ aᵢⱼ yᵢ = cⱼ</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:.7rem;">A <strong>função objetivo dual</strong> usa os termos independentes do primal como coeficientes: W = b₁y₁ + b₂y₂ + b₃y₃.</p>
+      </div>
+    </div>
+
+    <!-- R3 — Construção -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R3</div>
+        <div class="phase-title">Construção do Modelo Dual</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Passo 1 — Função objetivo dual:</strong><br>
+        Os termos independentes do primal (16, 11, 15) tornam-se coeficientes de y₁, y₂, y₃ no objetivo dual (MIN):</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          Minimizar W = 16y₁ + 11y₂ + 15y₃
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 2 — Restrições duais (uma por variável primal):</strong><br>
+        Cada coluna j da matriz A gera uma restrição. Como x₁ e x₂ são ≥ 0, as restrições são do tipo ≥ cⱼ.</p>
+
+        <p>Coluna de <strong>x₁</strong> = [0,5 ; 0,25 ; 0,25], c₁ = 3000:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          0,5y₁ + 0,25y₂ + 0,25y₃ ≥ 3000
+        </div>
+
+        <p>Coluna de <strong>x₂</strong> = [0,2 ; 0,3 ; 0,5], c₂ = 5000:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          0,2y₁ + 0,3y₂ + 0,5y₃ ≥ 5000
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 3 — Domínio das variáveis duais:</strong><br>
+        As três restrições do primal são do tipo ≤, logo y₁, y₂, y₃ ≥ 0.</p>
+      </div>
+    </div>
+
+    <!-- R4 — Resultado -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R4</div>
+        <div class="phase-title">Modelo Dual Final</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="result-box">
+          <div style="font-weight:700; margin-bottom:.5rem; font-size:1rem;">Modelo Dual</div>
+          <div style="font-family:monospace; line-height:2;">
+            Minimizar W = 16y₁ + 11y₂ + 15y₃<br>
+            Sujeito a:<br>
+            &emsp;0,5y₁ + 0,25y₂ + 0,25y₃ ≥ 3000<br>
+            &emsp;0,2y₁ + 0,30y₂ + 0,50y₃ ≥ 5000<br>
+            &emsp;y₁, y₂, y₃ ≥ 0
+          </div>
+        </div>
+        <p style="margin-top:.8rem;"><strong>Verificação de dimensões:</strong> primal com 3 restrições e 2 variáveis → dual com 2 restrições e 3 variáveis. ✓</p>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /q1 -->
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       Q2 — Modelo Dual: MIN, restrições mistas (≤ = ≥), xⱼ ≥ 0
+  ════════════════════════════════════════════════════════════ -->
+  <div id="q2" style="display:none">
+
+    <div class="q-header">
+      <div class="q-num">2</div>
+      <div>
+        <div class="q-title">Construção do Modelo Dual</div>
+        <div class="q-tags">
+          <span class="badge">Dualidade</span>
+          <span class="badge">MIN → MAX</span>
+          <span class="badge">Restrições Mistas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="alert alert-info" style="margin-bottom:1.2rem;">
+      <strong>Enunciado</strong><br>
+      Construa o modelo dual do problema abaixo. Não é necessário resolver.<br><br>
+      Minimizar: <strong>Z = 0,4x₁ + 0,5x₂</strong><br>
+      Sujeito a:<br>
+      &emsp;0,3x₁ + 0,1x₂ ≤ 2,7<br>
+      &emsp;0,5x₁ + 0,5x₂ = 6<br>
+      &emsp;0,6x₁ + 0,4x₂ ≥ 6<br>
+      &emsp;x₁, x₂ ≥ 0
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R1</div>
+        <div class="phase-title">Caracterização do Primal</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Atenção: o primal é de <strong>minimização</strong>. As regras de sinal das variáveis duais invertem em relação ao caso MAX.</p>
+        <table class="tgrid gtbl" style="max-width:620px;">
+          <thead><tr><th>Elemento</th><th>Descrição</th><th>Impacto no Dual</th></tr></thead>
+          <tbody>
+            <tr><td>Objetivo</td><td>Minimizar Z</td><td>Dual será <strong>Maximizar W</strong></td></tr>
+            <tr><td>Restrição 1</td><td>≤ 2,7</td><td>y₁ <strong>≤ 0</strong> (MIN + ≤ inverte)</td></tr>
+            <tr><td>Restrição 2</td><td>= 6</td><td>y₂ <strong>irrestrita</strong></td></tr>
+            <tr><td>Restrição 3</td><td>≥ 6</td><td>y₃ <strong>≥ 0</strong> (MIN + ≥ mantém)</td></tr>
+            <tr><td>x₁, x₂</td><td>≥ 0</td><td>Restrições duais: ≤ cⱼ (MIN + var≥0 inverte dir.)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R2</div>
+        <div class="phase-title">Regras de Conversão (MIN)</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Para um primal de <strong>minimização</strong>, os sinais se invertem em relação ao caso MAX:</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:700px;">
+          <table class="tgrid gtbl">
+            <thead><tr><th colspan="2">Restrição → yᵢ (MIN)</th></tr>
+            <tr><th>Tipo</th><th>Sinal yᵢ</th></tr></thead>
+            <tbody>
+              <tr><td>≤ bᵢ</td><td>yᵢ <strong>≤ 0</strong></td></tr>
+              <tr><td>≥ bᵢ</td><td>yᵢ <strong>≥ 0</strong></td></tr>
+              <tr><td>= bᵢ</td><td>yᵢ irrestrita</td></tr>
+            </tbody>
+          </table>
+          <table class="tgrid gtbl">
+            <thead><tr><th colspan="2">Variável → Restrição dual (MIN)</th></tr>
+            <tr><th>Tipo xⱼ</th><th>Tipo restrição</th></tr></thead>
+            <tbody>
+              <tr><td>xⱼ ≥ 0</td><td>∑ aᵢⱼ yᵢ ≤ cⱼ</td></tr>
+              <tr><td>xⱼ ≤ 0</td><td>∑ aᵢⱼ yᵢ ≥ cⱼ</td></tr>
+              <tr><td>xⱼ irrestrita</td><td>∑ aᵢⱼ yᵢ = cⱼ</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- R3 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R3</div>
+        <div class="phase-title">Construção do Modelo Dual</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Passo 1 — Função objetivo dual (MAX):</strong><br>
+        Os termos independentes (2,7 ; 6 ; 6) tornam-se coeficientes de y₁, y₂, y₃:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          Maximizar W = 2,7y₁ + 6y₂ + 6y₃
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 2 — Restrições duais (x₁, x₂ ≥ 0 → tipo ≤ cⱼ):</strong></p>
+
+        <p>Coluna de <strong>x₁</strong> = [0,3 ; 0,5 ; 0,6], c₁ = 0,4:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          0,3y₁ + 0,5y₂ + 0,6y₃ ≤ 0,4
+        </div>
+
+        <p>Coluna de <strong>x₂</strong> = [0,1 ; 0,5 ; 0,4], c₂ = 0,5:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          0,1y₁ + 0,5y₂ + 0,4y₃ ≤ 0,5
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 3 — Domínio das variáveis duais:</strong><br>
+        R1 é ≤ → y₁ ≤ 0 &nbsp;|&nbsp; R2 é = → y₂ irrestrita &nbsp;|&nbsp; R3 é ≥ → y₃ ≥ 0</p>
+      </div>
+    </div>
+
+    <!-- R4 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R4</div>
+        <div class="phase-title">Modelo Dual Final</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="result-box">
+          <div style="font-weight:700; margin-bottom:.5rem; font-size:1rem;">Modelo Dual</div>
+          <div style="font-family:monospace; line-height:2;">
+            Maximizar W = 2,7y₁ + 6y₂ + 6y₃<br>
+            Sujeito a:<br>
+            &emsp;0,3y₁ + 0,5y₂ + 0,6y₃ ≤ 0,4<br>
+            &emsp;0,1y₁ + 0,5y₂ + 0,4y₃ ≤ 0,5<br>
+            &emsp;y₁ ≤ 0,&nbsp; y₂ irrestrita,&nbsp; y₃ ≥ 0
+          </div>
+        </div>
+        <p style="margin-top:.8rem;"><strong>Verificação:</strong> primal 3 restrições, 2 variáveis → dual 2 restrições, 3 variáveis. ✓</p>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /q2 -->
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       Q3 — Modelo Dual: MAX, mista, x₂ irrestrita
+  ════════════════════════════════════════════════════════════ -->
+  <div id="q3" style="display:none">
+
+    <div class="q-header">
+      <div class="q-num">3</div>
+      <div>
+        <div class="q-title">Construção do Modelo Dual</div>
+        <div class="q-tags">
+          <span class="badge">Dualidade</span>
+          <span class="badge">MAX → MIN</span>
+          <span class="badge">Variável Irrestrita</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="alert alert-info" style="margin-bottom:1.2rem;">
+      <strong>Enunciado</strong><br>
+      Construa o modelo dual do problema abaixo. Não é necessário resolver.<br><br>
+      Maximizar: <strong>Z = x₁ + 3x₂</strong><br>
+      Sujeito a:<br>
+      &emsp;x₁ &minus; 3x₂ ≤ 3<br>
+      &emsp;&minus;2x₁ + x₂ = 2<br>
+      &emsp;&minus;3x₁ + 4x₂ ≥ 12<br>
+      &emsp;3x₁ + x₂ = 9<br>
+      &emsp;x₁ ≥ 0,&nbsp; x₂ irrestrita
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R1</div>
+        <div class="phase-title">Caracterização do Primal</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Este problema tem <strong>4 restrições</strong> de tipos diferentes e a variável <strong>x₂ irrestrita</strong>, que gerará uma restrição de igualdade no dual.</p>
+        <table class="tgrid gtbl" style="max-width:620px;">
+          <thead><tr><th>Elemento</th><th>Tipo</th><th>Variável/Restrição dual</th></tr></thead>
+          <tbody>
+            <tr><td>Objetivo</td><td>MAX</td><td>Dual: MIN W</td></tr>
+            <tr><td>Restrição 1 (b₁=3)</td><td>≤</td><td>y₁ ≥ 0</td></tr>
+            <tr><td>Restrição 2 (b₂=2)</td><td>=</td><td>y₂ irrestrita</td></tr>
+            <tr><td>Restrição 3 (b₃=12)</td><td>≥</td><td>y₃ ≤ 0</td></tr>
+            <tr><td>Restrição 4 (b₄=9)</td><td>=</td><td>y₄ irrestrita</td></tr>
+            <tr><td>x₁</td><td>≥ 0</td><td>Restrição dual 1: ≥ c₁ = 1</td></tr>
+            <tr><td>x₂</td><td>irrestrita</td><td>Restrição dual 2: <strong>= c₂ = 3</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R2</div>
+        <div class="phase-title">Construção Passo a Passo</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Passo 1 — Objetivo dual:</strong> W = b₁y₁ + b₂y₂ + b₃y₃ + b₄y₄</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          Minimizar W = 3y₁ + 2y₂ + 12y₃ + 9y₄
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 2 — Restrição dual de x₁ (≥ 0 → tipo ≥ c₁):</strong><br>
+        Coluna de x₁ na matriz A = [1, &minus;2, &minus;3, 3]:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          y₁ &minus; 2y₂ &minus; 3y₃ + 3y₄ ≥ 1
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 3 — Restrição dual de x₂ (irrestrita → tipo = c₂):</strong><br>
+        Coluna de x₂ na matriz A = [&minus;3, 1, 4, 1]:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          &minus;3y₁ + y₂ + 4y₃ + y₄ = 3
+        </div>
+        <div class="alert alert-warn" style="margin-top:.5rem;">
+          Variável primal irrestrita → restrição dual de <strong>igualdade</strong> (não pode ser desigualdade).
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 4 — Domínio das variáveis duais:</strong><br>
+        y₁ ≥ 0 (R1 é ≤) &nbsp;|&nbsp; y₂ irrestrita (R2 é =) &nbsp;|&nbsp; y₃ ≤ 0 (R3 é ≥, MAX) &nbsp;|&nbsp; y₄ irrestrita (R4 é =)</p>
+      </div>
+    </div>
+
+    <!-- R3 — Resultado -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R3</div>
+        <div class="phase-title">Modelo Dual Final</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="result-box">
+          <div style="font-weight:700; margin-bottom:.5rem; font-size:1rem;">Modelo Dual</div>
+          <div style="font-family:monospace; line-height:2;">
+            Minimizar W = 3y₁ + 2y₂ + 12y₃ + 9y₄<br>
+            Sujeito a:<br>
+            &emsp;y₁ &minus; 2y₂ &minus; 3y₃ + 3y₄ ≥ 1<br>
+            &emsp;&minus;3y₁ + y₂ + 4y₃ + y₄ = 3<br>
+            &emsp;y₁ ≥ 0,&nbsp; y₂ irrestrita,&nbsp; y₃ ≤ 0,&nbsp; y₄ irrestrita
+          </div>
+        </div>
+        <p style="margin-top:.8rem;"><strong>Verificação:</strong> primal 4 restrições, 2 variáveis → dual 2 restrições, 4 variáveis. ✓</p>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /q3 -->
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       Q4 — Modelo Dual: MAX, 1 restrição, c₄ = 0
+  ════════════════════════════════════════════════════════════ -->
+  <div id="q4" style="display:none">
+
+    <div class="q-header">
+      <div class="q-num">4</div>
+      <div>
+        <div class="q-title">Construção do Modelo Dual</div>
+        <div class="q-tags">
+          <span class="badge">Dualidade</span>
+          <span class="badge">MAX → MIN</span>
+          <span class="badge">1 Restrição</span>
+          <span class="badge">c₄ = 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="alert alert-info" style="margin-bottom:1.2rem;">
+      <strong>Enunciado</strong><br>
+      Construa o modelo dual do problema abaixo. Não é necessário resolver.<br><br>
+      Maximizar: <strong>Z = 2x₁ + x₂ + 4x₃ + 5x₅ + x₆</strong>&nbsp; (x₄ ausente da FO)<br>
+      Sujeito a:<br>
+      &emsp;3x₁ + 6x₂ + 3x₃ + 2x₄ + 3x₅ + 4x₆ ≤ 60<br>
+      &emsp;x₁, x₂, x₃, x₄, x₅, x₆ ≥ 0
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R1</div>
+        <div class="phase-title">Caracterização do Primal</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Há apenas <strong>1 restrição</strong>, portanto o dual terá apenas <strong>1 variável dual (y₁)</strong> e 6 restrições (uma por variável primal). O detalhe importante é que <strong>x₄ não aparece na função objetivo</strong>, portanto seu coeficiente é c₄ = 0.</p>
+        <table class="tgrid gtbl" style="max-width:560px;">
+          <thead><tr><th>Variável</th><th>Coef. FO (cⱼ)</th><th>Coef. na restrição (aⱼ)</th><th>Restrição dual</th></tr></thead>
+          <tbody>
+            <tr><td>x₁</td><td>2</td><td>3</td><td>3y₁ ≥ 2</td></tr>
+            <tr><td>x₂</td><td>1</td><td>6</td><td>6y₁ ≥ 1</td></tr>
+            <tr><td>x₃</td><td>4</td><td>3</td><td>3y₁ ≥ 4</td></tr>
+            <tr><td>x₄</td><td class="t-dim">0 (ausente)</td><td>2</td><td>2y₁ ≥ 0</td></tr>
+            <tr><td>x₅</td><td>5</td><td>3</td><td>3y₁ ≥ 5</td></tr>
+            <tr><td>x₆</td><td>1</td><td>4</td><td>4y₁ ≥ 1</td></tr>
+          </tbody>
+        </table>
+        <div class="alert alert-warn" style="margin-top:.7rem;">
+          x₄ ausente da FO equivale a c₄ = 0. A restrição dual correspondente é 2y₁ ≥ 0, que é sempre satisfeita para y₁ ≥ 0.
+        </div>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R2</div>
+        <div class="phase-title">Modelo Dual Final</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Objetivo dual:</strong> o único termo independente do primal é b₁ = 60, que é o coeficiente de y₁:</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          Minimizar W = 60y₁
+        </div>
+        <p>Como há apenas uma variável dual, cada restrição envolve somente y₁.</p>
+        <div class="result-box" style="margin-top:1rem;">
+          <div style="font-weight:700; margin-bottom:.5rem; font-size:1rem;">Modelo Dual</div>
+          <div style="font-family:monospace; line-height:2;">
+            Minimizar W = 60y₁<br>
+            Sujeito a:<br>
+            &emsp;3y₁ ≥ 2<br>
+            &emsp;6y₁ ≥ 1<br>
+            &emsp;3y₁ ≥ 4<br>
+            &emsp;2y₁ ≥ 0<br>
+            &emsp;3y₁ ≥ 5<br>
+            &emsp;4y₁ ≥ 1<br>
+            &emsp;y₁ ≥ 0
+          </div>
+        </div>
+        <p style="margin-top:.8rem;"><strong>Verificação:</strong> primal 1 restrição, 6 variáveis → dual 6 restrições, 1 variável. ✓</p>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /q4 -->
+
+
+  <!-- ════════════════════════════════════════════════════════════
+       Q5 — Modelo Dual: MAX, x₁,x₂≤0, x₃ irrestrita, x₄≥0
+  ════════════════════════════════════════════════════════════ -->
+  <div id="q5" style="display:none">
+
+    <div class="q-header">
+      <div class="q-num">5</div>
+      <div>
+        <div class="q-title">Construção do Modelo Dual</div>
+        <div class="q-tags">
+          <span class="badge">Dualidade</span>
+          <span class="badge">MAX → MIN</span>
+          <span class="badge">x₁,x₂ ≤ 0</span>
+          <span class="badge">x₃ Irrestrita</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="alert alert-info" style="margin-bottom:1.2rem;">
+      <strong>Enunciado</strong><br>
+      Construa o modelo dual do problema abaixo. Não é necessário resolver.<br><br>
+      Maximizar: <strong>Z = 2x₁ + x₂ + 5x₃ &minus; 3x₄</strong><br>
+      Sujeito a:<br>
+      &emsp;x₁ + 2x₂ + 4x₃ &minus; x₄ ≤ 6<br>
+      &emsp;2x₁ + 3x₂ &minus; x₃ + x₄ ≤ 12<br>
+      &emsp;x₁ + x₃ + x₄ ≤ 4<br>
+      &emsp;x₁, x₂ ≤ 0;&nbsp; x₃ irrestrita;&nbsp; x₄ ≥ 0
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R1</div>
+        <div class="phase-title">Caracterização do Primal</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>As três restrições são do tipo ≤, logo <strong>y₁, y₂, y₃ ≥ 0</strong>. O desafio aqui está nos domínios das variáveis primais — cada tipo muda o sentido da restrição dual.</p>
+        <table class="tgrid gtbl" style="max-width:640px;">
+          <thead><tr><th>Variável</th><th>Domínio primal</th><th>Tipo da restrição dual (MAX)</th></tr></thead>
+          <tbody>
+            <tr><td>x₁</td><td>x₁ ≤ 0</td><td>∑ aᵢ₁ yᵢ <strong>≤</strong> c₁ = 2</td></tr>
+            <tr><td>x₂</td><td>x₂ ≤ 0</td><td>∑ aᵢ₂ yᵢ <strong>≤</strong> c₂ = 1</td></tr>
+            <tr><td>x₃</td><td>irrestrita</td><td>∑ aᵢ₃ yᵢ <strong>=</strong> c₃ = 5</td></tr>
+            <tr><td>x₄</td><td>x₄ ≥ 0</td><td>∑ aᵢ₄ yᵢ <strong>≥</strong> c₄ = &minus;3</td></tr>
+          </tbody>
+        </table>
+        <div class="alert alert-warn" style="margin-top:.7rem;">
+          Variável ≤ 0 inverte o sentido da desigualdade na restrição dual (de ≥ para ≤).
+          Variável irrestrita gera restrição de igualdade.
+        </div>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R2</div>
+        <div class="phase-title">Construção das Restrições Duais</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Passo 1 — Objetivo dual:</strong></p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          Minimizar W = 6y₁ + 12y₂ + 4y₃
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 2 — Restrições duais (colunas da matriz A):</strong></p>
+
+        <p>Coluna de <strong>x₁</strong> = [1, 2, 1], c₁ = 2 &nbsp;&nbsp; (x₁ ≤ 0 → tipo ≤):</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          y₁ + 2y₂ + y₃ ≤ 2
+        </div>
+
+        <p>Coluna de <strong>x₂</strong> = [2, 3, 0], c₂ = 1 &nbsp;&nbsp; (x₂ ≤ 0 → tipo ≤):</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          2y₁ + 3y₂ ≤ 1
+        </div>
+
+        <p>Coluna de <strong>x₃</strong> = [4, &minus;1, 1], c₃ = 5 &nbsp;&nbsp; (x₃ irrestrita → tipo =):</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          4y₁ &minus; y₂ + y₃ = 5
+        </div>
+
+        <p>Coluna de <strong>x₄</strong> = [&minus;1, 1, 1], c₄ = &minus;3 &nbsp;&nbsp; (x₄ ≥ 0 → tipo ≥):</p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
+          &minus;y₁ + y₂ + y₃ ≥ &minus;3
+        </div>
+
+        <p style="margin-top:1rem;"><strong>Passo 3 — Domínio:</strong> todas as restrições primais são ≤ (MAX) → y₁, y₂, y₃ ≥ 0.</p>
+      </div>
+    </div>
+
+    <!-- R3 — Resultado -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R3</div>
+        <div class="phase-title">Modelo Dual Final</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="result-box">
+          <div style="font-weight:700; margin-bottom:.5rem; font-size:1rem;">Modelo Dual</div>
+          <div style="font-family:monospace; line-height:2;">
+            Minimizar W = 6y₁ + 12y₂ + 4y₃<br>
+            Sujeito a:<br>
+            &emsp;y₁ + 2y₂ + y₃ ≤ 2<br>
+            &emsp;2y₁ + 3y₂ ≤ 1<br>
+            &emsp;4y₁ &minus; y₂ + y₃ = 5<br>
+            &emsp;&minus;y₁ + y₂ + y₃ ≥ &minus;3<br>
+            &emsp;y₁, y₂, y₃ ≥ 0
+          </div>
+        </div>
+        <p style="margin-top:.8rem;"><strong>Verificação:</strong> primal 3 restrições, 4 variáveis → dual 4 restrições, 3 variáveis. ✓</p>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /q5 -->
+
+
   <div id="q6" style="display:none">
 
     <!-- ══════════════════════════════════════════════════════
@@ -1749,7 +2405,7 @@
 <script>
   (function () {
     // Todos os ids de exercícios
-    var sections = ['q6', 'q7', 'q8', 'q9'];
+    var sections = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9'];
 
     // Links da sidebar com href="#qN"
     var links = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
