@@ -281,7 +281,24 @@ footer {
 
 /* ── Responsivo ── */
 @media (max-width: 600px) {
-  .hero h1 { font-size: 1.7rem; }
-  nav { gap: .6rem; }
-  .hero-card { width: 140px; }
+  /* Navbar */
+  nav { gap: .5rem; padding: .6rem 1rem; }
+  nav .brand { font-size: 1rem; }
+  nav a { font-size: .82rem; padding: .3rem .5rem; }
+
+  /* Hero */
+  .hero { padding: 2rem 1rem 1.5rem; }
+  .hero h1 { font-size: 1.5rem; }
+  .hero p  { font-size: .95rem; }
+  .hero-cards { gap: .7rem; }
+  .hero-card { width: 130px; padding: 1rem .8rem; }
+  .hero-card-icon { font-size: 1.6rem; }
+  .hero-card h3 { font-size: .85rem; }
+
+  /* Seções internas */
+  .section { padding: 1.5rem 1rem; }
+  .section h2 { font-size: 1.3rem; }
+
+  /* Alertas / cards genéricos */
+  .alert { font-size: .88rem; padding: .7rem .9rem; }
 }

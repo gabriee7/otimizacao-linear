@@ -15,9 +15,64 @@
       margin: 2rem auto;
       padding: 0 1.2rem 3rem;
     }
+    /* ── Mobile nav (substitui sidebar) ── */
+    .ex-mobile-nav {
+      display: none;
+      padding: .6rem 1rem .2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .ex-mobile-nav label {
+      display: block;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      margin-bottom: .35rem;
+    }
+    .ex-mobile-nav select {
+      width: 100%;
+      padding: .55rem .8rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: .9rem;
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right .8rem center;
+      padding-right: 2.2rem;
+    }
+
     @media (max-width: 640px) {
-      .ex-layout { grid-template-columns: 1fr; }
+      .ex-layout { grid-template-columns: 1fr; padding: 0 .8rem 2rem; gap: 0; }
       .ex-sidebar { display: none; }
+      .ex-mobile-nav { display: block; }
+
+      /* Grids inline: forçar coluna única */
+      div[style*="display:grid"], div[style*="display: grid"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Tabelas: rolar horizontalmente */
+      .t-outer { max-width: calc(100vw - 1.6rem); }
+      table.gtbl { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: .8rem; }
+      table.gtbl th, table.gtbl td { padding: 6px 8px; white-space: normal; }
+      table.tgrid { font-size: .8rem; }
+      table.tgrid th, table.tgrid td { padding: 5px 9px; }
+
+      /* Tipografia compacta */
+      .phase-title { font-size: .95rem; }
+      .q-title { font-size: 1.25rem; }
+      .q-num { width: 42px; height: 42px; font-size: 1.1rem; }
+      .ops-block { font-size: .78rem; line-height: 1.7; }
+      .result-box { padding: .8rem 1rem; }
+      .phase-body { padding-left: 0; }
+      .nav-links { gap: .4rem; }
     }
 
     .ex-sidebar {
@@ -278,6 +333,29 @@
   <a href="solver.html">Solver</a>
   <a href="grafico.html">Gráfico</a>
 </nav>
+
+<!-- ── Navegação mobile (visível apenas em telas pequenas) ── -->
+<div class="ex-mobile-nav">
+  <label for="ex-select">Selecionar exercício</label>
+  <select id="ex-select">
+    <optgroup label="Modelo Dual">
+      <option value="q1">Q1 — MAX · todas ≤ · x≥0</option>
+      <option value="q2">Q2 — MIN · mista (≤ = ≥)</option>
+      <option value="q3">Q3 — MAX · mista · x₂ irrestrita</option>
+      <option value="q4">Q4 — MAX · 1 restrição · c₄=0</option>
+      <option value="q5">Q5 — MAX · x₁,x₂≤0 · x₃ irrestrita</option>
+    </optgroup>
+    <optgroup label="Dual Simplex">
+      <option value="q6">Q6 — MIN · restrições ≥</option>
+      <option value="q7">Q7 — MIN · mista (≤ e ≥)</option>
+      <option value="q8">Q8 — MAX→MIN · inviável</option>
+      <option value="q9">Q9 — MAX · restrições ≥</option>
+    </optgroup>
+    <optgroup label="Análise de Sensibilidade">
+      <option value="q10">Q10 — Pós-Otimalidade · Δc e Δb</option>
+    </optgroup>
+  </select>
+</div>
 
 <div class="ex-layout">
 
@@ -2774,40 +2852,46 @@
 
 <script>
   (function () {
-    // Todos os ids de exercícios
     var sections = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
-
-    // Links da sidebar com href="#qN"
-    var links = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
+    var links    = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
+    var mSel     = document.getElementById('ex-select');
 
     function showSection(id) {
+      // Mostra/esconde seções
       sections.forEach(function (s) {
         var el = document.getElementById(s);
         if (el) el.style.display = (s === id) ? '' : 'none';
       });
+      // Atualiza active na sidebar
       links.forEach(function (a) {
-        var target = a.getAttribute('href').slice(1); // remove '#'
-        a.classList.toggle('active', target === id);
+        a.classList.toggle('active', a.getAttribute('href').slice(1) === id);
       });
-      // Scroll suave ao topo do conteúdo
+      // Sincroniza select mobile
+      if (mSel) mSel.value = id;
+      // Scroll suave
       var top = document.getElementById(id);
       if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    // Cliques na sidebar
     links.forEach(function (a) {
       a.addEventListener('click', function (e) {
         e.preventDefault();
-        var id = a.getAttribute('href').slice(1);
-        showSection(id);
+        showSection(a.getAttribute('href').slice(1));
       });
     });
 
-    // Mostrar a seção marcada como active no load
-    var activeLink = document.querySelector('.ex-sidebar a.active[href^="#q"]');
-    if (activeLink) {
-      var initialId = activeLink.getAttribute('href').slice(1);
-      showSection(initialId);
+    // Select mobile
+    if (mSel) {
+      mSel.addEventListener('change', function () {
+        showSection(this.value);
+      });
     }
+
+    // Carga inicial: Q1 como padrão
+    var activeLink = document.querySelector('.ex-sidebar a.active[href^="#q"]');
+    var initialId  = activeLink ? activeLink.getAttribute('href').slice(1) : 'q1';
+    showSection(initialId);
   })();
 </script>
 
