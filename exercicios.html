@@ -341,11 +341,19 @@
         <div class="ex-sidebar-meta">MAX → MIN · vars. especiais · inviável</div>
       </div>
     </a>
-    <a href="#q9" class="active" style="margin-top:.2rem;">
+    <a href="#q9" style="margin-top:.2rem;">
       <span class="ex-num">9</span>
       <div>
         <div>Dual Simplex</div>
         <div class="ex-sidebar-meta">MAX · restrições ≥</div>
+      </div>
+    </a>
+    <div class="ex-sidebar-label" style="margin-top:.8rem;">Análise de Sensibilidade</div>
+    <a href="#q10" style="margin-top:.2rem;">
+      <span class="ex-num">10</span>
+      <div>
+        <div>Pós-Otimalidade</div>
+        <div class="ex-sidebar-meta">Δc e Δb · todos os casos</div>
       </div>
     </a>
   </aside>
@@ -2397,6 +2405,365 @@
       </div>
     </div>
 
+  <!-- ════════════════════════════════════════════════════════════
+       Q10 — Análise de Sensibilidade (Pós-Otimalidade)
+  ════════════════════════════════════════════════════════════ -->
+  <div id="q10" style="display:none">
+
+    <div class="q-header">
+      <div class="q-num">10</div>
+      <div>
+        <div class="q-title">Análise de Sensibilidade — Todos os Casos</div>
+        <div class="q-tags">
+          <span class="badge">Pós-Otimalidade</span>
+          <span class="badge">Δ custo não-básico</span>
+          <span class="badge">Δ custo básico</span>
+          <span class="badge">Δ recursos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="alert alert-info" style="margin-bottom:1.2rem;">
+      <strong>Enunciado</strong><br>
+      Faça a análise de sensibilidade, considerando todos os casos (mudança no vetor de custos, de recursos, etc.), para o modelo a seguir.<br><br>
+      Minimizar: <strong>Z = 6x₁ + 3x₂</strong><br>
+      Sujeito a:<br>
+      &emsp;6x₁ &minus; 3x₂ + x₃ ≥ 2<br>
+      &emsp;3x₁ + 4x₂ + x₃ ≥ 5<br>
+      &emsp;x₁, x₂, x₃ ≥ 0
+    </div>
+
+    <!-- CONCEITO -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R1</div>
+        <div class="phase-title">O que é Análise de Sensibilidade?</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Após encontrar a solução ótima, a análise de sensibilidade responde: <em>"Quanto pode variar um parâmetro sem que a base ótima atual deixe de ser ótima ou viável?"</em></p>
+        <p>Não se resolve o problema novamente — analisa-se <strong>diretamente o tableau ótimo</strong>. As condições a preservar são:</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:600px; margin-top:.5rem;">
+          <div style="background:var(--bg-alt); border-radius:6px; padding:.7rem 1rem;">
+            <strong>Otimalidade</strong><br>
+            Linha z: todos os coeficientes ≤ 0<br>
+            <em>(variação em c pode violar isso)</em>
+          </div>
+          <div style="background:var(--bg-alt); border-radius:6px; padding:.7rem 1rem;">
+            <strong>Viabilidade</strong><br>
+            Coluna b: todos os valores ≥ 0<br>
+            <em>(variação em b pode violar isso)</em>
+          </div>
+        </div>
+        <table class="tgrid gtbl" style="max-width:640px; margin-top:1rem;">
+          <thead><tr><th>Caso</th><th>Parâmetro alterado</th><th>Condição a preservar</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>cⱼ de variável <strong>não-básica</strong></td><td>Entrada na linha z continua ≤ 0</td></tr>
+            <tr><td>2</td><td>cₖ de variável <strong>básica</strong></td><td>Todas as entradas na linha z continuam ≤ 0</td></tr>
+            <tr><td>3</td><td><strong>bᵢ</strong> (recursos / lado direito)</td><td>Todos os valores básicos continuam ≥ 0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PASSO 1: TABLEAU ÓTIMO -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R2</div>
+        <div class="phase-title">Tableau Ótimo (via Dual Simplex)</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Este é o mesmo modelo da Q6. Toda a análise de sensibilidade parte do tableau ótimo — obtido em uma iteração do Dual Simplex. Forma padrão: multiplicam-se as restrições ≥ por −1 e acrescentam-se folgas x₄ e x₅.</p>
+
+        <p><strong>Tableau inicial:</strong></p>
+        <div class="t-outer">
+          <table class="tgrid t-base-col">
+            <thead><tr><th>Base</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+            <tbody>
+              <tr class="t-z"><td>z</td><td>−6</td><td>−3</td><td>0</td><td>0</td><td>0</td><td class="t-pc">0</td></tr>
+              <tr><td>x₄</td><td>−6</td><td>3</td><td>−1</td><td>1</td><td>0</td><td class="t-neg">−2</td></tr>
+              <tr><td>x₅</td><td>−3</td><td>−4</td><td>−1</td><td>0</td><td>1</td><td class="t-neg">−5</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ops-block" style="margin:.5rem 0;">
+          Dual Simplex · sai: x₅ (b=−5) · entra: x₃ (razão 0/1=0, mínima) · pivô = −1
+        </div>
+        <div class="ops-block" style="margin-bottom:.8rem;">
+          L₂ ← L₂ ÷ (−1) &nbsp;|&nbsp; L₁ ← L₁ + L₂ &nbsp;|&nbsp; Lz não muda (coef x₃ na Lz = 0)
+        </div>
+
+        <p><strong>Tableau ótimo:</strong></p>
+        <div class="t-outer">
+          <table class="tgrid t-base-col">
+            <thead><tr><th>Base</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+            <tbody>
+              <tr class="t-z"><td>z</td><td class="t-opt">−6</td><td class="t-opt">−3</td><td class="t-opt">0</td><td class="t-opt">0</td><td class="t-opt">0</td><td class="t-pc">0</td></tr>
+              <tr><td>x₄</td><td>−3</td><td>7</td><td>0</td><td>1</td><td>−1</td><td class="t-pc">3</td></tr>
+              <tr><td>x₃</td><td>3</td><td>4</td><td>1</td><td>0</td><td>−1</td><td class="t-pc">5</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="result-box" style="margin-top:1rem;">
+          <strong>Solução ótima:</strong> x₁ = 0 &nbsp;|&nbsp; x₂ = 0 &nbsp;|&nbsp; x₃ = 5 &nbsp;|&nbsp; <strong>Z* = 0</strong>
+        </div>
+
+        <table class="tgrid gtbl" style="max-width:400px; margin-top:1rem;">
+          <thead><tr><th>Variáveis básicas</th><th>Valor</th><th>Variáveis não-básicas</th></tr></thead>
+          <tbody>
+            <tr><td>x₄</td><td>3</td><td rowspan="2">x₁ = 0, x₂ = 0, x₅ = 0</td></tr>
+            <tr><td>x₃</td><td>5</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:.5rem;">Custo das variáveis básicas: <strong>c(x₄) = 0, c(x₃) = 0</strong> → vetor cB = [0, 0].</p>
+      </div>
+    </div>
+
+    <!-- CASO 1: cj NÃO-BÁSICA -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R3</div>
+        <div class="phase-title">Caso 1 — Variação em cⱼ de Variável Não-Básica</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Variáveis não-básicas:</strong> x₁ (c₁ = 6), x₂ (c₂ = 3).</p>
+
+        <div class="alert alert-warn" style="margin-bottom:.8rem;">
+          <strong>Regra:</strong> Como cB = [0, 0], a entrada na linha z para a variável não-básica xⱼ é simplesmente −cⱼ.<br>
+          Condição de otimalidade: −cⱼ ≤ 0, ou seja, <strong>cⱼ ≥ 0</strong>.<br>
+          Se cⱼ muda para cⱼ + Δ: nova entrada = −(cⱼ + Δ) ≤ 0 → <strong>Δ ≥ −cⱼ</strong>.
+        </div>
+
+        <p><strong>Para c₁ (x₁ não-básica, c₁ = 6):</strong></p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.4rem 0;">
+          −(6 + Δ) ≤ 0 &nbsp;→&nbsp; Δ ≥ −6 &nbsp;→&nbsp; c₁ = 6 + Δ ≥ 0
+        </div>
+        <div class="result-box" style="padding:.5rem 1rem; margin-bottom:.8rem;">c₁ ∈ [0, +∞) &nbsp;·&nbsp; pode diminuir até 0; se c₁ &lt; 0, x₁ entraria na base.</div>
+
+        <p><strong>Para c₂ (x₂ não-básica, c₂ = 3):</strong></p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.4rem 0;">
+          −(3 + Δ) ≤ 0 &nbsp;→&nbsp; Δ ≥ −3 &nbsp;→&nbsp; c₂ = 3 + Δ ≥ 0
+        </div>
+        <div class="result-box" style="padding:.5rem 1rem;">c₂ ∈ [0, +∞) &nbsp;·&nbsp; pode diminuir até 0; se c₂ &lt; 0, x₂ entraria na base.</div>
+      </div>
+    </div>
+
+    <!-- CASO 2: cₖ BÁSICA -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R4</div>
+        <div class="phase-title">Caso 2 — Variação em cₖ de Variável Básica</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Variável básica relevante:</strong> x₃ (c₃ = 0 atualmente). A outra básica é x₄ (folga, custo sempre 0, sem análise).</p>
+
+        <div class="alert alert-warn" style="margin-bottom:.8rem;">
+          <strong>Regra:</strong> quando o custo da variável básica xₖ muda por Δ, a entrada da linha z para cada variável não-básica xⱼ muda assim:<br><br>
+          <code>(nova entrada z para xⱼ) = (entrada atual) + Δ × (elemento do tableau: linha xₖ, coluna j)</code><br><br>
+          Aplique a cada variável não-básica e exija que o resultado seja ≤ 0.
+        </div>
+
+        <p><strong>Linha de x₃ no tableau ótimo:</strong></p>
+        <div class="t-outer">
+          <table class="tgrid t-base-col">
+            <thead><tr><th>Base</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+            <tbody>
+              <tr><td>x₃</td><td class="t-pv">3</td><td class="t-pv">4</td><td>1</td><td>0</td><td class="t-pv">−1</td><td>5</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="margin-top:.8rem;"><strong>Aplicando a regra para cada variável não-básica (x₁, x₂, x₅):</strong></p>
+
+        <table class="tgrid gtbl" style="max-width:700px;">
+          <thead>
+            <tr><th>Var. não-básica</th><th>Entrada z atual</th><th>Elem. linha x₃</th><th>Nova entrada z</th><th>Condição</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>x₁</td><td>−6</td><td>3</td><td>−6 + 3Δ</td><td>−6 + 3Δ ≤ 0 → <strong>Δ ≤ 2</strong></td></tr>
+            <tr><td>x₂</td><td>−3</td><td>4</td><td>−3 + 4Δ</td><td>−3 + 4Δ ≤ 0 → <strong>Δ ≤ 0,75</strong></td></tr>
+            <tr><td>x₅</td><td>0</td><td>−1</td><td>0 − Δ</td><td>−Δ ≤ 0 → <strong>Δ ≥ 0</strong></td></tr>
+          </tbody>
+        </table>
+
+        <p style="margin-top:.8rem;"><strong>Interseção de todas as condições:</strong></p>
+        <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.4rem 0;">
+          Δ ≥ 0 &nbsp;(x₅) &nbsp;∩&nbsp; Δ ≤ 0,75 &nbsp;(x₂) &nbsp;∩&nbsp; Δ ≤ 2 &nbsp;(x₁) &nbsp;→&nbsp; 0 ≤ Δ ≤ 0,75
+        </div>
+        <div class="result-box" style="padding:.5rem 1rem; margin-top:.5rem;">c₃ ∈ [0; 0,75]</div>
+
+        <div class="alert alert-warn" style="margin-top:.7rem;">
+          <strong>Interpretação:</strong><br>
+          · Se c₃ &gt; 0,75 (Δ &gt; 0,75): x₂ entraria na base (passa a ser vantajoso usar x₂).<br>
+          · Se c₃ &lt; 0 (Δ &lt; 0): x₅ entraria na base (o problema mudaria de comportamento).
+        </div>
+      </div>
+    </div>
+
+    <!-- CASO 3: b -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R5</div>
+        <div class="phase-title">Caso 3 — Variação no Vetor b (Recursos)</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="alert alert-warn" style="margin-bottom:.8rem;">
+          <strong>Regra:</strong> quando bᵢ muda por Δ, o novo valor de cada variável básica é:<br><br>
+          <code>b̄ₖ(novo) = b̄ₖ(atual) − Δ × (coluna do surplus de restrição i no tableau ótimo)</code><br><br>
+          O sinal negativo vem da negação das restrições ≥ feita no setup do Dual Simplex.<br>
+          Condição: todos os b̄ₖ(novo) ≥ 0.
+        </div>
+
+        <p>As colunas das variáveis de folga x₄ e x₅ no tableau ótimo funcionam como B⁻¹ e revelam a sensibilidade:</p>
+
+        <div class="t-outer">
+          <table class="tgrid t-base-col">
+            <thead>
+              <tr><th>Base</th><th>...</th><th>x₄ ← surplus R1</th><th>x₅ ← surplus R2</th><th>b atual</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>x₄</td><td>...</td><td>1</td><td>−1</td><td>3</td></tr>
+              <tr><td>x₃</td><td>...</td><td>0</td><td>−1</td><td>5</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- b1 -->
+        <p style="margin-top:1.2rem;"><strong>Variação em b₁ (b₁ = 2, muda para 2 + Δ) — usa coluna x₄ = [1, 0]:</strong></p>
+        <table class="tgrid gtbl" style="max-width:600px;">
+          <thead><tr><th>Básica</th><th>b̄ atual</th><th>Coluna x₄</th><th>Novo b̄ = atual − Δ × col</th><th>Condição</th></tr></thead>
+          <tbody>
+            <tr><td>x₄</td><td>3</td><td>1</td><td>3 − Δ</td><td>3 − Δ ≥ 0 → <strong>Δ ≤ 3</strong></td></tr>
+            <tr><td>x₃</td><td>5</td><td>0</td><td>5</td><td>sempre ≥ 0</td></tr>
+          </tbody>
+        </table>
+        <p>Sem limite inferior para Δ (diminuir b₁ torna a restrição 1 menos exigente, x₄ só cresce).</p>
+        <div class="result-box" style="padding:.5rem 1rem; margin:.5rem 0;">b₁ ∈ (−∞; 5] &nbsp;·&nbsp; b₁ pode subir até 5; acima disso a base muda (x₄ ficaria negativa).</div>
+
+        <!-- b2 -->
+        <p style="margin-top:1.2rem;"><strong>Variação em b₂ (b₂ = 5, muda para 5 + Δ) — usa coluna x₅ = [−1, −1]:</strong></p>
+        <table class="tgrid gtbl" style="max-width:600px;">
+          <thead><tr><th>Básica</th><th>b̄ atual</th><th>Coluna x₅</th><th>Novo b̄ = atual − Δ × col</th><th>Condição</th></tr></thead>
+          <tbody>
+            <tr><td>x₄</td><td>3</td><td>−1</td><td>3 − Δ × (−1) = 3 + Δ</td><td>3 + Δ ≥ 0 → <strong>Δ ≥ −3</strong></td></tr>
+            <tr><td>x₃</td><td>5</td><td>−1</td><td>5 + Δ</td><td>5 + Δ ≥ 0 → <strong>Δ ≥ −5</strong></td></tr>
+          </tbody>
+        </table>
+        <p>Mais restritivo: Δ ≥ −3 → b₂ = 5 + Δ ≥ 2. Sem limite superior.</p>
+        <div class="result-box" style="padding:.5rem 1rem; margin:.5rem 0;">b₂ ∈ [2; +∞) &nbsp;·&nbsp; b₂ pode cair até 2; abaixo disso a base muda (x₄ ficaria negativa).</div>
+      </div>
+    </div>
+
+    <!-- TABELA RESUMO -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R6</div>
+        <div class="phase-title">Tabela Resumo — Todos os Casos</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <table class="tgrid gtbl" style="max-width:760px;">
+          <thead>
+            <tr>
+              <th>Caso</th><th>Parâmetro</th><th>Valor atual</th>
+              <th>Intervalo da base ótima</th><th>O que ocorre no limite</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1 — NB</td><td>c₁</td><td>6</td>
+              <td>[0, +∞)</td><td>c₁ &lt; 0 → x₁ entra na base</td>
+            </tr>
+            <tr>
+              <td>1 — NB</td><td>c₂</td><td>3</td>
+              <td>[0, +∞)</td><td>c₂ &lt; 0 → x₂ entra na base</td>
+            </tr>
+            <tr>
+              <td>2 — B</td><td>c₃</td><td>0</td>
+              <td>[0; 0,75]</td><td>c₃ &gt; 0,75 → x₂ entra; c₃ &lt; 0 → x₅ entra</td>
+            </tr>
+            <tr>
+              <td>3 — RHS</td><td>b₁</td><td>2</td>
+              <td>(−∞; 5]</td><td>b₁ &gt; 5 → x₄ &lt; 0, usar Dual Simplex</td>
+            </tr>
+            <tr>
+              <td>3 — RHS</td><td>b₂</td><td>5</td>
+              <td>[2; +∞)</td><td>b₂ &lt; 2 → x₄ &lt; 0, usar Dual Simplex</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- R7 MNEMÔNICO -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R7</div>
+        <div class="phase-title">Mnemônico para a Prova</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:.8rem; max-width:800px;">
+          <div style="background:var(--bg-alt); border-radius:8px; padding:.8rem 1rem;">
+            <strong>Caso 1 — cⱼ não-básica</strong><br><br>
+            Nova entrada z = −(cⱼ + Δ)<br>
+            Condição: ≤ 0<br>
+            → Δ ≥ −cⱼ → cⱼ ≥ 0
+          </div>
+          <div style="background:var(--bg-alt); border-radius:8px; padding:.8rem 1rem;">
+            <strong>Caso 2 — cₖ básica</strong><br><br>
+            Para cada não-básica xⱼ:<br>
+            z_j_novo = z_j + Δ × T[xₖ,xⱼ]<br>
+            Condição: z_j_novo ≤ 0<br>
+            → interseção de todas
+          </div>
+          <div style="background:var(--bg-alt); border-radius:8px; padding:.8rem 1rem;">
+            <strong>Caso 3 — bᵢ (recurso)</strong><br><br>
+            b̄ₖ_novo = b̄ₖ − Δ × col(xsᵢ)<br>
+            Condição: b̄ₖ_novo ≥ 0<br>
+            → interseção de todas
+          </div>
+        </div>
+        <div class="alert alert-warn" style="margin-top:1rem;">
+          <strong>Atenção:</strong> o sinal <em>menos</em> na fórmula do Caso 3 vem da negação das restrições ≥ no setup do Dual Simplex. Leia a coluna do surplus da restrição i e <em>subtraia</em> Δ vezes essa coluna do b̄ atual.
+        </div>
+      </div>
+    </div>
+
+    <!-- R8 ARMADILHA -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R8</div>
+        <div class="phase-title">Armadilha e Generalização</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="alert alert-warn">
+          <strong>Armadilha clássica — Caso 2 (variável básica):</strong> ao variar cₖ, é necessário verificar <em>todas</em> as variáveis não-básicas, não apenas uma. O intervalo final é a <strong>interseção</strong> de todas as inequações geradas. Quem pega só a condição mais aparente erra o intervalo.
+        </div>
+        <p style="margin-top:.8rem;"><strong>Generalização:</strong> este exercício tem solução ótima com Z* = 0 porque x₃ não entra na função objetivo (c₃ = 0) — um "atalho" que viabiliza tirar x₁ e x₂ da base sem custo. Mas isso tem limite: se c₃ superar 0,75, o modelo passa a preferir usar x₂ ao invés de apenas x₃, e a base muda.</p>
+        <p>O mesmo raciocínio se aplica a qualquer modelo: a análise de sensibilidade revela qual parâmetro é o "gargalo" da solução atual. Neste caso, o gargalo de c é c₃ (intervalo mais estreito), e o gargalo de b é b₂ (não pode cair abaixo de 2).</p>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /q10 -->
+
   </div><!-- /content -->
 </div><!-- /ex-layout -->
 
@@ -2405,7 +2772,7 @@
 <script>
   (function () {
     // Todos os ids de exercícios
-    var sections = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9'];
+    var sections = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
 
     // Links da sidebar com href="#qN"
     var links = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
