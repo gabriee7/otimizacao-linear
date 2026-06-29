@@ -298,6 +298,13 @@
         <div class="ex-sidebar-meta">MIN · mista (≤ e ≥)</div>
       </div>
     </a>
+    <a href="#q8" style="margin-top:.2rem;">
+      <span class="ex-num">8</span>
+      <div>
+        <div>Dual Simplex</div>
+        <div class="ex-sidebar-meta">MAX → MIN · vars. especiais · inviável</div>
+      </div>
+    </a>
     <a href="#q9" class="active" style="margin-top:.2rem;">
       <span class="ex-num">9</span>
       <div>
@@ -1070,6 +1077,273 @@
 
   </div><!-- /q7 -->
 
+  <div id="q8" style="display:none">
+
+    <!-- ══════════════════════════════════════════════════════
+         EXERCÍCIO 8
+    ══════════════════════════════════════════════════════ -->
+
+    <div class="q-header">
+      <div class="q-label">Questão 8</div>
+      <div class="q-title">Método Dual Simplex — Solução Inviável</div>
+      <div class="q-tags">
+        <span class="q-tag qt-method">Dual Simplex</span>
+        <span class="q-tag" style="background:#fee2e2;color:#b91c1c">Solução Inviável</span>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MAX &nbsp; Z = −3x₁ − 2x₂ + x₃<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;−x₁ + x₂ ≤ −1 &nbsp;&nbsp;(R1)<br>
+        &nbsp;&nbsp;5x₁ + 3x₂ + x₃ ≤ 15 &nbsp;&nbsp;(R2)<br><br>
+        Condições especiais:<br>
+        &nbsp;&nbsp;x₁ ≤ 0 &nbsp;&nbsp; x₂ ≥ 1,5 &nbsp;&nbsp; x₃ irrestrito
+      </div>
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R1</span>
+        <span class="phase-title">Leitura e Extração de Dados</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Problema de <strong>maximização</strong> (deve ser convertido para MIN). As três variáveis possuem <strong>domínios fora do padrão</strong> do Simplex — nenhuma delas é simplesmente x ≥ 0:</p>
+        <div class="tableau-wrap">
+          <table class="gtbl" style="width:auto">
+            <thead><tr><th>Variável</th><th>Domínio</th><th>Tipo</th><th>Substituição necessária</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td>x₁ ≤ 0</td><td>Não-positiva</td><td>x₁ = −x₁' &nbsp;(x₁' ≥ 0)</td></tr>
+              <tr><td>x₂</td><td>x₂ ≥ 1,5</td><td>Limitada inferiormente</td><td>x₂ = x₂' + 1,5 &nbsp;(x₂' ≥ 0)</td></tr>
+              <tr><td>x₃</td><td>irrestrita</td><td>Sem restrição de sinal</td><td>x₃ = x₃' − x₃'' &nbsp;(x₃', x₃'' ≥ 0)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R2</span>
+        <span class="phase-title">Classificação</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Após o pré-processamento, a restrição R1 gera b = −2,5 &lt; 0. Tentamos o Dual Simplex. O tableau revelará um <strong>bloqueio matemático</strong> — o critério de entrada não encontrará nenhum candidato, diagnosticando <strong>Solução Inviável</strong>.</p>
+        <div class="alert alert-info">
+          <strong>📌 Regra de diagnóstico:</strong> No Dual Simplex, se a linha da variável que deve sair (b mais negativo) não possuir <em>nenhum coeficiente negativo</em>, o problema é <strong>primal inviável</strong> — a região viável é vazia.
+        </div>
+      </div>
+    </div>
+
+    <!-- R3 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R3</span>
+        <span class="phase-title">Pré-processamento</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <h3>3.1 — Converter MAX para MIN</h3>
+        <div class="math-block">
+          MAX Z = −3x₁ − 2x₂ + x₃ &nbsp;⟹&nbsp; MIN Z = 3x₁ + 2x₂ − x₃
+        </div>
+
+        <h3 style="margin-top:1.4rem">3.2 — Aplicar as substituições na Função Objetivo</h3>
+        <div class="math-block">
+          MIN Z = 3(−x₁') + 2(x₂' + 1,5) − (x₃' − x₃'')<br>
+          MIN Z = −3x₁' + 2x₂' + 3 − x₃' + x₃''<br><br>
+          Passando para a esquerda (convenção Z − cx = constante):<br>
+          <strong>Z + 3x₁' − 2x₂' + x₃' − x₃'' = 3</strong>
+        </div>
+        <div class="alert alert-warning" style="margin-top:.5rem">
+          <strong>⚠️ Constante na linha Z:</strong> A substituição x₂ = x₂' + 1,5 introduz o termo +3 no lado direito. A linha Z começa com b = 3 (não zero). Isso é correto — representa o valor mínimo de Z quando todas as variáveis substituídas valem zero.
+        </div>
+
+        <h3 style="margin-top:1.4rem">3.3 — Aplicar as substituições nas Restrições</h3>
+
+        <div class="card" style="margin:.6rem 0; border-left: 3px solid var(--success);">
+          <strong>R1: −x₁ + x₂ ≤ −1</strong>
+          <div class="math-block" style="margin-top:.4rem">
+            −(−x₁') + (x₂' + 1,5) ≤ −1<br>
+            x₁' + x₂' + 1,5 ≤ −1<br>
+            x₁' + x₂' ≤ −2,5<br>
+            <strong>x₁' + x₂' + x₄ = −2,5</strong>
+          </div>
+          <p style="font-size:.85rem;color:var(--text-muted);margin:.3rem 0 0">b = −2,5 &lt; 0 → gatilho para Dual Simplex.</p>
+        </div>
+
+        <div class="card" style="margin:.6rem 0; border-left: 3px solid var(--success);">
+          <strong>R2: 5x₁ + 3x₂ + x₃ ≤ 15</strong>
+          <div class="math-block" style="margin-top:.4rem">
+            5(−x₁') + 3(x₂' + 1,5) + (x₃' − x₃'') ≤ 15<br>
+            −5x₁' + 3x₂' + 4,5 + x₃' − x₃'' ≤ 15<br>
+            −5x₁' + 3x₂' + x₃' − x₃'' ≤ 10,5<br>
+            <strong>−5x₁' + 3x₂' + x₃' − x₃'' + x₅ = 10,5</strong>
+          </div>
+          <p style="font-size:.85rem;color:var(--text-muted);margin:.3rem 0 0">b = 10,5 &gt; 0 → não contribui para o gatilho.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- R4 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R4</span>
+        <span class="phase-title">Tableau Inicial (Iteração 0)</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="pills">
+          <span class="pill pill-warn">❌ Primal inviável (b = −2,5)</span>
+        </div>
+        <div class="t-outer" style="overflow-x:auto">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">Z</div>
+            <div class="t-base-cell t-pr">x₄</div>
+            <div class="t-base-cell">x₅</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>Z</th><th>x₁'</th><th>x₂'</th><th>x₃'</th><th>x₃''</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td>3</td><td>−2</td><td>1</td><td>−1</td><td class="t-dim">0</td><td class="t-dim">0</td><td class="t-dim">3</td></tr>
+                <tr><td class="t-z">0</td><td class="t-pr">1</td><td class="t-pr">1</td><td class="t-pr">0</td><td class="t-pr">0</td><td class="t-pr">1</td><td class="t-pr t-dim">0</td><td class="t-pr t-neg">−2,5</td></tr>
+                <tr><td class="t-z">0</td><td>−5</td><td>3</td><td>1</td><td>−1</td><td class="t-dim">0</td><td>1</td><td class="t-opt">10,5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R5 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R5</span>
+        <span class="phase-title">Tentativa de Iteração — O Bloqueio</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Critério de saída</strong> — b mais negativo:
+            <div class="math-block" style="margin-top:.4rem">b(x₄) = −2,5 &nbsp;←&nbsp; único negativo<br>→ x₄ deve sair da base</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Critério de entrada</strong> — buscar coeficientes negativos na linha x₄ = [1, 1, 0, 0, 1, 0]:
+            <div class="tableau-wrap" style="margin-top:.5rem">
+              <table class="rtbl">
+                <thead><tr><th>Coluna</th><th>Coef. linha x₄</th><th>É negativo?</th><th>Candidato?</th></tr></thead>
+                <tbody>
+                  <tr><td>x₁'</td><td>1</td><td class="skip">não (≥ 0)</td><td class="skip">não</td></tr>
+                  <tr><td>x₂'</td><td>1</td><td class="skip">não (≥ 0)</td><td class="skip">não</td></tr>
+                  <tr><td>x₃'</td><td>0</td><td class="skip">não (= 0)</td><td class="skip">não</td></tr>
+                  <tr><td>x₃''</td><td>0</td><td class="skip">não (= 0)</td><td class="skip">não</td></tr>
+                  <tr><td>x₄</td><td>1</td><td class="skip">não (≥ 0)</td><td class="skip">não</td></tr>
+                  <tr><td>x₅</td><td>0</td><td class="skip">não (= 0)</td><td class="skip">não</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert" style="background:#fee2e2; border-left:4px solid var(--danger); margin-top:.6rem">
+          <strong>🚫 BLOQUEIO MATEMÁTICO:</strong> A linha pivô (x₄) não possui <em>nenhum coeficiente negativo</em>. O Teste da Razão é impossível — não há variável candidata a entrar na base.
+        </div>
+      </div>
+    </div>
+
+    <!-- R6 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R6</span>
+        <span class="phase-title">Conclusão — Solução Inviável</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="result-box" style="background:#fef2f2; border-color:#fca5a5;">
+          <h4 style="color:#b91c1c">🚫 Solução Inviável</h4>
+          <p style="margin:.4rem 0 0; font-size:.9rem">O algoritmo não pode prosseguir. A região viável do problema é <strong>vazia</strong>.</p>
+        </div>
+
+        <h3 style="margin-top:1.2rem">Por que é inviável? Interpretação algébrica</h3>
+        <p>Após as substituições, a R1 ficou:</p>
+        <div class="math-block">x₁' + x₂' ≤ −2,5 &nbsp;&nbsp; com &nbsp;&nbsp; x₁', x₂' ≥ 0</div>
+        <p>A soma de dois números não-negativos nunca pode ser negativa. A condição é <strong>algebricamente impossível</strong>:</p>
+        <div class="math-block">x₁' + x₂' ≥ 0 &nbsp;&gt;&nbsp; −2,5 &nbsp;→&nbsp; <strong>contradição</strong></div>
+
+        <h3 style="margin-top:1.2rem">Interpretação no contexto original</h3>
+        <p>Substituindo de volta: x₁ = −x₁' ≤ 0 e x₂ = x₂' + 1,5 ≥ 1,5.</p>
+        <div class="math-block">R1 original: −x₁ + x₂ ≤ −1<br>
+        Com x₁ ≤ 0: &nbsp;−x₁ ≥ 0 &nbsp;→ &nbsp;−x₁ + x₂ ≥ 0 + 1,5 = 1,5 &gt; −1<br>
+        <strong>A restrição R1 nunca pode ser satisfeita.</strong></div>
+      </div>
+    </div>
+
+    <!-- R7 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R7</span>
+        <span class="phase-title">Verificação</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="card">
+          <div class="v-row"><span>✅</span><span>Tableau montado corretamente com 7 variáveis: x₁', x₂', x₃', x₃'', x₄, x₅</span></div>
+          <div class="v-row"><span>✅</span><span>Linha x₄ possui b = −2,5 &lt; 0 → corretamente identificada como candidata a sair</span></div>
+          <div class="v-row"><span>✅</span><span>Linha x₄ tem coeficientes [1, 1, 0, 0, 1, 0] → todos ≥ 0 → nenhum candidato a entrar</span></div>
+          <div class="v-row"><span>✅</span><span>Conclusão: Solução Inviável (Dual Simplex bloqueado) — confirmado algebricamente</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R8 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R8</span>
+        <span class="phase-title">Generalização</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="tableau-wrap">
+          <table class="gtbl">
+            <thead><tr><th>Técnica / Condição</th><th>Neste problema</th><th>Regra geral</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td>x₁ ≤ 0</td><td>Substituir por x₁ = −x₁' (x₁' ≥ 0) — inverte todos os coeficientes de x₁</td><td>Toda variável não-positiva vira x = −x' para usar no Simplex</td></tr>
+              <tr class="hl"><td>x₂ ≥ 1,5</td><td>Substituir por x₂ = x₂' + 1,5 — desloca a variável para a origem</td><td>Toda variável com limite inferior L vira x = x' + L</td></tr>
+              <tr class="hl"><td>x₃ irrestrita</td><td>Substituir por x₃ = x₃' − x₃'' — separa em parte positiva e negativa</td><td>Toda irrestrita vira xᵢ = xᵢ' − xᵢ'' (ambas ≥ 0)</td></tr>
+              <tr><td>Constante na linha Z (b = 3)</td><td>Vem do termo +3 introduzido pela substituição de x₂</td><td>Substituições de variáveis com limite inferior sempre introduzem constantes na FO</td></tr>
+              <tr><td>Bloqueio no Dual Simplex</td><td>Linha pivô sem negativos → Solução Inviável ✅</td><td>Sempre que o pivô sainte não tem coef. negativo → região viável vazia</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert" style="background:#fef2f2; border-left:4px solid var(--danger); margin-top:.8rem">
+          <strong>❗ Armadilha clássica de prova:</strong> Ao ver o bloqueio, alguns alunos tentam usar outra linha como pivô ou buscam uma variável artificial. <strong>Não existe saída:</strong> se a linha do b mais negativo não tem nenhum coeficiente negativo, o problema é inviável e o algoritmo <em>para</em>. Não há iteração possível.
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador -->
+    <div style="height:3rem; border-bottom: 2px dashed var(--border); margin-bottom: 3rem;"></div>
+
+  </div><!-- /q8 -->
+
   <div id="q9">
 
     <!-- Cabeçalho da questão -->
@@ -1475,7 +1749,7 @@
 <script>
   (function () {
     // Todos os ids de exercícios
-    var sections = ['q6', 'q7', 'q9'];
+    var sections = ['q6', 'q7', 'q8', 'q9'];
 
     // Links da sidebar com href="#qN"
     var links = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
