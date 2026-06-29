@@ -358,7 +358,7 @@
           <table class="gtbl">
             <thead><tr><th>Condição</th><th>Significado</th><th>Este problema</th></tr></thead>
             <tbody>
-              <tr class="hl"><td><strong>Dual viável</strong></td><td>Todos os custos reduzidos na linha z são ≥ 0 (para MIN)</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
+              <tr class="hl"><td><strong>Dual viável</strong></td><td>Todos os valores da linha Z são ≤ 0 (negativos ou zero) — convenção Z − cx = 0</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
               <tr class="hl"><td><strong>Primal inviável</strong></td><td>Existe pelo menos um b &lt; 0 na coluna RHS</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
             </tbody>
           </table>
@@ -379,8 +379,8 @@
       <div class="phase-body">
 
         <h3>3.1 — Verificar se é necessário converter para MIN</h3>
-        <p>O problema já está na forma de <strong>minimização</strong>, portanto nenhuma conversão é necessária. A linha z do tableau receberá diretamente os coeficientes da função objetivo:</p>
-        <div class="math-block">MIN &nbsp; z = 6x₁ + 3x₂ + 0x₃<br><span style="color:var(--text-muted);font-size:.85rem;">→ linha z: [6, 3, 0, 0, 0] para [x₁, x₂, x₃, x₄, x₅]</span></div>
+        <p>O problema já está na forma de <strong>minimização</strong>, portanto nenhuma conversão é necessária. Igualamos a FO a zero passando tudo para a esquerda com sinal trocado:</p>
+        <div class="math-block">MIN Z = 6x₁ + 3x₂ &nbsp;⟹&nbsp; <strong>Z − 6x₁ − 3x₂ = 0</strong><br><span style="color:var(--text-muted);font-size:.85rem;">→ linha Z guarda os coeficientes negativos da FO: [−6, −3, 0, 0, 0] para [x₁, x₂, x₃, x₄, x₅]</span></div>
         <div class="alert alert-warning">
           <strong>⚠️ Atenção:</strong> x₃ não aparece na função objetivo — seu custo reduzido inicial é <strong>0</strong>. Isso criará um pivô degenerado na iteração 1 (razão = 0/1 = 0), discutido em R5.
         </div>
@@ -394,19 +394,19 @@
         <p>x₄ e x₅ entram na base com b = <strong style="color:var(--danger)">−2</strong> e <strong style="color:var(--danger)">−5</strong> — ambos negativos → primal inviável, condição necessária para o Dual Simplex.</p>
 
         <h3 style="margin-top:1.4rem">3.3 — Verificar viabilidade dual</h3>
-        <p>Para aplicar o Dual Simplex em um problema MIN, todos os custos reduzidos das variáveis não-básicas devem ser ≥ 0:</p>
+        <p>Na convenção <code>Z − cx = 0</code>, a linha Z guarda <strong>−c</strong> (negativo dos custos). Para MIN com Dual Simplex, a linha Z deve ter todos os valores <strong>≤ 0</strong> (negativos ou zero):</p>
         <div class="tableau-wrap">
           <table class="gtbl" style="width:auto">
-            <thead><tr><th>Variável não-básica</th><th>Custo reduzido</th><th>Condição ≥ 0</th><th>Observação</th></tr></thead>
+            <thead><tr><th>Variável não-básica</th><th>Valor na linha Z (= −c)</th><th>Condição ≤ 0</th><th>Observação</th></tr></thead>
             <tbody>
-              <tr><td>x₁</td><td style="font-family:monospace">6</td><td><span class="badge badge-green">✓</span></td><td>Custo original da FO</td></tr>
-              <tr><td>x₂</td><td style="font-family:monospace">3</td><td><span class="badge badge-green">✓</span></td><td>Custo original da FO</td></tr>
-              <tr><td>x₃</td><td style="font-family:monospace">0</td><td><span class="badge badge-green">✓</span></td><td>x₃ não está na FO — custo zero</td></tr>
+              <tr><td>x₁</td><td style="font-family:monospace">−6</td><td><span class="badge badge-green">−6 ≤ 0 ✓</span></td><td>Custo na FO = 6 → linha Z guarda −6</td></tr>
+              <tr><td>x₂</td><td style="font-family:monospace">−3</td><td><span class="badge badge-green">−3 ≤ 0 ✓</span></td><td>Custo na FO = 3 → linha Z guarda −3</td></tr>
+              <tr><td>x₃</td><td style="font-family:monospace">0</td><td><span class="badge badge-green">0 ≤ 0 ✓</span></td><td>x₃ não está na FO — custo zero</td></tr>
             </tbody>
           </table>
         </div>
         <div class="alert alert-success">
-          <strong>✅ Pronto para iterar:</strong> Dual viável (todos os custos ≥ 0) + Primal inviável (b₁ = −2, b₂ = −5) → <strong>Dual Simplex aplicável.</strong>
+          <strong>✅ Pronto para iterar:</strong> Dual viável (todos os valores da linha Z ≤ 0) + Primal inviável (b₁ = −2, b₂ = −5) → <strong>Dual Simplex aplicável.</strong>
         </div>
       </div>
     </div>
@@ -444,7 +444,7 @@
             <table class="tgrid">
               <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
               <tbody>
-                <tr><td class="t-z">1</td><td>6</td><td>3</td><td class="t-pc">0</td><td class="t-dim">0</td><td class="t-dim">0</td><td class="t-dim">0</td></tr>
+                <tr><td class="t-z">1</td><td>−6</td><td>−3</td><td class="t-pc">0</td><td class="t-dim">0</td><td class="t-dim">0</td><td class="t-dim">0</td></tr>
                 <tr><td class="t-z">0</td><td>−6</td><td>3</td><td class="t-pc">−1</td><td>1</td><td class="t-dim">0</td><td class="t-neg">−2</td></tr>
                 <tr><td class="t-z">0</td><td class="t-pr">−3</td><td class="t-pr">−4</td><td class="t-pv">−1</td><td class="t-pr t-dim">0</td><td class="t-pr">1</td><td class="t-pr t-neg">−5</td></tr>
               </tbody>
@@ -479,10 +479,10 @@
             <strong>Critério de entrada</strong> — razão |custo reduzido| ÷ |coeficiente| apenas para coeficientes <em>negativos</em> da linha pivô (L2 = [−3, −4, −1, 0, 1]):
             <div class="tableau-wrap" style="margin-top:.6rem">
               <table class="rtbl">
-                <thead><tr><th>Coluna</th><th>Custo reduzido (linha z)</th><th>Coef. linha x₅</th><th>Razão</th><th>Escolha?</th></tr></thead>
+                <thead><tr><th>Coluna</th><th>Valor linha Z (= −c)</th><th>Coef. linha x₅</th><th>Razão |Z| ÷ |coef.|</th><th>Escolha?</th></tr></thead>
                 <tbody>
-                  <tr><td>x₁</td><td>6</td><td>−3</td><td>|6| ÷ |−3| = 2,0</td><td class="skip">não</td></tr>
-                  <tr><td>x₂</td><td>3</td><td>−4</td><td>|3| ÷ |−4| = 0,75</td><td class="skip">não</td></tr>
+                  <tr><td>x₁</td><td>−6</td><td>−3</td><td>|−6| ÷ |−3| = 2,0</td><td class="skip">não</td></tr>
+                  <tr><td>x₂</td><td>−3</td><td>−4</td><td>|−3| ÷ |−4| = 0,75</td><td class="skip">não</td></tr>
                   <tr class="winner"><td>x₃</td><td>0</td><td>−1</td><td>|0| ÷ |−1| = <strong>0,0</strong></td><td>✓ menor</td></tr>
                   <tr><td>x₄</td><td>0</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
                 </tbody>
@@ -504,11 +504,11 @@
           <div>
             <strong>Operações de linha</strong> — dividir a linha pivô pelo elemento pivô (−1) e eliminar x₃ das demais linhas:
             <div class="ops-block">
-              L₂ ← L₂ ÷ (−1) &nbsp;&nbsp;→&nbsp; [ 0 | 3 | 4 | 1 | 0 | −1 | 5 ]<br>
-              L₀ ← L₀ − 0·L₂ &nbsp;&nbsp;→&nbsp; sem alteração &nbsp; [ 1 | 6 | 3 | 0 | 0 | 0 | 0 ]<br>
-              L₁ ← L₁ − (−1)·L₂ &nbsp;→&nbsp; L₁ + L₂ &nbsp; [ 0 | −3 | 7 | 0 | 1 | −1 | 3 ]
+              L₂ ← L₂ ÷ (−1) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; [ 0 | 3 | 4 | 1 | 0 | −1 | 5 ]<br>
+              L₀ ← L₀ − <strong>0</strong>·L₂ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→&nbsp; <em>sem alteração</em> &nbsp; [ 1 | <strong>−6</strong> | <strong>−3</strong> | 0 | 0 | 0 | 0 ]<br>
+              L₁ ← L₁ − (−1)·L₂ →&nbsp; L₁ + L₂ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ 0 | −3 | 7 | 0 | 1 | −1 | 3 ]
             </div>
-            <p style="font-size:.85rem;color:var(--text-muted)">Detalhe de L₁: [0,−6,3,−1,1,0,−2] + [0,3,4,1,0,−1,5] = [0,−3,7,0,1,−1,3]</p>
+            <p style="font-size:.85rem;color:var(--text-muted)">Como o coeficiente de x₃ na linha Z original é 0, a linha Z desce <strong>intacta</strong>. Detalhe de L₁: [0,−6,3,−1,1,0,−2] + [0,3,4,1,0,−1,5] = [0,−3,7,0,1,−1,3]</p>
           </div>
         </div>
 
@@ -529,7 +529,7 @@
             <table class="tgrid">
               <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
               <tbody>
-                <tr><td class="t-z">1</td><td>6</td><td>3</td><td class="t-dim">0</td><td class="t-dim">0</td><td>0</td><td class="t-opt">0</td></tr>
+                <tr><td class="t-z">1</td><td>−6</td><td>−3</td><td class="t-dim">0</td><td class="t-dim">0</td><td>0</td><td class="t-opt">0</td></tr>
                 <tr><td class="t-z">0</td><td>−3</td><td>7</td><td class="t-dim">0</td><td>1</td><td>−1</td><td class="t-opt">3</td></tr>
                 <tr><td class="t-z">0</td><td>3</td><td>4</td><td>1</td><td class="t-dim">0</td><td>−1</td><td class="t-opt">5</td></tr>
               </tbody>
@@ -538,7 +538,7 @@
         </div>
 
         <p style="margin-top:.6rem;font-size:.88rem;color:var(--text-muted)">
-          Todos os custos reduzidos ≥ 0 (linha z) e todos os b ≥ 0 → condição de otimalidade atingida em apenas <strong>1 iteração</strong>.
+          Todos os valores da linha Z são ≤ 0 (−6, −3, 0) e todos os b ≥ 0 → condição de otimalidade atingida em apenas <strong>1 iteração</strong>. A linha Z ficou intacta pois o coeficiente de x₃ nela era zero.
         </p>
       </div>
     </div>
@@ -577,10 +577,10 @@
         <p>No tableau final, inspecionamos os custos reduzidos das variáveis não-básicas:</p>
         <div class="tableau-wrap">
           <table class="gtbl" style="width:auto">
-            <thead><tr><th>Variável não-básica</th><th>Custo reduzido</th><th>Condição</th><th>Implicação</th></tr></thead>
+            <thead><tr><th>Variável não-básica</th><th>Valor na linha Z</th><th>Condição (≤ 0 = ótimo)</th><th>Implicação</th></tr></thead>
             <tbody>
-              <tr><td>x₁</td><td style="font-family:monospace">6</td><td><span class="badge badge-green">6 &gt; 0 ✓</span></td><td>Aumentar x₁ piora z</td></tr>
-              <tr><td>x₂</td><td style="font-family:monospace">3</td><td><span class="badge badge-green">3 &gt; 0 ✓</span></td><td>Aumentar x₂ piora z</td></tr>
+              <tr><td>x₁</td><td style="font-family:monospace">−6</td><td><span class="badge badge-green">−6 &lt; 0 ✓</span></td><td>Aumentar x₁ piora z</td></tr>
+              <tr><td>x₂</td><td style="font-family:monospace">−3</td><td><span class="badge badge-green">−3 &lt; 0 ✓</span></td><td>Aumentar x₂ piora z</td></tr>
               <tr><td>x₅</td><td style="font-family:monospace">0</td><td><span class="badge badge-orange">= 0 ⚠</span></td><td>Aumentar x₅ não altera z → <strong>ótimos alternativos</strong></td></tr>
             </tbody>
           </table>
@@ -633,7 +633,7 @@
           <table class="gtbl">
             <thead><tr><th>Condição</th><th>Neste problema</th><th>Se fosse diferente</th></tr></thead>
             <tbody>
-              <tr class="hl"><td>Problema já é MIN</td><td>Sem conversão — z row recebe coeficientes diretamente ✅</td><td>Se fosse MAX: multiplicar FO por −1, operar com −z</td></tr>
+              <tr class="hl"><td>Problema já é MIN</td><td>Sem conversão — Z row = Z − (FO) = 0 → guarda −c: [−6, −3, 0, …] ✅</td><td>Se fosse MAX: multiplicar FO por −1, mesma estrutura</td></tr>
               <tr class="hl"><td>Variável com custo zero na FO (x₃)</td><td>Gera razão = 0 → pivô degenerado (z não muda) ✅</td><td>Se todos custos &gt; 0: nenhuma razão seria zero</td></tr>
               <tr><td>Restrições ≥ com b &gt; 0</td><td>Gera b negativo após ×(−1) → Dual Simplex ✅</td><td>b já negativo no enunciado: mesmo caminho</td></tr>
               <tr><td>Custo reduzido = 0 no ótimo (x₅)</td><td>Ótimos alternativos — infinitas soluções ótimas ⚠</td><td>Se todos &gt; 0: ótimo único</td></tr>
