@@ -291,6 +291,13 @@
         <div class="ex-sidebar-meta">MIN · restrições ≥</div>
       </div>
     </a>
+    <a href="#q7" style="margin-top:.2rem;">
+      <span class="ex-num">7</span>
+      <div>
+        <div>Dual Simplex</div>
+        <div class="ex-sidebar-meta">MIN · mista (≤ e ≥)</div>
+      </div>
+    </a>
     <a href="#q9" class="active" style="margin-top:.2rem;">
       <span class="ex-num">9</span>
       <div>
@@ -651,6 +658,417 @@
     <div style="height:3rem; border-bottom: 2px dashed var(--border); margin-bottom: 3rem;"></div>
 
   </div><!-- /q6 -->
+
+  <div id="q7" style="display:none">
+
+    <!-- ══════════════════════════════════════════════════════
+         EXERCÍCIO 7
+    ══════════════════════════════════════════════════════ -->
+
+    <div class="q-header">
+      <div class="q-label">Questão 7</div>
+      <div class="q-title">Método Dual Simplex</div>
+      <div class="q-tags">
+        <span class="q-tag qt-method">Dual Simplex</span>
+        <span class="q-tag qt-result">z* = 52/5 · x₂=17/5 · x₃=18/5</span>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MIN &nbsp; z = 3x₁ + 2x₂ + x₃<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;2x₁ − 3x₂ + 2x₃ ≤ −3 &nbsp;&nbsp;(R1)<br>
+        &nbsp;&nbsp;−x₁ + x₂ + x₃ ≥ 7 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(R2)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃ ≥ 0
+      </div>
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R1</span>
+        <span class="phase-title">Leitura e Extração de Dados</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Problema de <strong>minimização</strong> com 3 variáveis de decisão (x₁, x₂, x₃), todas não-negativas, e 2 restrições com sinais <strong>diferentes</strong> — R1 é ≤ e R2 é ≥.</p>
+        <p>Detalhe fundamental em R1: o lado direito já é <strong>negativo</strong> (b = −3), o que é o "gatilho perfeito" do Dual Simplex — sem precisar multiplicar por −1, essa restrição já gera b < 0 no tableau.</p>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R2</span>
+        <span class="phase-title">Classificação — Por que Dual Simplex?</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="tableau-wrap">
+          <table class="gtbl">
+            <thead><tr><th>Condição</th><th>Significado</th><th>Este problema</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td><strong>Dual viável</strong></td><td>Todos os valores da linha Z ≤ 0 (convenção Z − cx = 0)</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
+              <tr class="hl"><td><strong>Primal inviável</strong></td><td>Existe pelo menos um b &lt; 0 na coluna RHS</td><td><span class="badge badge-green">✓ satisfaz</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-info" style="margin-top:.8rem">
+          <strong>📌 Regra MIN:</strong> O tableau é ótimo quando a linha Z não possui valores positivos. Aqui, com −3, −2, −1, 0, 0 na linha Z inicial, a condição dual já está satisfeita antes de iniciar.
+        </div>
+      </div>
+    </div>
+
+    <!-- R3 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R3</span>
+        <span class="phase-title">Pré-processamento</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <h3>3.1 — Função Objetivo (já é MIN)</h3>
+        <p>Sem conversão. Passamos as variáveis para a esquerda com sinal trocado:</p>
+        <div class="math-block">MIN Z = 3x₁ + 2x₂ + x₃ &nbsp;⟹&nbsp; <strong>Z − 3x₁ − 2x₂ − x₃ = 0</strong><br>
+        <span style="color:var(--text-muted);font-size:.85rem;">→ linha Z guarda [−3, −2, −1, 0, 0] para [x₁, x₂, x₃, x₄, x₅]</span></div>
+
+        <h3 style="margin-top:1.4rem">3.2 — Preparar restrições</h3>
+
+        <div class="card" style="margin:.6rem 0; border-left: 3px solid var(--success);">
+          <strong>R1 — Já está no formato ≤ com b negativo</strong>
+          <div class="math-block" style="margin-top:.4rem">
+            2x₁ − 3x₂ + 2x₃ ≤ −3 &nbsp;→&nbsp; apenas adicionamos x₄ ≥ 0<br>
+            <strong>2x₁ − 3x₂ + 2x₃ + x₄ = −3</strong>
+          </div>
+          <p style="font-size:.85rem;color:var(--text-muted);margin:.3rem 0 0">Não multiplicamos por −1 aqui — o b já é negativo e é exatamente isso que o Dual Simplex precisa.</p>
+        </div>
+
+        <div class="card" style="margin:.6rem 0; border-left: 3px solid var(--warning);">
+          <strong>R2 — Sinal ≥ com b positivo → multiplicar por −1</strong>
+          <div class="math-block" style="margin-top:.4rem">
+            −x₁ + x₂ + x₃ ≥ 7<br>
+            <span style="color:var(--text-muted)">×(−1):</span> &nbsp; x₁ − x₂ − x₃ ≤ −7 &nbsp;→ &nbsp;adicionamos x₅ ≥ 0<br>
+            <strong>x₁ − x₂ − x₃ + x₅ = −7</strong>
+          </div>
+        </div>
+
+        <h3 style="margin-top:1.4rem">3.3 — Verificar viabilidade dual</h3>
+        <div class="tableau-wrap">
+          <table class="gtbl" style="width:auto">
+            <thead><tr><th>Variável não-básica</th><th>Valor na linha Z</th><th>Condição ≤ 0</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td style="font-family:monospace">−3</td><td><span class="badge badge-green">−3 ≤ 0 ✓</span></td></tr>
+              <tr><td>x₂</td><td style="font-family:monospace">−2</td><td><span class="badge badge-green">−2 ≤ 0 ✓</span></td></tr>
+              <tr><td>x₃</td><td style="font-family:monospace">−1</td><td><span class="badge badge-green">−1 ≤ 0 ✓</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-success" style="margin-top:.6rem">
+          <strong>✅ Pronto:</strong> Dual viável (linha Z ≤ 0) + Primal inviável (b₁ = −3, b₂ = −7).
+        </div>
+      </div>
+    </div>
+
+    <!-- R4 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R4</span>
+        <span class="phase-title">Tableau Inicial (Iteração 0)</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="pills">
+          <span class="pill pill-ok">✅ Dual viável</span>
+          <span class="pill pill-warn">❌ Primal inviável</span>
+        </div>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">Z</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell t-pr">x₅</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>Z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td>−3</td><td>−2</td><td class="t-pc">−1</td><td class="t-dim">0</td><td class="t-dim">0</td><td class="t-dim">0</td></tr>
+                <tr><td class="t-z">0</td><td>2</td><td>−3</td><td class="t-pc">2</td><td>1</td><td class="t-dim">0</td><td class="t-neg">−3</td></tr>
+                <tr><td class="t-z">0</td><td class="t-pr">1</td><td class="t-pr">−1</td><td class="t-pv">−1</td><td class="t-pr t-dim">0</td><td class="t-pr">1</td><td class="t-pr t-neg">−7</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R5 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R5</span>
+        <span class="phase-title">Iterações do Dual Simplex</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <!-- ── Iteração 1 ── -->
+        <p class="iter-title">Iteração 1</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Critério de saída</strong> — b mais negativo:
+            <div class="math-block" style="margin-top:.4rem">b₁ = −3 &nbsp;&nbsp; b₂ = −7 ← mais negativo<br>→ x₅ sai da base (linha 2)</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Critério de entrada</strong> — coeficientes negativos da linha x₅ = [1, −1, −1, 0, 1]:
+            <div class="tableau-wrap" style="margin-top:.5rem">
+              <table class="rtbl">
+                <thead><tr><th>Coluna</th><th>Valor linha Z</th><th>Coef. linha x₅</th><th>Razão |Z| ÷ |coef.|</th><th>Escolha?</th></tr></thead>
+                <tbody>
+                  <tr><td>x₁</td><td>−3</td><td>1</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
+                  <tr><td>x₂</td><td>−2</td><td>−1</td><td>|−2| ÷ |−1| = 2,0</td><td class="skip">não</td></tr>
+                  <tr class="winner"><td>x₃</td><td>−1</td><td>−1</td><td>|−1| ÷ |−1| = <strong>1,0</strong></td><td>✓ menor</td></tr>
+                  <tr><td>x₄</td><td>0</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pv-row">
+              <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₅</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₃</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Pivô: <strong>−1</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <strong>Operações de linha</strong>
+            <div class="ops-block">
+              Nova x₃ &nbsp;= L₂ ÷ (−1) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | −1 | 1 | 1 | 0 | −1 | 7 ]<br>
+              Nova Z &nbsp;&nbsp;= L₀ − (−1)·Nova x₃ = L₀ + Nova x₃ → [ 1 | −4 | −1 | 0 | 0 | −1 | 7 ]<br>
+              Nova x₄ = L₁ − (2)·Nova x₃ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | 4 | −5 | 0 | 1 | 2 | −17 ]
+            </div>
+            <p style="font-size:.85rem;color:var(--text-muted)">
+              Detalhe da linha Z: [1,−3,−2,−1,0,0,0] + [0,−1,1,1,0,−1,7] = [1,−4,−1,0,0,−1,7]<br>
+              Detalhe de x₄: [0,2,−3,2,1,0,−3] − 2·[0,−1,1,1,0,−1,7] = [0,4,−5,0,1,2,−17]
+            </p>
+          </div>
+        </div>
+
+        <!-- Tableau 1 -->
+        <div class="alert alert-warning" style="margin:.4rem 0 .8rem">
+          <strong>⚠️ b₁ = −17 ainda negativo.</strong> O problema permanece primal inviável. Continuamos para a Iteração 2.
+        </div>
+
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">Z</div>
+            <div class="t-base-cell t-pr">x₄</div>
+            <div class="t-base-cell">x₃</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>Z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td>−4</td><td class="t-pc">−1</td><td class="t-dim">0</td><td class="t-dim">0</td><td>−1</td><td class="t-dim">7</td></tr>
+                <tr><td class="t-z">0</td><td class="t-pr">4</td><td class="t-pv">−5</td><td class="t-pr t-dim">0</td><td class="t-pr">1</td><td class="t-pr">2</td><td class="t-pr t-neg">−17</td></tr>
+                <tr><td class="t-z">0</td><td>−1</td><td class="t-pc">1</td><td>1</td><td class="t-dim">0</td><td>−1</td><td class="t-opt">7</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── Iteração 2 ── -->
+        <p class="iter-title" style="margin-top:2rem">Iteração 2</p>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <strong>Critério de saída</strong> — único b negativo:
+            <div class="math-block" style="margin-top:.4rem">b₁ = −17 ← o único negativo<br>→ x₄ sai da base (linha 1)</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <strong>Critério de entrada</strong> — coeficientes negativos da linha x₄ = [4, −5, 0, 1, 2]:
+            <div class="tableau-wrap" style="margin-top:.5rem">
+              <table class="rtbl">
+                <thead><tr><th>Coluna</th><th>Valor linha Z</th><th>Coef. linha x₄</th><th>Razão |Z| ÷ |coef.|</th><th>Escolha?</th></tr></thead>
+                <tbody>
+                  <tr><td>x₁</td><td>−4</td><td>4</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
+                  <tr class="winner"><td>x₂</td><td>−1</td><td>−5</td><td>|−1| ÷ |−5| = <strong>1/5</strong></td><td>✓ único negativo</td></tr>
+                  <tr><td>x₃</td><td>0</td><td>0</td><td class="skip">— zero, ignora</td><td class="skip">não</td></tr>
+                  <tr><td>x₄</td><td>0</td><td>1</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
+                  <tr><td>x₅</td><td>−1</td><td>2</td><td class="skip">— positivo, ignora</td><td class="skip">não</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="alert alert-info" style="margin:.5rem 0">
+              <strong>📌 Entrada compulsória:</strong> Existe apenas <em>um</em> coeficiente negativo na linha x₄ (o −5 em x₂). Não há escolha — x₂ entra obrigatoriamente.
+            </div>
+            <div class="pv-row">
+              <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₄</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₂</strong></div>
+              <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Pivô: <strong>−5</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <strong>Operações de linha</strong>
+            <div class="ops-block">
+              Nova x₂ = L₁ ÷ (−5) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | −4/5 | 1 | 0 | −1/5 | −2/5 | 17/5 ]<br>
+              Nova Z &nbsp;= L₀ − (−1)·Nova x₂ = L₀ + Nova x₂ → [ 1 | −24/5 | 0 | 0 | −1/5 | −7/5 | 52/5 ]<br>
+              Nova x₃ = L₂ − (1)·Nova x₂ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ [ 0 | −1/5 | 0 | 1 | 1/5 | −3/5 | 18/5 ]
+            </div>
+            <p style="font-size:.85rem;color:var(--text-muted)">
+              Detalhe da linha Z: [1,−4,−1,0,0,−1,7] + [0,−4/5,1,0,−1/5,−2/5,17/5] = [1,−24/5,0,0,−1/5,−7/5,52/5]<br>
+              Detalhe de x₃: [0,−1,1,1,0,−1,7] − [0,−4/5,1,0,−1/5,−2/5,17/5] = [0,−1/5,0,1,1/5,−3/5,18/5]
+            </p>
+          </div>
+        </div>
+
+        <div class="pills" style="margin-top:.8rem">
+          <span class="pill pill-ok">✅ Dual viável</span>
+          <span class="pill pill-ok">✅ Primal viável</span>
+          <span class="pill pill-done">🏁 Ótimo</span>
+        </div>
+
+        <!-- Tableau Final -->
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">Z</div>
+            <div class="t-base-cell">x₂</div>
+            <div class="t-base-cell">x₃</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>Z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-z">1</td><td>−24/5</td><td class="t-dim">0</td><td class="t-dim">0</td><td>−1/5</td><td>−7/5</td><td class="t-opt">52/5</td></tr>
+                <tr><td class="t-z">0</td><td>−4/5</td><td>1</td><td class="t-dim">0</td><td>−1/5</td><td>−2/5</td><td class="t-opt">17/5</td></tr>
+                <tr><td class="t-z">0</td><td>−1/5</td><td class="t-dim">0</td><td>1</td><td>1/5</td><td>−3/5</td><td class="t-opt">18/5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p style="margin-top:.6rem;font-size:.88rem;color:var(--text-muted)">
+          Todos os b ≥ 0 e todos os valores da linha Z ≤ 0 → otimalidade atingida em <strong>2 iterações</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- R6 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R6</span>
+        <span class="phase-title">Leitura da Solução</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="math-block">
+          Variáveis <strong>na base</strong> → leia a coluna b:<br>
+          &nbsp;&nbsp;x₂ = 17/5 &nbsp;&nbsp; x₃ = 18/5<br><br>
+          Variáveis <strong>fora da base</strong> → valor = 0:<br>
+          &nbsp;&nbsp;x₁ = 0 &nbsp;&nbsp; x₄ = 0 &nbsp;&nbsp; x₅ = 0<br><br>
+          Linha Z: b = 52/5 → Z_min = <strong>52/5 = 10,4</strong>
+        </div>
+        <div class="alert alert-info" style="margin:.6rem 0">
+          <strong>💡 Convenção MIN — leitura direta:</strong> Como operamos com Z (não com −Z), o valor ótimo é lido diretamente do b da linha Z, sem inverter sinal.
+        </div>
+
+        <div class="result-box">
+          <h4>✅ Solução Ótima</h4>
+          <div class="result-vars">
+            <span class="rv">x₁ = <span>0</span></span>
+            <span class="rv">x₂ = <span>17/5</span></span>
+            <span class="rv">x₃ = <span>18/5</span></span>
+            <span class="rv">z* = <span>52/5</span></span>
+          </div>
+        </div>
+
+        <h3 style="margin-top:1.4rem">Tipo de solução ótima</h3>
+        <div class="tableau-wrap">
+          <table class="gtbl" style="width:auto">
+            <thead><tr><th>Variável não-básica</th><th>Valor na linha Z</th><th>Condição</th><th>Implicação</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td style="font-family:monospace">−24/5</td><td><span class="badge badge-green">−24/5 &lt; 0 ✓</span></td><td>Aumentar x₁ piora z</td></tr>
+              <tr><td>x₄</td><td style="font-family:monospace">−1/5</td><td><span class="badge badge-green">−1/5 &lt; 0 ✓</span></td><td>Aumentar x₄ piora z</td></tr>
+              <tr><td>x₅</td><td style="font-family:monospace">−7/5</td><td><span class="badge badge-green">−7/5 &lt; 0 ✓</span></td><td>Aumentar x₅ piora z</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-success" style="margin-top:.6rem">
+          <strong>✅ Solução Ótima Única:</strong> Todos os valores da linha Z para variáveis não-básicas são estritamente negativos (nenhum zero). Não há ótimos alternativos.
+        </div>
+      </div>
+    </div>
+
+    <!-- R7 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R7</span>
+        <span class="phase-title">Verificação</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="card">
+          <div class="v-row"><span>✅</span><span>R1: 2·(0) − 3·(17/5) + 2·(18/5) = −51/5 + 36/5 = −15/5 = −3 ≤ −3 ✓ (ativa)</span></div>
+          <div class="v-row"><span>✅</span><span>R2: −(0) + 17/5 + 18/5 = 35/5 = 7 ≥ 7 ✓ (ativa)</span></div>
+          <div class="v-row"><span>✅</span><span>FO: 3·(0) + 2·(17/5) + 18/5 = 34/5 + 18/5 = 52/5 = z* ✓</span></div>
+          <div class="v-row"><span>✅</span><span>x₁ = 0, x₂ = 17/5, x₃ = 18/5 ≥ 0 ✓</span></div>
+        </div>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-top:.5rem">Ambas as restrições estão ativas (igualdade exata), o que é esperado quando o ótimo é um vértice com 2 variáveis básicas e 2 restrições.</p>
+      </div>
+    </div>
+
+    <!-- R8 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R8</span>
+        <span class="phase-title">Generalização</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="tableau-wrap">
+          <table class="gtbl">
+            <thead><tr><th>Condição</th><th>Neste problema</th><th>Se fosse diferente</th></tr></thead>
+            <tbody>
+              <tr class="hl"><td>R1 tem sinal ≤ com b &lt; 0</td><td>Não multiplica por −1 — folga entra direto com b negativo ✅</td><td>Se b &gt; 0: folga viável, sem gatilho para Dual Simplex</td></tr>
+              <tr class="hl"><td>R2 tem sinal ≥ com b &gt; 0</td><td>Multiplica por −1 → transforma em ≤ com b negativo ✅</td><td>Se b &lt; 0 após ×(−1): mesmo tratamento</td></tr>
+              <tr><td>Só 1 coef negativo em iter. 2</td><td>Entrada compulsória de x₂ — não há alternativa ✅</td><td>Se houvesse 2+: usar razão mínima para escolher</td></tr>
+              <tr><td>Todos Z row &lt; 0 ao final</td><td>Solução ótima única — sem zero nas não-básicas ✅</td><td>Se algum = 0: ótimo alternativo</td></tr>
+              <tr><td>Frações no resultado</td><td>Pivô −5 introduz denominador 5 em toda a linha ✅</td><td>Pivô ±1 preserva inteiros</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert" style="background:#fef2f2; border-left:4px solid var(--danger); margin-top:.8rem">
+          <strong>❗ Armadilha clássica de prova:</strong> R1 é uma restrição ≤ com b já negativo. Muitos alunos multiplicam por −1 por reflexo ao ver b &lt; 0, gerando b positivo e perdendo o gatilho do Dual Simplex. <strong>Não multiplique ≤ — só ≥!</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separador -->
+    <div style="height:3rem; border-bottom: 2px dashed var(--border); margin-bottom: 3rem;"></div>
+
+  </div><!-- /q7 -->
 
   <div id="q9">
 
@@ -1057,7 +1475,7 @@
 <script>
   (function () {
     // Todos os ids de exercícios
-    var sections = ['q6', 'q9'];
+    var sections = ['q6', 'q7', 'q9'];
 
     // Links da sidebar com href="#qN"
     var links = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
