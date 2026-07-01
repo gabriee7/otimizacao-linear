@@ -353,6 +353,7 @@
     </optgroup>
     <optgroup label="Análise de Sensibilidade">
       <option value="q10">Q10 — Pós-Otimalidade · Δc e Δb</option>
+      <option value="q11">Q11 — Sensibilidade · Tableau dado · 11 casos</option>
     </optgroup>
   </select>
 </div>
@@ -432,6 +433,13 @@
       <div>
         <div>Pós-Otimalidade</div>
         <div class="ex-sidebar-meta">Δc e Δb · todos os casos</div>
+      </div>
+    </a>
+    <a href="#q11" style="margin-top:.2rem;">
+      <span class="ex-num">11</span>
+      <div>
+        <div>Sensibilidade Completa</div>
+        <div class="ex-sidebar-meta">Tableau dado · 11 sub-casos</div>
       </div>
     </a>
   </aside>
@@ -2845,6 +2853,405 @@
     <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
   </div><!-- /q10 -->
 
+  <!-- ════════════════════════════════════════════════════════════
+       Q11 — Análise de Sensibilidade: Tableau Ótimo Dado (11 sub-casos)
+  ════════════════════════════════════════════════════════════ -->
+  <div id="q11" style="display:none">
+
+    <div class="q-header">
+      <div style="display:flex;align-items:center;gap:1rem;padding-bottom:1.2rem;border-bottom:2px solid var(--border);margin-bottom:2rem;">
+        <div class="q-num" style="min-width:2.2rem;height:2.2rem;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;">11</div>
+        <div>
+          <div class="q-title">Análise de Sensibilidade — Tableau Ótimo Dado</div>
+          <div class="q-tags">
+            <span class="q-tag qt-method">MAX · Simplex Padrão</span>
+            <span class="q-tag qt-method">11 sub-casos</span>
+            <span class="q-tag qt-result">z* = 16</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="alert alert-info" style="margin-bottom:1.2rem;">
+      <strong>Enunciado</strong><br>
+      Dado o tableau ótimo abaixo para o problema, realize a análise de sensibilidade pedida nos itens a–k.<br><br>
+      Maximizar: <strong>z = 2x₁ + x₂ − x₃</strong><br>
+      Sujeito a: &emsp;x₁ + 2x₂ + x₃ ≤ 8 &nbsp;(R1)&emsp;|&emsp; −x₁ + x₂ − 2x₃ ≤ 4 &nbsp;(R2)&emsp;|&emsp; x₁, x₂, x₃ ≥ 0
+    </div>
+
+    <!-- Tableau dado -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R1</div>
+        <div class="phase-title">Tableau Ótimo Dado + Extração de Dados</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Folgas: x₄ (R1), x₅ (R2). Tableau ótimo fornecido pelo enunciado:</p>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">z</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₅</div>
+          </div>
+          <table class="tgrid">
+            <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+            <tbody>
+              <tr><td class="t-z">1</td><td class="t-opt">0</td><td class="t-opt">3</td><td class="t-opt">3</td><td class="t-opt">2</td><td class="t-opt">0</td><td class="t-opt"><strong>16</strong></td></tr>
+              <tr><td>0</td><td>1</td><td>2</td><td>1</td><td><strong>1</strong></td><td>0</td><td><strong>8</strong></td></tr>
+              <tr><td>0</td><td>0</td><td>3</td><td class="t-neg">−1</td><td><strong>1</strong></td><td><strong>1</strong></td><td><strong>12</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-warning" style="margin-top:.8rem;">
+          <strong>⚠️ Convenção deste tableau (MAX simplex padrão):</strong> a linha-z armazena <em>−c̄ⱼ</em> para cada variável não-básica. No tableau acima, as entradas da linha-z para x₂, x₃ e x₄ são <strong>3, 3, 2 (≥ 0)</strong> — isso confirma otimalidade para MAX (c̄ⱼ ≤ 0). É a convenção oposta ao Dual Simplex usado em Q6–Q10.
+        </div>
+        <p style="margin-top:.8rem;"><strong>Leitura do tableau:</strong></p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.6rem 0 1rem;">
+          <div class="card" style="padding:.9rem 1.1rem;">
+            <div class="card-title" style="margin-bottom:.4rem;">Base ótima</div>
+            <div style="font-family:'Courier New',monospace;font-size:.9rem;line-height:2;">
+              B = {x₁, x₅}<br>
+              x₁ = 8, &nbsp;x₅ = 12<br>
+              z* = 16
+            </div>
+          </div>
+          <div class="card" style="padding:.9rem 1.1rem;">
+            <div class="card-title" style="margin-bottom:.4rem;">B⁻¹ (colunas x₄ e x₅ no tableau)</div>
+            <div style="font-family:'Courier New',monospace;font-size:.9rem;line-height:2;">
+              B⁻¹ = &nbsp;[[1, 0],<br>
+              &emsp;&emsp;&emsp;&emsp;&emsp;[1, 1]]<br>
+              cB = [2, 0]
+            </div>
+          </div>
+        </div>
+        <p>Custos reduzidos das não-básicas (c̄ⱼ = cⱼ − cB·ȳⱼ):</p>
+        <table class="gtbl" style="max-width:500px;margin:.5rem 0;">
+          <thead><tr><th>Variável</th><th>ȳⱼ (col. no tableau)</th><th>c̄ⱼ = cⱼ − cB·ȳⱼ</th><th>Linha-z (−c̄ⱼ)</th></tr></thead>
+          <tbody>
+            <tr><td>x₂</td><td>[2, 3]</td><td>1 − [2,0]·[2,3]ᵀ = 1−4 = <strong>−3</strong></td><td>3 ✓</td></tr>
+            <tr><td>x₃</td><td>[1, −1]</td><td>−1 − [2,0]·[1,−1]ᵀ = −1−2 = <strong>−3</strong></td><td>3 ✓</td></tr>
+            <tr><td>x₄</td><td>[1, 1]</td><td>0 − [2,0]·[1,1]ᵀ = 0−2 = <strong>−2</strong></td><td>2 ✓</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:.4rem;">Todos c̄ⱼ ≤ 0 → solução ótima confirmada.</p>
+      </div>
+    </div>
+
+    <!-- CASO a -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R2</div>
+        <div class="phase-title">Caso a — Alterar c₂ de 1 para 6 (não-básica)</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>x₂ é <strong>não-básica</strong>. Quando cⱼ de uma não-básica muda por Δ, apenas a entrada da linha-z para xⱼ é afetada:</p>
+        <div class="math-block">Nova entrada linha-z para x₂ = −c̄ⱼ_novo = −(c₂_novo − cB·ȳ₂)<br>= −(6 − [2,0]·[2,3]ᵀ) = −(6 − 4) = <strong>−2 &lt; 0</strong></div>
+        <div class="alert alert-warning">Entrada negativa → x₂ <strong>quer entrar</strong> na base → base atual NÃO é mais ótima com c₂ = 6.</div>
+        <p><strong>Intervalo de validade (base ótima):</strong> −c̄_x₂ ≥ 0 → c₂ − 4 ≤ 0 → <strong>c₂ ≤ 4</strong>. (com c₂=6 > 4 → violado)</p>
+        <p><strong>Ação — 1 iteração Simplex:</strong> x₂ entra. Razões: 8/2 = 4 (x₁), 12/3 = 4 (x₅) → empate, x₅ sai.</p>
+        <div class="t-outer" style="margin-top:.6rem;">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">z</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₂</div>
+          </div>
+          <table class="tgrid">
+            <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+            <tbody>
+              <tr><td class="t-z">1</td><td class="t-opt">0</td><td class="t-opt">0</td><td class="t-opt" style="white-space:nowrap;">7/3</td><td class="t-opt" style="white-space:nowrap;">8/3</td><td class="t-opt" style="white-space:nowrap;">2/3</td><td class="t-opt"><strong>24</strong></td></tr>
+              <tr><td>0</td><td>1</td><td>0</td><td style="white-space:nowrap;">5/3</td><td style="white-space:nowrap;">1/3</td><td style="white-space:nowrap;">−2/3</td><td><strong>0</strong></td></tr>
+              <tr><td>0</td><td>0</td><td>1</td><td style="white-space:nowrap;">−1/3</td><td style="white-space:nowrap;">1/3</td><td style="white-space:nowrap;">1/3</td><td><strong>4</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="result-box">
+          <h4>✓ Nova solução ótima (c₂ = 6)</h4>
+          <div class="result-vars">
+            <span class="rv">x₁ = <span>0</span></span>
+            <span class="rv">x₂ = <span>4</span></span>
+            <span class="rv">z* = <span>24</span></span>
+            <span class="rv" style="color:var(--text-muted);font-size:.82rem;">⚠ x₁ degenerada (=0 na base)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASO b -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R3</div>
+        <div class="phase-title">Caso b — Alterar c₁ de 2 para 4 (básica)</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>x₁ é <strong>básica</strong>. Quando cₖ de uma básica muda por Δ, as entradas da linha-z de <em>todas</em> as não-básicas mudam:</p>
+        <div class="math-block">Nova entrada xⱼ = entrada_atual + Δ × tableau[linha_x₁, col_xⱼ]<br>Δ = 4 − 2 = +2</div>
+        <table class="gtbl" style="max-width:500px;margin:.6rem 0;">
+          <thead><tr><th>Não-básica</th><th>Entrada atual</th><th>+ Δ × tableau[x₁, ·]</th><th>Nova entrada</th><th>≥ 0?</th></tr></thead>
+          <tbody>
+            <tr><td>x₂</td><td>3</td><td>+2 × 2 = +4</td><td>7</td><td>✓</td></tr>
+            <tr><td>x₃</td><td>3</td><td>+2 × 1 = +2</td><td>5</td><td>✓</td></tr>
+            <tr><td>x₄</td><td>2</td><td>+2 × 1 = +2</td><td>4</td><td>✓</td></tr>
+          </tbody>
+        </table>
+        <div class="alert alert-success">Todas as entradas ainda ≥ 0 → base permanece ótima com c₁ = 4.</div>
+        <p><strong>Nova z*</strong> = cB_novo · b̄ = [4, 0] · [8, 12]ᵀ = <strong>32</strong>.</p>
+      </div>
+    </div>
+
+    <!-- CASO c -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R4</div>
+        <div class="phase-title">Caso c — Alterar b = [8, 4]ᵀ para b' = [8, 7]ᵀ</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Alterar o vetor b não afeta a linha-z. Afeta apenas a <strong>solução básica</strong> (viabilidade primal).</p>
+        <div class="math-block">b̄_novo = B⁻¹ · b'<br>= [[1,0],[1,1]] · [8, 7]ᵀ<br>= [8, 8+7]ᵀ = [8, 15]ᵀ</div>
+        <p>x₁ = 8 ≥ 0 ✓ &nbsp;&nbsp; x₅ = 15 ≥ 0 ✓ → Solução ainda viável e ótima.</p>
+        <div class="alert alert-success">Base permanece ótima. z* = [2, 0] · [8, 15]ᵀ = <strong>16</strong> (z não mudou — Δb₂ afeta apenas x₅ que tem c₅ = 0).</div>
+      </div>
+    </div>
+
+    <!-- CASO d -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R5</div>
+        <div class="phase-title">Caso d — Alterar coluna a₂ de [2, 1]ᵀ para [¼, 1]ᵀ</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Mudar a₂ (coluna de x₂ na matriz A) exige recomputar ȳ₂ = B⁻¹·a₂_novo e o custo reduzido:</p>
+        <div class="math-block">ȳ₂_novo = B⁻¹ · [1/4, 1]ᵀ = [[1,0],[1,1]] · [0,25; 1]ᵀ = [0,25; 1,25]ᵀ<br>c̄_x₂ = 1 − [2,0]·[0,25; 1,25]ᵀ = 1 − 0,5 = <strong>+0,5 &gt; 0</strong></div>
+        <div class="alert alert-warning">c̄_x₂ > 0 → entrada linha-z = −0,5 &lt; 0 → x₂ entra na base.</div>
+        <p><strong>Pivot:</strong> x₂ entra (col [0,25; 1,25]). Razões: 8/0,25 = 32 (x₁), 12/1,25 = 9,6 (x₅) → x₅ sai.</p>
+        <div class="t-outer" style="margin-top:.6rem;">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">z</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₂</div>
+          </div>
+          <table class="tgrid">
+            <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+            <tbody>
+              <tr><td class="t-z">1</td><td class="t-opt">0</td><td class="t-opt">0</td><td class="t-opt">2,6</td><td class="t-opt">2,4</td><td class="t-opt">0,4</td><td class="t-opt"><strong>20,8</strong></td></tr>
+              <tr><td>0</td><td>1</td><td>0</td><td>1,2</td><td>0,8</td><td>−0,2</td><td><strong>5,6</strong></td></tr>
+              <tr><td>0</td><td>0</td><td>1</td><td>−0,8</td><td>0,8</td><td>0,8</td><td><strong>9,6</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="result-box">
+          <h4>✓ Nova solução ótima (a₂ alterada)</h4>
+          <div class="result-vars">
+            <span class="rv">x₁ = <span>5,6</span></span>
+            <span class="rv">x₂ = <span>9,6</span></span>
+            <span class="rv">z* = <span>20,8</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASO e -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R6</div>
+        <div class="phase-title">Caso e — Inserir restrição x₂ + x₃ = 3</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Verificar se a solução ótima atual satisfaz a nova restrição:</p>
+        <div class="math-block">x₂ + x₃ = 0 + 0 = 0 ≠ 3 → <strong>VIOLADA</strong></div>
+        <div class="alert alert-warning">A solução atual (x₂=0, x₃=0) viola a nova restrição. Não é mais viável.</div>
+        <p><strong>Procedimento:</strong></p>
+        <ol style="padding-left:1.4rem;line-height:2.1;">
+          <li>Adicionar variável artificial x₆: &nbsp; x₂ + x₃ + x₆ = 3</li>
+          <li>Montar o tableau aumentado com a nova linha</li>
+          <li>Aplicar <strong>Fase 1 (Duas Fases)</strong> ou Big-M para conduzir x₆ → 0</li>
+          <li>Se x₆ = 0 na Fase 1: solução viável encontrada → otimizar na Fase 2</li>
+        </ol>
+        <p style="margin-top:.6rem;">A nova restrição é <em>igualdade</em>, portanto não aceita folga — artificial é obrigatória. Note que a nova linha no tableau, expressa nas variáveis não-básicas atuais, é simplesmente: <span style="font-family:'Courier New',monospace;"> x₂ + x₃ = 3</span> (sem x₁ nem x₅).</p>
+      </div>
+    </div>
+
+    <!-- CASO f -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R7</div>
+        <div class="phase-title">Caso f — Inserir x₆ com c₆ = 4 e a₆ = [1, 2]ᵀ</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Calcular custo reduzido da nova variável:</p>
+        <div class="math-block">ȳ₆ = B⁻¹ · a₆ = [[1,0],[1,1]] · [1, 2]ᵀ = [1, 3]ᵀ<br>c̄_x₆ = 4 − [2,0]·[1,3]ᵀ = 4 − 2 = <strong>+2 &gt; 0</strong></div>
+        <div class="alert alert-warning">c̄_x₆ > 0 → entrada linha-z = −2 &lt; 0 → x₆ quer entrar. Base atual não é mais ótima.</div>
+        <p><strong>Pivot:</strong> x₆ entra (col [1, 3]). Razões: 8/1 = 8 (x₁), 12/3 = 4 (x₅) → <strong>x₅ sai</strong>. Pivot = 3.</p>
+        <div class="t-outer" style="margin-top:.6rem;">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">z</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₆</div>
+          </div>
+          <table class="tgrid">
+            <thead><tr><th>z</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₆</th><th>b</th></tr></thead>
+            <tbody>
+              <tr><td class="t-z">1</td><td class="t-opt">0</td><td class="t-opt">5</td><td class="t-opt" style="white-space:nowrap;">7/3</td><td class="t-opt" style="white-space:nowrap;">8/3</td><td class="t-opt" style="white-space:nowrap;">2/3</td><td class="t-opt">0</td><td class="t-opt"><strong>24</strong></td></tr>
+              <tr><td>0</td><td>1</td><td>1</td><td style="white-space:nowrap;">4/3</td><td style="white-space:nowrap;">2/3</td><td style="white-space:nowrap;">−1/3</td><td>0</td><td><strong>4</strong></td></tr>
+              <tr><td>0</td><td>0</td><td>1</td><td style="white-space:nowrap;">−1/3</td><td style="white-space:nowrap;">1/3</td><td style="white-space:nowrap;">1/3</td><td>1</td><td><strong>4</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="result-box">
+          <h4>✓ Nova solução ótima (com x₆)</h4>
+          <div class="result-vars">
+            <span class="rv">x₁ = <span>4</span></span>
+            <span class="rv">x₆ = <span>4</span></span>
+            <span class="rv">z* = <span>24</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASOS g e h -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R8</div>
+        <div class="phase-title">Casos g e h — Retirar Restrições</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.8rem;">
+          <div class="card">
+            <div class="card-title">g) Retirar R1 (x₁ + 2x₂ + x₃ ≤ 8)</div>
+            <p style="font-size:.9rem;margin-bottom:.6rem;">A restrição R1 é o que mantém x₁ ≤ 8. Sem ela:</p>
+            <div class="math-block" style="font-size:.82rem;padding:.6rem .9rem;">Única R2: −x₁+x₂−2x₃≤4<br>Com x₂=x₃=0: −x₁≤4 → x₁≥−4<br>Não limita x₁ por cima!</div>
+            <div class="alert alert-warning" style="font-size:.85rem;padding:.5rem .8rem;margin-top:.5rem;">x₁ → ∞ ⟹ z = 2x₁ → ∞<br><strong>Problema ILIMITADO</strong></div>
+          </div>
+          <div class="card">
+            <div class="card-title">h) Retirar R2 (−x₁+x₂−2x₃≤4, folga x₅)</div>
+            <p style="font-size:.9rem;margin-bottom:.6rem;">x₅ (folga de R2) está na base com x₅=12. Ao remover R2, retiramos a linha de x₅ do tableau.</p>
+            <p style="font-size:.9rem;">Tableau restante (1 linha — x₁):</p>
+            <div class="math-block" style="font-size:.82rem;padding:.6rem .9rem;">linha-z: 0 3 3 2 → ≥ 0 ✓<br>linha x₁: [1 2 1 1 | 8] ≥ 0 ✓</div>
+            <div class="alert alert-success" style="font-size:.85rem;padding:.5rem .8rem;margin-top:.5rem;">Ainda ótimo. <br>Mesma solução: x₁=8, z*=16</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASOS i e j -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R9</div>
+        <div class="phase-title">Casos i e j — Retirar Variáveis</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="card">
+            <div class="card-title">i) Retirar x₂ (não-básica)</div>
+            <p style="font-size:.9rem;">x₂ é <strong>não-básica</strong> (x₂=0 na solução ótima). Remover simplesmente elimina sua coluna do problema.</p>
+            <div class="alert alert-success" style="font-size:.85rem;padding:.5rem .8rem;margin-top:.5rem;">Solução e base inalteradas.<br>z* = 16, x₁ = 8.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">j) Retirar x₁ (básica, x₁=8)</div>
+            <p style="font-size:.9rem;">x₁ é <strong>básica com valor 8</strong>. Removê-la elimina a variável mais importante do modelo.</p>
+            <p style="font-size:.9rem;margin-top:.5rem;">Novo problema: MAX z = x₂ − x₃<br>s.a. 2x₂+x₃≤8, x₂−2x₃≤4, x₂,x₃≥0</p>
+            <p style="font-size:.9rem;margin-top:.5rem;">Após 1 iteração Simplex (x₂ entra, x₄ sai):</p>
+            <div class="alert alert-success" style="font-size:.85rem;padding:.5rem .8rem;margin-top:.5rem;">Nova solução: x₂=4, z*=4<br><em>(z caiu de 16 para 4)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASO k -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R10</div>
+        <div class="phase-title">Caso k — Intervalos de Variação: Δc₁, Δc₃, Δb</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+
+        <p><strong>c₁ — variável básica (Δ = c₁ − 2):</strong><br>
+        Ao variar c₁, as entradas da linha-z das não-básicas mudam por Δ × tableau[x₁, xⱼ]:</p>
+        <table class="gtbl" style="max-width:520px;margin:.5rem 0 1rem;">
+          <thead><tr><th>Não-básica xⱼ</th><th>Entrada atual</th><th>Variação</th><th>Condição (≥ 0)</th></tr></thead>
+          <tbody>
+            <tr><td>x₂</td><td>3</td><td>3 + 2Δ ≥ 0</td><td>Δ ≥ −3/2 → c₁ ≥ <strong>0,5</strong></td></tr>
+            <tr><td>x₃</td><td>3</td><td>3 + Δ ≥ 0</td><td>Δ ≥ −3 → c₁ ≥ −1</td></tr>
+            <tr><td>x₄</td><td>2</td><td>2 + Δ ≥ 0</td><td>Δ ≥ −2 → c₁ ≥ 0</td></tr>
+          </tbody>
+        </table>
+        <div class="alert alert-success">Restrição mais apertada (x₂): &nbsp;<strong>c₁ ∈ [0,5;&nbsp;+∞)</strong></div>
+
+        <p style="margin-top:1rem;"><strong>c₃ — variável não-básica (Δ = c₃ − (−1)):</strong><br>
+        Somente a entrada da linha-z de x₃ é afetada: entrada_nova = 3 − Δ ≥ 0 → Δ ≤ 3 → c₃ ≤ 2.</p>
+        <div class="alert alert-success"><strong>c₃ ∈ (−∞;&nbsp;2]</strong> &nbsp;(sem limite inferior — quanto mais negativo, mais "não-básica" x₃ fica)</div>
+
+        <p style="margin-top:1rem;"><strong>Vetor b — viabilidade primal (b̄ = B⁻¹·b ≥ 0):</strong></p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.5rem 0 1rem;">
+          <div>
+            <p style="font-size:.88rem;font-weight:600;">b₁ = 8 + Δ₁:</p>
+            <div class="math-block" style="font-size:.82rem;padding:.6rem .9rem;">B⁻¹·[b₁,4]ᵀ = [b₁, b₁+4]ᵀ<br>x₁ = b₁ ≥ 0 → b₁ ≥ 0 ← crítica<br>x₅ = b₁+4 ≥ 0 → b₁ ≥ −4</div>
+            <div class="alert alert-success" style="font-size:.85rem;padding:.5rem .8rem;margin-top:.4rem;"><strong>b₁ ∈ [0;&nbsp;+∞)</strong></div>
+          </div>
+          <div>
+            <p style="font-size:.88rem;font-weight:600;">b₂ = 4 + Δ₂:</p>
+            <div class="math-block" style="font-size:.82rem;padding:.6rem .9rem;">B⁻¹·[8,b₂]ᵀ = [8, 8+b₂]ᵀ<br>x₁ = 8 ≥ 0 → sempre ✓<br>x₅ = 8+b₂ ≥ 0 → b₂ ≥ −8 ← crítica</div>
+            <div class="alert alert-success" style="font-size:.85rem;padding:.5rem .8rem;margin-top:.4rem;"><strong>b₂ ∈ [−8;&nbsp;+∞)</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabela Resumo -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">R11</div>
+        <div class="phase-title">Resumo dos 11 Sub-casos</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <table class="gtbl">
+          <thead><tr><th>Caso</th><th>Alteração</th><th>Diagnóstico</th><th>Resultado</th></tr></thead>
+          <tbody>
+            <tr><td><strong>a</strong></td><td>c₂: 1 → 6</td><td class="t-neg" style="background:none;font-weight:normal;">NÃO ótimo (c₂ > 4)</td><td>Pivot x₂ entra, x₅ sai → z*=24</td></tr>
+            <tr class="hl"><td><strong>b</strong></td><td>c₁: 2 → 4</td><td>Ainda ótimo</td><td>z*=32, mesma base</td></tr>
+            <tr><td><strong>c</strong></td><td>b=[8,4]→[8,7]</td><td>Ainda viável e ótimo</td><td>z*=16 inalterado</td></tr>
+            <tr class="hl"><td><strong>d</strong></td><td>a₂: [2,1]→[¼,1]</td><td class="t-neg" style="background:none;font-weight:normal;">NÃO ótimo</td><td>Pivot x₂ entra → z*=20,8</td></tr>
+            <tr><td><strong>e</strong></td><td>+restrição x₂+x₃=3</td><td class="t-neg" style="background:none;font-weight:normal;">Sol. atual violada</td><td>Fase 1 (artificial) necessária</td></tr>
+            <tr class="hl"><td><strong>f</strong></td><td>+variável x₆ (c₆=4)</td><td class="t-neg" style="background:none;font-weight:normal;">NÃO ótimo (c̄_x₆>0)</td><td>Pivot x₆ entra → z*=24</td></tr>
+            <tr><td><strong>g</strong></td><td>−R1</td><td class="t-neg" style="background:none;font-weight:normal;">ILIMITADO</td><td>x₁ sem cota superior</td></tr>
+            <tr class="hl"><td><strong>h</strong></td><td>−R2</td><td>Ainda ótimo</td><td>z*=16 inalterado</td></tr>
+            <tr><td><strong>i</strong></td><td>−x₂ (não-básica)</td><td>Ainda ótimo</td><td>z*=16 inalterado</td></tr>
+            <tr class="hl"><td><strong>j</strong></td><td>−x₁ (básica)</td><td>Re-otimizar</td><td>Novo z*=4, x₂=4</td></tr>
+            <tr><td><strong>k</strong></td><td>Intervalos Δ</td><td>Análise paramétrica</td><td>c₁∈[0,5;∞) | c₃∈(−∞;2] | b₁∈[0;∞) | b₂∈[−8;∞)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /q11 -->
+
   </div><!-- /content -->
 </div><!-- /ex-layout -->
 
@@ -2852,7 +3259,7 @@
 
 <script>
   (function () {
-    var sections = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
+    var sections = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11'];
     var links    = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
     var mSel     = document.getElementById('ex-select');
 
