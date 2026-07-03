@@ -48,31 +48,118 @@
       padding-right: 2.2rem;
     }
 
-    @media (max-width: 640px) {
-      .ex-layout { grid-template-columns: 1fr; padding: 0 .8rem 2rem; gap: 0; }
-      .ex-sidebar { display: none; }
-      .ex-mobile-nav { display: block; }
+    /* ── Tablet (até 900px) ── */
+    @media (max-width: 900px) {
+      .ex-layout { grid-template-columns: 170px 1fr; gap: 1.2rem; padding: 0 1rem 2rem; }
+      .ex-sidebar a { font-size: .8rem; padding: .45rem .5rem; }
+      .ex-sidebar-meta { display: none; }
+      table.gtbl, table.tgrid, table.rtbl { font-size: .82rem; }
+      table.gtbl th, table.gtbl td { padding: 6px 9px; }
+      table.tgrid th, table.tgrid td { padding: 6px 10px; }
+    }
 
-      /* Grids inline: forçar coluna única */
-      div[style*="display:grid"], div[style*="display: grid"] {
+    /* ── Mobile (até 640px) ── */
+    @media (max-width: 640px) {
+      /* Layout principal */
+      .ex-layout { grid-template-columns: 1fr; padding: 0 .6rem 2rem; gap: 0; }
+      .ex-sidebar { display: none; }
+      .ex-mobile-nav { display: block; padding: .5rem .6rem .2rem; }
+
+      /* Todos os grids inline → coluna única */
+      div[style*="display:grid"],
+      div[style*="display: grid"] {
         grid-template-columns: 1fr !important;
+        gap: .5rem !important;
       }
 
-      /* Tabelas: rolar horizontalmente */
-      .t-outer { max-width: calc(100vw - 1.6rem); }
-      table.gtbl { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: .8rem; }
-      table.gtbl th, table.gtbl td { padding: 6px 8px; white-space: normal; }
-      table.tgrid { font-size: .8rem; }
-      table.tgrid th, table.tgrid td { padding: 5px 9px; }
+      /* Tabelas: scroll horizontal */
+      .t-outer {
+        max-width: calc(100vw - 1.2rem);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table.gtbl {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: .77rem;
+        min-width: 0;
+      }
+      table.gtbl th, table.gtbl td {
+        padding: 5px 7px;
+        white-space: normal;
+        word-break: break-word;
+      }
+      table.tgrid {
+        font-size: .77rem;
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      table.tgrid th, table.tgrid td { padding: 5px 8px; }
+      table.rtbl {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: .77rem;
+      }
+      table.rtbl th, table.rtbl td { padding: 5px 9px; }
 
-      /* Tipografia compacta */
-      .phase-title { font-size: .95rem; }
-      .q-title { font-size: 1.25rem; }
-      .q-num { width: 42px; height: 42px; font-size: 1.1rem; }
-      .ops-block { font-size: .78rem; line-height: 1.7; }
-      .result-box { padding: .8rem 1rem; }
+      /* Blocos de código / math */
+      .math-block {
+        font-size: .75rem;
+        padding: .6rem .8rem;
+        overflow-x: auto;
+        max-width: calc(100vw - 1.4rem);
+        word-break: break-word;
+      }
+      .ops-block {
+        font-size: .75rem;
+        line-height: 1.65;
+        padding: .5rem .7rem;
+        overflow-x: auto;
+      }
+
+      /* Phase head: linhas decorativas somem, título quebra */
+      .phase-head {
+        flex-wrap: wrap;
+        gap: .35rem;
+        margin-bottom: .7rem;
+      }
+      .phase-line { display: none; }
+      .phase-tag  { font-size: .7rem; padding: 2px 7px; }
+      .phase-title { font-size: .92rem; width: 100%; }
       .phase-body { padding-left: 0; }
-      .nav-links { gap: .4rem; }
+      .phase { margin-bottom: 1.6rem; }
+
+      /* Cabeçalho da questão */
+      .q-header { margin-bottom: 1.4rem; }
+      .q-title { font-size: 1.1rem; }
+      .q-num {
+        min-width: 2rem !important;
+        height: 2rem !important;
+        font-size: .9rem !important;
+      }
+      .q-tags { gap: .35rem; }
+      .q-tag  { font-size: .72rem; padding: 2px 8px; }
+
+      /* Alertas */
+      .alert { font-size: .83rem; padding: .55rem .75rem; }
+
+      /* Result box */
+      .result-box { padding: .7rem .9rem; }
+      .result-vars { gap: .6rem; }
+      .rv { font-size: .85rem; }
+
+      /* Divs com borda inline (Q10 tipo 3, Q12–Q14) */
+      div[style*="border:2px"],
+      div[style*="border: 2px"] { padding: .65rem !important; }
+
+      /* Iter title */
+      .iter-title { font-size: .95rem; }
+
+      /* Pills */
+      .pill { font-size: .72rem; padding: 2px 8px; }
     }
 
     .ex-sidebar {
@@ -2571,83 +2658,94 @@
     <!-- ENUNCIADO -->
     <div class="alert alert-info" style="margin-bottom:1.2rem;">
       <strong>Enunciado</strong><br>
-      Faça a análise de sensibilidade, considerando todos os casos, para o modelo abaixo. Use o tableau ótimo já fornecido.<br><br>
+      Faça a análise de sensibilidade, considerando todos os casos, para o modelo abaixo.<br><br>
       Minimizar: <strong>Z = 6x₁ + 3x₂</strong><br>
       Sujeito a: &emsp;6x₁ − 3x₂ + x₃ ≥ 2 &nbsp;·&nbsp; 3x₁ + 4x₂ + x₃ ≥ 5 &nbsp;·&nbsp; x₁, x₂, x₃ ≥ 0
     </div>
 
-    <!-- ★ GUIA GERAL — PASSOS ROMANOS ★ -->
+    <!-- BIG PICTURE -->
     <div class="phase" style="border-left:4px solid var(--primary);">
       <div class="phase-head">
         <div class="phase-line"></div>
-        <div class="phase-tag" style="background:var(--primary);color:#fff;min-width:5rem;">MÉTODO</div>
-        <div class="phase-title" style="color:var(--primary);">Roteiro Universal — Como Resolver Qualquer Questão de Sensibilidade</div>
+        <div class="phase-tag" style="background:var(--primary);color:#fff;">ANTES DE TUDO</div>
+        <div class="phase-title" style="color:var(--primary);">O que é isso e por que existe?</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <div class="alert alert-info" style="margin-bottom:1rem;">
-          O professor vai sempre dar o <strong>tableau ótimo já resolvido</strong> e pedir o intervalo de algum parâmetro. Siga estes passos em ordem — funciona para qualquer problema.
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+          <div style="background:#fff3cd;border-radius:8px;padding:1rem;border-left:4px solid #f0ad4e;">
+            <strong>Imagine esta situação:</strong><br><br>
+            Você resolveu um problema e achou que a melhor forma de fazer algo é usar apenas o recurso x₃ = 5 unidades, gastando Z = 0.<br><br>
+            Aí alguém pergunta: <em>"Mas e se o custo de x₃ subir? E se tivermos menos recurso disponível no lado direito?"</em><br><br>
+            Você teria que resolver tudo de novo do zero? <strong>Não!</strong> É exatamente isso que a Análise de Sensibilidade resolve.
+          </div>
+          <div style="background:#d4edda;border-radius:8px;padding:1rem;border-left:4px solid #28a745;">
+            <strong>O que ela responde:</strong><br><br>
+            <em>"Quanto pode mudar este número antes de minha solução atual deixar de ser a melhor?"</em><br><br>
+            O professor dá o tableau já resolvido e pede o <strong>intervalo</strong> de algum parâmetro.<br><br>
+            Existem <strong>3 tipos de parâmetro</strong> que podem mudar — e cada um tem um procedimento diferente.
+          </div>
         </div>
 
         <table class="gtbl" style="max-width:900px;">
-          <thead><tr><th style="width:3rem;">Passo</th><th>O que fazer</th><th>Como identificar no tableau</th></tr></thead>
+          <thead><tr><th>Tipo</th><th>O que muda</th><th>Em palavras simples</th><th>O que pode quebrar</th></tr></thead>
           <tbody>
             <tr>
-              <td style="text-align:center;font-weight:700;font-size:1.1rem;">I</td>
-              <td><strong>Identifique a base atual</strong><br>Quais variáveis estão na base? (coluna com um único "1" e resto "0")</td>
-              <td>Procure colunas identidade no tableau ótimo. As variáveis da base ficam na coluna "Base" (esquerda).</td>
+              <td style="text-align:center;"><span style="background:#e67e22;color:#fff;padding:.2rem .5rem;border-radius:4px;">Tipo 1</span></td>
+              <td>Custo de variável que está em <strong>ZERO</strong> na solução</td>
+              <td>Mudamos o preço de algo que não estamos usando. Em algum momento ele fica tão barato que vale a pena usar.</td>
+              <td>A solução atual pode deixar de ser a melhor <em>(problema de otimalidade)</em></td>
             </tr>
             <tr>
-              <td style="text-align:center;font-weight:700;font-size:1.1rem;">II</td>
-              <td><strong>Monte o vetor cB</strong><br>Anote o custo (da função objetivo) de cada variável que está na base.</td>
-              <td>cB = [custo da 1ª básica, custo da 2ª básica, ...]<br>Folgas têm custo 0.</td>
+              <td style="text-align:center;"><span style="background:#8e44ad;color:#fff;padding:.2rem .5rem;border-radius:4px;">Tipo 2</span></td>
+              <td>Custo de variável que está sendo <strong>USADA</strong> na solução</td>
+              <td>Mudamos o preço de algo que estamos usando. Isso muda todos os custos relativos e pode fazer outras coisas ficarem mais atrativas.</td>
+              <td>A solução atual pode deixar de ser a melhor <em>(problema de otimalidade)</em></td>
             </tr>
             <tr>
-              <td style="text-align:center;font-weight:700;font-size:1.1rem;">III</td>
-              <td><strong>Identifique B⁻¹</strong><br>Leia as colunas das <em>folgas originais</em> (x₄, x₅, …) no tableau ótimo — elas formam B⁻¹.</td>
-              <td>Se o problema tiver m restrições, há m colunas de folga. B⁻¹ é a submatriz m×m dessas colunas.</td>
-            </tr>
-            <tr>
-              <td style="text-align:center;font-weight:700;font-size:1.1rem;">IV</td>
-              <td><strong>Identifique o que varia</strong><br>A questão pede variação em: (a) custo de não-básica, (b) custo de básica ou (c) lado direito bᵢ?</td>
-              <td>Leia o enunciado. Substitua o parâmetro por <strong>β</strong> (ou b + Δ) e siga o caso correspondente.</td>
-            </tr>
-            <tr>
-              <td style="text-align:center;font-weight:700;font-size:1.1rem;">V</td>
-              <td><strong>Aplique a fórmula do caso</strong><br>Cada caso tem uma fórmula diferente (detalhado abaixo).<br>Expresse o resultado em termos de β.</td>
-              <td>— Caso b: calcule B⁻¹ × b'<br>— Caso c não-básica: calcule novo custo reduzido<br>— Caso c básica: recalcule todos os custos reduzidos</td>
-            </tr>
-            <tr>
-              <td style="text-align:center;font-weight:700;font-size:1.1rem;">VI</td>
-              <td><strong>Imponha as condições de viabilidade/otimalidade</strong><br>Cada linha deve ser ≥ 0 (viabilidade) ou cada custo reduzido ≤ 0 (otimalidade).</td>
-              <td>Monte uma inequação por linha. Resolva para β. <strong>Intersecte todos os intervalos.</strong></td>
-            </tr>
-            <tr>
-              <td style="text-align:center;font-weight:700;font-size:1.1rem;">VII</td>
-              <td><strong>Escreva o intervalo final</strong><br>β ∈ [limite_inferior, limite_superior]</td>
-              <td>O intervalo mais restritivo ganha. Se não houver limite inferior, use −∞. Se não houver superior, use +∞.</td>
+              <td style="text-align:center;"><span style="background:#27ae60;color:#fff;padding:.2rem .5rem;border-radius:4px;">Tipo 3</span></td>
+              <td>Lado direito de uma restrição (o b)</td>
+              <td>Mudamos a quantidade disponível de um recurso. Isso pode fazer as variáveis que estão sendo usadas ficarem negativas — impossível!</td>
+              <td>A solução pode deixar de existir <em>(problema de viabilidade)</em></td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-top:1rem;">
-          <div style="background:var(--bg-alt);border-left:3px solid #e67e22;border-radius:6px;padding:.7rem 1rem;font-size:.87rem;">
-            <strong>Caso A — c de NÃO-BÁSICA</strong><br>
-            Afeta: só o custo reduzido dessa variável<br>
-            Condição: custo reduzido ≤ 0<br>
-            Preserva: <em>otimalidade</em>
+    <!-- GLOSSÁRIO RÁPIDO -->
+    <div class="phase">
+      <div class="phase-head">
+        <div class="phase-line"></div>
+        <div class="phase-tag">GLOSSÁRIO</div>
+        <div class="phase-title">Tradução dos Termos — O que Cada Coisa Significa</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
+          <div style="background:var(--bg-alt);border-radius:6px;padding:.8rem 1rem;">
+            <strong>Variável "na base" (básica)</strong><br>
+            É uma variável que está sendo <em>usada</em> na solução atual — ela tem valor diferente de zero. No tableau, ela aparece com uma coluna que tem 1 numa linha e 0 em todas as outras.
           </div>
-          <div style="background:var(--bg-alt);border-left:3px solid #8e44ad;border-radius:6px;padding:.7rem 1rem;font-size:.87rem;">
-            <strong>Caso B — c de BÁSICA</strong><br>
-            Afeta: todos os custos reduzidos das não-básicas<br>
-            Condição: todos ≤ 0 (interseção)<br>
-            Preserva: <em>otimalidade</em>
+          <div style="background:var(--bg-alt);border-radius:6px;padding:.8rem 1rem;">
+            <strong>Variável "fora da base" (não-básica)</strong><br>
+            É uma variável com valor = 0 na solução atual. Ela não está sendo usada. Isso não significa que ela não existe — significa que, por enquanto, não compensa usá-la.
           </div>
-          <div style="background:var(--bg-alt);border-left:3px solid #27ae60;border-radius:6px;padding:.7rem 1rem;font-size:.87rem;">
-            <strong>Caso C — b (recurso)</strong><br>
-            Afeta: valores das variáveis básicas = B⁻¹b'<br>
-            Condição: todos ≥ 0 (interseção)<br>
-            Preserva: <em>viabilidade</em>
+          <div style="background:var(--bg-alt);border-radius:6px;padding:.8rem 1rem;">
+            <strong>Linha z (primeira linha do tableau)</strong><br>
+            Mostra o "quanto cada variável contribuiria" se entrasse na solução. Se o número dela na linha z for negativo (ou zero), ela não melhora nada — fica fora. Se ficar positivo, ela quer entrar.
+          </div>
+          <div style="background:var(--bg-alt);border-radius:6px;padding:.8rem 1rem;">
+            <strong>Coluna b (última coluna do tableau)</strong><br>
+            São os valores atuais de cada variável da base. Esses valores <em>têm que ser ≥ 0</em>. Se algum ficar negativo, a solução não existe mais (inviável).
+          </div>
+          <div style="background:var(--bg-alt);border-radius:6px;padding:.8rem 1rem;">
+            <strong>B⁻¹ (lê-se: B inversa)</strong><br>
+            É uma matriz que aparece nas colunas das variáveis de folga (x₄, x₅, …) no tableau ótimo. O professor às vezes dá ela pronta como dica. Ela é usada para calcular como a coluna b muda quando b muda.
+          </div>
+          <div style="background:var(--bg-alt);border-radius:6px;padding:.8rem 1rem;">
+            <strong>β (beta)</strong><br>
+            É apenas um nome para o valor que estamos testando. Quando a questão pede o intervalo de b₁, substituímos b₁ por β e vemos quais valores de β mantêm tudo funcionando.
           </div>
         </div>
       </div>
@@ -2657,236 +2755,274 @@
     <div class="phase">
       <div class="phase-head">
         <div class="phase-line"></div>
-        <div class="phase-tag">I + II + III</div>
-        <div class="phase-title">Passos I, II e III Aplicados — Tableau Ótimo e B⁻¹</div>
+        <div class="phase-tag">Passo I</div>
+        <div class="phase-title">Leia o Tableau Ótimo — Quem Está Sendo Usado?</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <p>Restrições ≥ são multiplicadas por −1 para obter folgas. Aplica-se Dual Simplex (uma iteração). Tableau <strong>ótimo</strong> resultante:</p>
+        <div style="background:#fff3cd;border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;border-left:3px solid #f0ad4e;font-size:.9rem;">
+          <strong>O que fazer neste passo:</strong> antes de qualquer cálculo, identifique exatamente quem está na solução e quem está de fora. Olhe o tableau ótimo (já dado ou calculado) e preencha mentalmente: "variáveis na base = ... com valores ..., variáveis fora = ...".
+        </div>
+
+        <p>O problema tem restrições ≥, então multiplica-se por −1 e adiciona folgas x₄, x₅. Após uma iteração de Dual Simplex, chega-se ao tableau ótimo:</p>
         <div class="t-outer">
           <table class="tgrid t-base-col">
-            <thead><tr><th>Base</th><th>x₁</th><th>x₂</th><th>x₃</th><th style="background:#e8f5e9;">x₄</th><th style="background:#e8f5e9;">x₅</th><th>b</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Quem está aqui</th><th>x₁</th><th>x₂</th><th>x₃</th>
+                <th style="background:#e8f5e9;">x₄ (folga R1)</th>
+                <th style="background:#e8f5e9;">x₅ (folga R2)</th>
+                <th>Valor atual (b)</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr class="t-z"><td>z</td><td class="t-opt">−6</td><td class="t-opt">−3</td><td class="t-opt">0</td><td class="t-opt" style="background:#e8f5e9;">0</td><td class="t-opt" style="background:#e8f5e9;">0</td><td class="t-pc">0</td></tr>
-              <tr><td>x₄</td><td>−3</td><td>7</td><td>0</td><td class="t-pv" style="background:#e8f5e9;">1</td><td class="t-pv" style="background:#e8f5e9;">−1</td><td class="t-pc">3</td></tr>
-              <tr><td>x₃</td><td>3</td><td>4</td><td>1</td><td class="t-pv" style="background:#e8f5e9;">0</td><td class="t-pv" style="background:#e8f5e9;">−1</td><td class="t-pc">5</td></tr>
+              <tr class="t-z">
+                <td>linha z<br><small>(verifica otimalidade)</small></td>
+                <td class="t-opt">−6</td><td class="t-opt">−3</td><td class="t-opt">0</td>
+                <td class="t-opt" style="background:#e8f5e9;">0</td>
+                <td class="t-opt" style="background:#e8f5e9;">0</td>
+                <td class="t-pc">Z = 0</td>
+              </tr>
+              <tr>
+                <td><strong>x₄ NA BASE</strong><br><small>(folga da restrição 1)</small></td>
+                <td>−3</td><td>7</td><td>0</td>
+                <td class="t-pv" style="background:#e8f5e9;">1</td>
+                <td class="t-pv" style="background:#e8f5e9;">−1</td>
+                <td class="t-pc"><strong>3</strong></td>
+              </tr>
+              <tr>
+                <td><strong>x₃ NA BASE</strong><br><small>(variável original)</small></td>
+                <td>3</td><td>4</td><td>1</td>
+                <td class="t-pv" style="background:#e8f5e9;">0</td>
+                <td class="t-pv" style="background:#e8f5e9;">−1</td>
+                <td class="t-pc"><strong>5</strong></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-top:.8rem;">
-          <div style="background:var(--bg-alt);border-radius:6px;padding:.7rem 1rem;font-size:.88rem;">
-            <strong>Passo I — Base:</strong><br>
-            x₄ = 3 (folga da R1)<br>
-            x₃ = 5 (variável original)<br>
-            Não-básicas: x₁=0, x₂=0, x₅=0
+          <div style="background:#d4edda;border-radius:6px;padding:.7rem 1rem;font-size:.88rem;border-left:3px solid #28a745;">
+            <strong>✅ Variáveis NA BASE (sendo usadas):</strong><br>
+            x₄ = 3 &nbsp;&nbsp; x₃ = 5<br>
+            Custo de cada uma: c(x₄)=0, c(x₃)=0<br>
+            <em>→ vetor cB = [0, 0]</em>
           </div>
-          <div style="background:var(--bg-alt);border-radius:6px;padding:.7rem 1rem;font-size:.88rem;">
-            <strong>Passo II — cB:</strong><br>
-            c(x₄) = 0 (folga, sem custo)<br>
-            c(x₃) = 0 (está em Z com coef 0)<br>
-            → cB = [0, 0]
+          <div style="background:#f8d7da;border-radius:6px;padding:.7rem 1rem;font-size:.88rem;border-left:3px solid #dc3545;">
+            <strong>❌ Variáveis FORA DA BASE (valor = 0):</strong><br>
+            x₁ = 0 &nbsp;&nbsp; x₂ = 0 &nbsp;&nbsp; x₅ = 0<br>
+            <em>→ por enquanto não compensa usá-las</em>
           </div>
-          <div style="background:#e8f5e9;border-radius:6px;padding:.7rem 1rem;font-size:.88rem;">
-            <strong>Passo III — B⁻¹:</strong><br>
-            Colunas de x₄ e x₅ (verde):<br>
-            B⁻¹ = [[1, −1], [0, −1]]
+          <div style="background:#e8f5e9;border-radius:6px;padding:.7rem 1rem;font-size:.88rem;border-left:3px solid #27ae60;">
+            <strong>🔎 B⁻¹ (colunas verde do tableau):</strong><br>
+            Col. x₄: [1, 0]<br>
+            Col. x₅: [−1, −1]<br>
+            <em>→ usada no Tipo 3 (variação em b)</em>
           </div>
+        </div>
+        <div class="result-box" style="margin-top:.8rem;">
+          Solução atual: <strong>x₁=0, x₂=0, x₃=5</strong> com <strong>Z*=0</strong>. A linha z tem só valores ≤ 0 → ótima. A coluna b tem só valores ≥ 0 → viável.
         </div>
       </div>
     </div>
 
-    <!-- CASO A: cj NÃO-BÁSICA -->
+    <!-- TIPO 1: cj NÃO-BÁSICA -->
     <div class="phase">
       <div class="phase-head">
         <div class="phase-line"></div>
-        <div class="phase-tag">CASO A</div>
-        <div class="phase-title">Variação em cⱼ de Variável Não-Básica (Passos IV → VII)</div>
+        <div class="phase-tag" style="background:#e67e22;color:#fff;">Tipo 1</div>
+        <div class="phase-title">Custo de variável que está em ZERO — Passos II, III, IV, V</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <div class="alert alert-info" style="margin-bottom:.8rem;">
-          <strong>Passo IV:</strong> Varia c de variável <em>não-básica</em> → afeta só o custo reduzido dela na linha z.<br>
-          <strong>Fórmula (Passo V):</strong> custo reduzido de xⱼ = (entrada atual na linha z) ← quando cB = [0,0], a entrada já é simplesmente −cⱼ.<br>
-          <strong>Condição (Passo VI):</strong> custo reduzido ≤ 0 → −cⱼ ≤ 0 → cⱼ ≥ 0.
+        <div style="background:#fff3cd;border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;border-left:3px solid #f0ad4e;font-size:.9rem;">
+          <strong>O raciocínio em palavras:</strong> x₁ e x₂ estão fora da solução (valor zero). Olhe a linha z — para x₁ o número é −6, para x₂ é −3. Esses números negativos dizem "não vale a pena entrar". Se o custo c₁ mudar, esse número na linha z muda também. A pergunta é: <strong>até que valor c₁ pode ir antes de esse número ficar positivo</strong> (momento em que x₁ vai querer entrar)?
         </div>
 
-        <!-- c1 -->
-        <p><strong>Aplicando para c₁ (x₁ não-básica, valor atual c₁ = 6):</strong></p>
-        <div class="t-outer" style="margin:.4rem 0;">
-          <table class="gtbl" style="max-width:640px;">
-            <thead><tr><th>Passo</th><th>Operação</th><th>Resultado</th></tr></thead>
-            <tbody>
-              <tr><td>V</td><td>Entrada z de x₁ se c₁ vira β: nova entrada = −β</td><td>−β</td></tr>
-              <tr><td>VI</td><td>Condição de otimalidade: −β ≤ 0</td><td>β ≥ 0</td></tr>
-              <tr><td>VII</td><td>Intervalo de c₁</td><td><strong>c₁ ∈ [0, +∞)</strong></td></tr>
-            </tbody>
-          </table>
+        <p><strong>Passo II — Identifique o número atual na linha z da variável não-básica:</strong></p>
+        <p>Para x₁: o número na linha z é −6. Para x₂: é −3. Como cB = [0, 0] (custos das básicas são zero), esses números são simplesmente = −c₁ e −c₂.</p>
+
+        <p><strong>Passo III — Substitua o custo por β e recalcule:</strong></p>
+        <p>Se c₁ vira β, o número da linha z de x₁ vira −β. Para que x₁ fique fora (solução continua a mesma), precisamos: −β ≤ 0.</p>
+
+        <p><strong>Passo IV — Resolva a inequação:</strong></p>
+        <p>−β ≤ 0 &nbsp;→&nbsp; β ≥ 0 &nbsp;→&nbsp; c₁ deve ser ≥ 0.</p>
+
+        <p><strong>Passo V — Escreva o intervalo:</strong></p>
+        <div class="result-box" style="padding:.5rem 1rem;margin:.4rem 0 1rem;">
+          c₁ ∈ [0, +∞) &nbsp;·&nbsp; c₂ ∈ [0, +∞)
         </div>
 
-        <!-- c2 -->
-        <p style="margin-top:.8rem;"><strong>Aplicando para c₂ (x₂ não-básica, valor atual c₂ = 3):</strong></p>
-        <div class="t-outer" style="margin:.4rem 0;">
-          <table class="gtbl" style="max-width:640px;">
-            <thead><tr><th>Passo</th><th>Operação</th><th>Resultado</th></tr></thead>
-            <tbody>
-              <tr><td>V</td><td>Entrada z de x₂ se c₂ vira β: nova entrada = −β</td><td>−β</td></tr>
-              <tr><td>VI</td><td>Condição: −β ≤ 0</td><td>β ≥ 0</td></tr>
-              <tr><td>VII</td><td>Intervalo de c₂</td><td><strong>c₂ ∈ [0, +∞)</strong></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- E SE TABLE -->
-        <p style="margin-top:1rem;font-weight:700;">📋 Tabela "E Se" — Caso A (c de não-básica)</p>
+        <p style="font-weight:700;">📋 Tabela "E Se" — o que muda conforme c₁ varia:</p>
         <div class="t-outer">
           <table class="gtbl" style="max-width:900px;">
-            <thead><tr><th>E se c₁ for...</th><th>O que acontece</th><th>O que fazer</th></tr></thead>
+            <thead><tr><th>E se c₁ for…</th><th>O número de x₁ na linha z fica…</th><th>O que acontece</th><th>O que fazer</th></tr></thead>
             <tbody>
-              <tr class="hl"><td>c₁ ∈ [0, +∞) — dentro do intervalo</td><td>Custo reduzido de x₁ fica ≤ 0 → x₁ não quer entrar na base</td><td>Nada. Base atual permanece ótima. Z* muda proporcionalmente.</td></tr>
-              <tr><td>c₁ = 0 (no limite inferior)</td><td>Custo reduzido = 0 → x₁ poderia entrar sem mudar Z (solução alternativa)</td><td>Há outra base ótima com mesmo Z*. Pode ignorar ou pivotear.</td></tr>
-              <tr><td>c₁ &lt; 0 (abaixo do intervalo)</td><td>Custo reduzido de x₁ &gt; 0 → x₁ quer entrar (melhora Z)</td><td>Usar Simplex Primal: x₁ entra na base → nova solução ótima.</td></tr>
+              <tr class="hl"><td><strong>c₁ = 6 (atual)</strong></td><td>−6 (muito negativo)</td><td>x₁ não tem nenhuma vontade de entrar. Solução perfeita.</td><td>Nada.</td></tr>
+              <tr class="hl"><td><strong>c₁ = 3 (qualquer valor ≥ 0)</strong></td><td>−3 (ainda negativo)</td><td>Continua igual — x₁ ainda não quer entrar. Mesma solução.</td><td>Nada.</td></tr>
+              <tr><td><strong>c₁ = 0 (exatamente no limite)</strong></td><td>0 (zero)</td><td>x₁ ficaria indiferente — poderia entrar ou ficar de fora, daria na mesma. Existem duas soluções com mesmo Z*.</td><td>Pode ignorar ou entrar com x₁ (dá no mesmo).</td></tr>
+              <tr><td><strong>c₁ = −2 (abaixo de 0)</strong></td><td>+2 (positivo!)</td><td>Agora x₁ quer entrar — usar x₁ diminuiria Z. A solução atual não é mais a melhor.</td><td>Rodar Simplex Primal: x₁ entra na base, saída pela regra da razão mínima.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- CASO B: cₖ BÁSICA -->
+    <!-- TIPO 2: cₖ BÁSICA -->
     <div class="phase">
       <div class="phase-head">
         <div class="phase-line"></div>
-        <div class="phase-tag">CASO B</div>
-        <div class="phase-title">Variação em cₖ de Variável Básica (Passos IV → VII)</div>
+        <div class="phase-tag" style="background:#8e44ad;color:#fff;">Tipo 2</div>
+        <div class="phase-title">Custo de variável que está SENDO USADA — Passos II, III, IV, V</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <div class="alert alert-info" style="margin-bottom:.8rem;">
-          <strong>Passo IV:</strong> Varia c de variável <em>básica</em> → afeta TODOS os custos reduzidos das não-básicas.<br>
-          <strong>Fórmula (Passo V):</strong> para cada não-básica xⱼ: z_j_novo = z_j_atual + Δ × (coef de xⱼ na linha de xₖ no tableau)<br>
-          <strong>Condição (Passo VI):</strong> z_j_novo ≤ 0 para TODAS as não-básicas → interseção dos intervalos.
+        <div style="background:#fff3cd;border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;border-left:3px solid #f0ad4e;font-size:.9rem;">
+          <strong>O raciocínio em palavras:</strong> x₃ está na solução com valor 5. Seu custo atual é 0. Se x₃ ficar mais caro (c₃ aumenta), as variáveis que estavam fora (x₁, x₂, x₅) ficam relativamente mais baratas — pode chegar um ponto em que uma delas queira entrar e substituir x₃.<br><br>
+          <strong>Diferença do Tipo 1:</strong> quando muda o custo de uma variável básica, TODOS os números da linha z mudam juntos (não só um). Por isso você precisa checar todas as variáveis fora da base.
         </div>
 
-        <p><strong>Variável básica relevante: x₃ (c₃ = 0 atualmente). Muda para 0 + Δ.</strong></p>
-        <p>Linha de x₃ no tableau ótimo: [3, 4, 1, 0, −1 | 5] (coeficientes nas colunas x₁, x₂, x₃, x₄, x₅)</p>
+        <p><strong>Variável cuja análise faremos: x₃ (está na base com valor 5, custo c₃ = 0). Chamamos a variação de Δ: c₃ = 0 + Δ.</strong></p>
 
-        <p style="margin-top:.8rem;"><strong>Passo V — Novos custos reduzidos (linha z + Δ × linha x₃):</strong></p>
+        <p><strong>Passo II — Fórmula:</strong> para cada variável fora da base (xⱼ), o número na linha z muda assim:</p>
+        <div style="background:var(--bg-alt);border-radius:6px;padding:.6rem 1rem;font-size:.9rem;margin:.4rem 0 .8rem;">
+          número novo na linha z de xⱼ = número atual + Δ × (número da linha de x₃ na coluna de xⱼ)
+        </div>
+
+        <p><strong>Passo III — Aplique para cada variável fora da base (x₁, x₂, x₅):</strong></p>
         <div class="t-outer">
-          <table class="gtbl" style="max-width:780px;">
-            <thead><tr><th>Var. não-básica</th><th>z atual (linha z)</th><th>Elem. de x₃ na coluna</th><th>z_novo = atual + Δ × elem</th><th>Passo VI: Condição ≤ 0</th></tr></thead>
+          <table class="gtbl" style="max-width:860px;">
+            <thead>
+              <tr>
+                <th>Variável fora da base</th>
+                <th>Número atual na linha z</th>
+                <th>Número da linha de x₃ nessa coluna</th>
+                <th>Novo número = atual + Δ × esse</th>
+                <th>Passo IV: deve continuar ≤ 0</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>x₁</td><td>−6</td><td>3</td><td>−6 + 3Δ</td><td>−6 + 3Δ ≤ 0 → <strong>Δ ≤ 2</strong></td></tr>
-              <tr><td>x₂</td><td>−3</td><td>4</td><td>−3 + 4Δ</td><td>−3 + 4Δ ≤ 0 → <strong>Δ ≤ 0,75</strong></td></tr>
-              <tr><td>x₅</td><td>0</td><td>−1</td><td>0 + (−1)Δ = −Δ</td><td>−Δ ≤ 0 → <strong>Δ ≥ 0</strong></td></tr>
+              <tr>
+                <td><strong>x₁</strong></td><td>−6</td><td>3</td>
+                <td>−6 + 3Δ</td>
+                <td>−6 + 3Δ ≤ 0<br>3Δ ≤ 6<br><strong>Δ ≤ 2</strong></td>
+              </tr>
+              <tr>
+                <td><strong>x₂</strong></td><td>−3</td><td>4</td>
+                <td>−3 + 4Δ</td>
+                <td>−3 + 4Δ ≤ 0<br>4Δ ≤ 3<br><strong>Δ ≤ 0,75</strong></td>
+              </tr>
+              <tr>
+                <td><strong>x₅</strong></td><td>0</td><td>−1</td>
+                <td>0 + (−1)Δ = −Δ</td>
+                <td>−Δ ≤ 0<br><strong>Δ ≥ 0</strong></td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <div style="background:var(--bg-alt);border-radius:6px;padding:.6rem 1rem;margin:.8rem 0;font-size:.88rem;">
-          <strong>Passo VII — Interseção:</strong> Δ ≥ 0 &nbsp;∩&nbsp; Δ ≤ 0,75 &nbsp;∩&nbsp; Δ ≤ 2 &nbsp;&nbsp;→&nbsp;&nbsp; <strong>0 ≤ Δ ≤ 0,75</strong>
-          <br>Logo c₃ = 0 + Δ → <strong>c₃ ∈ [0; 0,75]</strong>
+        <p style="margin-top:.8rem;"><strong>Passo V — Pegue a interseção (o intervalo que satisfaz TODAS ao mesmo tempo):</strong></p>
+        <div style="background:var(--bg-alt);border-radius:6px;padding:.6rem 1rem;margin:.4rem 0;font-size:.9rem;">
+          Δ ≥ 0 (de x₅) &nbsp;&nbsp; E &nbsp;&nbsp; Δ ≤ 0,75 (de x₂, a mais restritiva) &nbsp;&nbsp; E &nbsp;&nbsp; Δ ≤ 2 (de x₁)<br>
+          → Δ deve estar entre 0 e 0,75 &nbsp;→&nbsp; c₃ = 0 + Δ deve estar entre 0 e 0,75
         </div>
+        <div class="result-box" style="padding:.5rem 1rem;"><strong>c₃ ∈ [0 ; 0,75]</strong></div>
 
-        <!-- E SE TABLE -->
-        <p style="margin-top:1rem;font-weight:700;">📋 Tabela "E Se" — Caso B (c de variável básica)</p>
+        <p style="font-weight:700;margin-top:1rem;">📋 Tabela "E Se" — o que muda conforme c₃ varia:</p>
         <div class="t-outer">
           <table class="gtbl" style="max-width:900px;">
-            <thead><tr><th>E se c₃ for...</th><th>O que acontece</th><th>O que fazer</th></tr></thead>
+            <thead><tr><th>E se c₃ for…</th><th>O que acontece com a linha z</th><th>Consequência prática</th><th>O que fazer</th></tr></thead>
             <tbody>
-              <tr class="hl"><td>c₃ ∈ [0; 0,75] — dentro do intervalo</td><td>Todos os custos reduzidos permanecem ≤ 0 → base ótima</td><td>Nada. Mesma base, Z* aumenta proporcionalmente com c₃.</td></tr>
-              <tr><td>c₃ = 0,75 (limite superior)</td><td>Custo reduzido de x₂ = 0 → x₂ prestes a entrar</td><td>Solução alternativa: pode pivotear x₂ sem perder otimalidade.</td></tr>
-              <tr><td>c₃ &gt; 0,75 (acima do intervalo)</td><td>Custo reduzido de x₂ &gt; 0 → x₂ quer entrar na base</td><td>Usar Simplex Primal: x₂ entra → nova base ótima.</td></tr>
-              <tr><td>c₃ = 0 (limite inferior)</td><td>Custo reduzido de x₅ = 0 → x₅ prestes a entrar</td><td>Solução alternativa com x₅ na base.</td></tr>
-              <tr><td>c₃ &lt; 0 (abaixo do intervalo)</td><td>Custo reduzido de x₅ &gt; 0 → x₅ quer entrar</td><td>Usar Simplex Primal: x₅ entra → nova base.</td></tr>
+              <tr class="hl"><td><strong>c₃ = 0 (atual)</strong></td><td>Todos os números ≤ 0 (linha z atual). Solução ótima.</td><td>Situação normal. Tudo certo.</td><td>Nada.</td></tr>
+              <tr class="hl"><td><strong>c₃ = 0,5 (dentro)</strong></td><td>x₁: −6+1,5=−4,5 ✓ &nbsp; x₂: −3+2=−1 ✓ &nbsp; x₅: −0,5 ✓</td><td>Todos ainda negativos. Mesma base ainda é a melhor.</td><td>Nada.</td></tr>
+              <tr><td><strong>c₃ = 0,75 (no limite)</strong></td><td>x₂ fica com 0 na linha z</td><td>x₂ está prestes a entrar — daria na mesma usá-la. Solução alternativa com mesmo Z*.</td><td>Pode ignorar ou entrar com x₂.</td></tr>
+              <tr><td><strong>c₃ = 1 (acima do limite)</strong></td><td>x₂ fica com +1 na linha z (positivo!)</td><td>x₂ quer entrar na base — a solução atual deixou de ser ótima.</td><td>Rodar Simplex Primal: x₂ entra.</td></tr>
+              <tr><td><strong>c₃ = −0,5 (abaixo do limite)</strong></td><td>x₅ fica com +0,5 na linha z (positivo!)</td><td>x₅ quer entrar na base.</td><td>Rodar Simplex Primal: x₅ entra.</td></tr>
             </tbody>
           </table>
         </div>
         <div class="alert alert-warning" style="margin-top:.6rem;font-size:.87rem;">
-          ⚠️ <strong>Armadilha de prova:</strong> ao variar c de variável BÁSICA você precisa checar TODAS as não-básicas. Quem verifica só uma perde o intervalo correto.
+          ⚠️ <strong>Erro clássico de prova:</strong> ao variar o custo de uma variável básica, você TEM que checar todas as que estão fora. Se checar só x₁ ou só x₂, vai errar o intervalo. A resposta correta vem da condição mais restritiva (Δ ≤ 0,75 vence porque é menor que Δ ≤ 2).
         </div>
       </div>
     </div>
 
-    <!-- CASO C: b (RECURSOS) — método B⁻¹b' do professor -->
+    <!-- TIPO 3: b (RECURSOS) -->
     <div class="phase">
       <div class="phase-head">
         <div class="phase-line"></div>
-        <div class="phase-tag">CASO C</div>
-        <div class="phase-title">Variação em bᵢ — Método B⁻¹b' (Passos IV → VII)</div>
+        <div class="phase-tag" style="background:#27ae60;color:#fff;">Tipo 3</div>
+        <div class="phase-title">Lado direito da restrição (b) — O Caso Mais Cobrado em Prova</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <div class="alert alert-info" style="margin-bottom:.8rem;">
-          <strong>Este é o caso mais cobrado em prova.</strong> O professor dá B⁻¹ explicitamente ou você lê do tableau.<br><br>
-          <strong>Passo IV:</strong> Varia bᵢ → substitui bᵢ por <strong>β</strong> e mantém os outros b iguais.<br>
-          <strong>Fórmula (Passo V):</strong> novos valores básicos = <strong>B⁻¹ × b'</strong> (multiplicação matriz × vetor).<br>
-          <strong>Condição (Passo VI):</strong> cada linha do resultado ≥ 0.<br>
-          <strong>Otimalidade:</strong> mudança em b NÃO altera a linha z → otimalidade permanece automaticamente.
+        <div style="background:#fff3cd;border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;border-left:3px solid #f0ad4e;font-size:.9rem;">
+          <strong>O raciocínio em palavras:</strong> b₁ é a quantidade do recurso 1 disponível (atualmente = 2). Se aumentarmos b₁, as variáveis que estão sendo usadas (x₄ e x₃) vão receber novos valores. Se algum desses valores ficar negativo, a solução deixa de existir (não dá ter −3 unidades de algo).<br><br>
+          <strong>Ponto chave:</strong> mudar b NÃO afeta a linha z. Por isso a otimalidade não é problema — só a viabilidade (coluna b deve ficar ≥ 0).
         </div>
 
-        <!-- Variação em b1 -->
-        <div style="border:2px solid var(--primary);border-radius:8px;padding:1rem;margin-bottom:1rem;">
-          <p style="font-weight:700;margin-top:0;">Variação em b₁ (b₁ = 2 vira β) — b' = [β, 5]</p>
+        <div style="background:#e8f5e9;border-radius:6px;padding:.8rem 1rem;margin-bottom:.8rem;border-left:3px solid #27ae60;font-size:.9rem;">
+          <strong>Onde ler B⁻¹ no tableau:</strong> são as colunas das variáveis de folga <strong>originais</strong> (x₄ e x₅) no tableau ótimo (destacadas em verde acima). Cada coluna diz "como aquela variável de folga afeta os valores da base quando o b correspondente muda".
+        </div>
 
-          <p><strong>Passo V — Calcule B⁻¹ × b':</strong></p>
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center;">
-            <div class="math-block" style="font-size:.85rem;">
-B⁻¹ × b' =<br>
-[[1, −1],   ×  [β]  =  [1·β + (−1)·5]  =  [β − 5]<br>
- [0, −1]]      [5]     [0·β + (−1)·5]     [−5]</div>
-            <div>
-              <div class="alert alert-warning" style="font-size:.85rem;">Espera! Aqui b' = [b₁, b₂] = [β, 5]. Mas as restrições eram ≥, então no tableau o RHS já foi negado.<br>
-              <strong>Método direto (leia do tableau):</strong> o b da coluna básica = B⁻¹b. Ao variar b₁, use a <em>coluna de x₄ no tableau ótimo</em> para saber como x₄ e x₃ respondem.</div>
-            </div>
+        <div style="border:2px solid #27ae60;border-radius:8px;padding:1rem;margin-bottom:1rem;">
+          <p style="font-weight:700;margin-top:0;color:#27ae60;">Variação em b₁ (atualmente b₁ = 2 — muda para β)</p>
+
+          <p><strong>Passo II — Substitua b₁ por β no vetor de recursos:</strong> b' = [β, 5]</p>
+
+          <p><strong>Passo III — Calcule os novos valores das variáveis básicas usando a coluna de x₄:</strong></p>
+          <div style="background:var(--bg-alt);border-radius:6px;padding:.6rem 1rem;font-size:.9rem;margin:.4rem 0;">
+            A coluna de x₄ no tableau ótimo é [1, 0]. Isso diz: se b₁ mudar por Δ (= β − 2), cada variável básica muda por Δ × (seu número nessa coluna).<br><br>
+            Novo valor de x₄ = 3 − Δ × 1 = 3 − Δ<br>
+            Novo valor de x₃ = 5 − Δ × 0 = 5 (não muda!)
           </div>
 
-          <p style="margin-top:.6rem;"><strong>Método via coluna de x₄ (folga da R1) — mais direto:</strong></p>
+          <p><strong>Passo IV — Imponha que os novos valores sejam ≥ 0:</strong></p>
           <div class="t-outer">
             <table class="gtbl" style="max-width:680px;">
-              <thead><tr><th>Básica</th><th>b̄ atual</th><th>Col. x₄ no tableau</th><th>b̄_novo = b̄ − Δ × col_x₄</th><th>Passo VI: ≥ 0</th></tr></thead>
+              <thead><tr><th>Variável na base</th><th>Valor atual</th><th>Novo valor</th><th>Deve ser ≥ 0 → portanto</th></tr></thead>
               <tbody>
-                <tr><td>x₄</td><td>3</td><td>1</td><td>3 − Δ·1 = 3 − Δ</td><td>3 − Δ ≥ 0 → <strong>Δ ≤ 3</strong></td></tr>
-                <tr><td>x₃</td><td>5</td><td>0</td><td>5 − Δ·0 = 5</td><td>5 ≥ 0 sempre ✓</td></tr>
+                <tr><td>x₄</td><td>3</td><td>3 − Δ</td><td>3 − Δ ≥ 0 &nbsp;→&nbsp; <strong>Δ ≤ 3</strong></td></tr>
+                <tr><td>x₃</td><td>5</td><td>5</td><td>5 ≥ 0 sempre ✓ (sem restrição)</td></tr>
               </tbody>
             </table>
           </div>
-          <p style="font-size:.85rem;">Δ = variação em b₁ (b₁ = 2 + Δ). Sem limite inferior (Δ pode ir a −∞). <strong>Δ ≤ 3 → b₁ ≤ 5.</strong></p>
-          <div class="result-box" style="padding:.5rem 1rem;margin-top:.4rem;"><strong>Passo VII: b₁ ∈ (−∞, 5]</strong></div>
+          <p style="font-size:.88rem;margin-top:.4rem;">Δ = variação em b₁ (b₁ = 2 + Δ). Sem limite inferior (Δ pode ser qualquer número negativo). Limite superior: Δ ≤ 3, então b₁ ≤ 2 + 3 = <strong>5</strong>.</p>
+          <div class="result-box" style="padding:.5rem 1rem;margin-top:.5rem;"><strong>Passo V: b₁ ∈ (−∞, 5]</strong></div>
         </div>
 
-        <!-- Variação em b2 -->
-        <div style="border:2px solid var(--primary);border-radius:8px;padding:1rem;">
-          <p style="font-weight:700;margin-top:0;">Variação em b₂ (b₂ = 5 vira β) — coluna de x₅ no tableau</p>
+        <div style="border:2px solid #27ae60;border-radius:8px;padding:1rem;margin-bottom:1rem;">
+          <p style="font-weight:700;margin-top:0;color:#27ae60;">Variação em b₂ (atualmente b₂ = 5 — muda para β)</p>
+          <p>Coluna de x₅ no tableau ótimo: [−1, −1]</p>
           <div class="t-outer">
             <table class="gtbl" style="max-width:680px;">
-              <thead><tr><th>Básica</th><th>b̄ atual</th><th>Col. x₅ no tableau</th><th>b̄_novo = b̄ − Δ × col_x₅</th><th>Passo VI: ≥ 0</th></tr></thead>
+              <thead><tr><th>Variável na base</th><th>Valor atual</th><th>Novo valor (com Δ = β−5)</th><th>Deve ser ≥ 0 → portanto</th></tr></thead>
               <tbody>
-                <tr><td>x₄</td><td>3</td><td>−1</td><td>3 − Δ·(−1) = 3 + Δ</td><td>3 + Δ ≥ 0 → <strong>Δ ≥ −3</strong></td></tr>
-                <tr><td>x₃</td><td>5</td><td>−1</td><td>5 − Δ·(−1) = 5 + Δ</td><td>5 + Δ ≥ 0 → <strong>Δ ≥ −5</strong></td></tr>
+                <tr><td>x₄</td><td>3</td><td>3 − Δ × (−1) = 3 + Δ</td><td>3 + Δ ≥ 0 &nbsp;→&nbsp; <strong>Δ ≥ −3</strong></td></tr>
+                <tr><td>x₃</td><td>5</td><td>5 − Δ × (−1) = 5 + Δ</td><td>5 + Δ ≥ 0 &nbsp;→&nbsp; <strong>Δ ≥ −5</strong></td></tr>
               </tbody>
             </table>
           </div>
-          <p style="font-size:.85rem;">Interseção: Δ ≥ −3 (mais restritiva) e sem limite superior. b₂ = 5 + Δ ≥ 5 − 3 = 2.</p>
-          <div class="result-box" style="padding:.5rem 1rem;margin-top:.4rem;"><strong>Passo VII: b₂ ∈ [2, +∞)</strong></div>
+          <p style="font-size:.88rem;margin-top:.4rem;">Mais restritiva: Δ ≥ −3, então b₂ ≥ 5 − 3 = <strong>2</strong>. Sem limite superior.</p>
+          <div class="result-box" style="padding:.5rem 1rem;margin-top:.5rem;"><strong>Passo V: b₂ ∈ [2, +∞)</strong></div>
         </div>
 
-        <!-- E SE TABLE b -->
-        <p style="margin-top:1.2rem;font-weight:700;">📋 Tabela "E Se" — Caso C (variação em b₁ como exemplo)</p>
+        <p style="font-weight:700;">📋 Tabela "E Se" — o que muda conforme b₁ varia:</p>
         <div class="t-outer">
-          <table class="gtbl" style="max-width:900px;">
-            <thead><tr><th>E se b₁ for...</th><th>O que acontece nas variáveis básicas</th><th>O que fazer</th></tr></thead>
+          <table class="gtbl" style="max-width:960px;">
+            <thead><tr><th>E se b₁ for…</th><th>Novos valores da base</th><th>A solução ainda existe?</th><th>O que fazer</th></tr></thead>
             <tbody>
-              <tr class="hl"><td>b₁ ∈ (−∞, 5] — dentro do intervalo</td><td>x₄ = 3 − Δ ≥ 0, x₃ = 5 ≥ 0 → base viável e ótima</td><td>Nada. Leia os novos valores com b₁_novo no lugar de 2.</td></tr>
-              <tr><td>b₁ = 5 (no limite superior)</td><td>x₄ = 0 → variável básica degenerada (zero)</td><td>Solução ainda válida (degenerada). Base pode mudar na próxima perturbação.</td></tr>
-              <tr><td>b₁ &gt; 5 (acima do intervalo)</td><td>x₄ &lt; 0 → solução inviável (base quebra)</td><td>Usar <strong>Dual Simplex</strong>: x₄ sai da base → resolve inviabilidade.</td></tr>
-              <tr><td>b₁ → −∞ (sem limite inferior)</td><td>x₄ = 3 − Δ → +∞ → x₃ = 5 (não muda)</td><td>Base permanece ótima. Folga cresce indefinidamente (restrição folgada).</td></tr>
+              <tr class="hl"><td><strong>b₁ = 2 (atual)</strong></td><td>x₄ = 3, x₃ = 5</td><td>✅ Sim. Tudo positivo.</td><td>Nada.</td></tr>
+              <tr class="hl"><td><strong>b₁ = 4 (dentro do intervalo)</strong></td><td>Δ=2 → x₄ = 3−2 = 1, x₃ = 5</td><td>✅ Sim. Mesma base, novos valores.</td><td>Nada — apenas leia os novos valores.</td></tr>
+              <tr><td><strong>b₁ = 5 (exatamente no limite)</strong></td><td>Δ=3 → x₄ = 0, x₃ = 5</td><td>✅ Sim, mas x₄ chegou a zero — degenerada.</td><td>Solução válida, mas qualquer nova perturbação pode mudar a base.</td></tr>
+              <tr><td><strong>b₁ = 7 (acima do limite)</strong></td><td>Δ=5 → x₄ = 3−5 = −2 ❌</td><td>❌ Não! x₄ ficou negativo. Impossível.</td><td>Rodar <strong>Dual Simplex</strong>: x₄ sai da base. O dual simplex "conserta" a inviabilidade.</td></tr>
+              <tr><td><strong>b₁ = −10 (muito pequeno)</strong></td><td>Δ=−12 → x₄ = 3+12 = 15, x₃ = 5</td><td>✅ Sim. Folga (x₄) só aumenta quando b₁ diminui.</td><td>Nada — solução fica folgada, mas continua válida.</td></tr>
             </tbody>
           </table>
         </div>
-
-        <div class="alert alert-info" style="margin-top:.8rem;font-size:.87rem;">
-          <strong>Por que muda só a viabilidade e não a otimalidade?</strong><br>
-          Quando b muda, a linha z não é afetada (os custos reduzidos são cB·B⁻¹·A − c, que não dependem de b). Logo, se a base ainda for viável, ela continua automaticamente ótima.
+        <div class="alert alert-info" style="margin-top:.8rem;font-size:.88rem;">
+          <strong>Por que mudar b não afeta a otimalidade?</strong><br>
+          A linha z mostra se uma variável "quer entrar" ou não. Esses números dependem dos custos (c) e da matriz A — nenhum dos dois muda quando b muda. Por isso a linha z fica igual e a otimalidade está garantida, desde que a solução ainda exista (coluna b ≥ 0).
         </div>
       </div>
     </div>
@@ -2895,49 +3031,64 @@ B⁻¹ × b' =<br>
     <div class="phase">
       <div class="phase-head">
         <div class="phase-line"></div>
-        <div class="phase-tag">RESUMO</div>
-        <div class="phase-title">Tabela Geral — Todos os Resultados + E Se Sair do Intervalo</div>
+        <div class="phase-tag">RESUMÃO</div>
+        <div class="phase-title">Tudo em Uma Página — Para Revisar Antes da Prova</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <table class="gtbl" style="max-width:960px;">
+        <table class="gtbl" style="max-width:980px;">
           <thead>
-            <tr><th>Caso</th><th>Parâmetro</th><th>Valor atual</th><th>Intervalo ótimo</th><th>Se dentro do intervalo</th><th>Se fora do intervalo</th></tr>
+            <tr>
+              <th>Tipo</th><th>Parâmetro</th><th>Valor atual</th>
+              <th>Intervalo que mantém a solução</th>
+              <th>Se dentro: o que acontece?</th>
+              <th>Se fora: o que acontece? O que fazer?</th>
+            </tr>
           </thead>
           <tbody>
             <tr>
-              <td>A — NB</td><td>c₁</td><td>6</td><td>[0, +∞)</td>
-              <td>Base ótima. x₁ fora da base.</td><td>c₁ &lt; 0 → x₁ entra. Usar Simplex Primal.</td>
+              <td><span style="background:#e67e22;color:#fff;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;">Tipo 1</span></td>
+              <td>c₁ (custo de x₁ — fora da base)</td><td>6</td><td>[0, +∞)</td>
+              <td>x₁ continua fora, Z não muda.</td>
+              <td>c₁ &lt; 0 → x₁ quer entrar → roda <strong>Simplex Primal</strong>.</td>
             </tr>
             <tr>
-              <td>A — NB</td><td>c₂</td><td>3</td><td>[0, +∞)</td>
-              <td>Base ótima. x₂ fora da base.</td><td>c₂ &lt; 0 → x₂ entra. Usar Simplex Primal.</td>
+              <td><span style="background:#e67e22;color:#fff;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;">Tipo 1</span></td>
+              <td>c₂ (custo de x₂ — fora da base)</td><td>3</td><td>[0, +∞)</td>
+              <td>x₂ continua fora, Z não muda.</td>
+              <td>c₂ &lt; 0 → x₂ quer entrar → roda <strong>Simplex Primal</strong>.</td>
             </tr>
             <tr>
-              <td>B — B</td><td>c₃</td><td>0</td><td>[0; 0,75]</td>
-              <td>Base ótima. Todos custos reduzidos ≤ 0.</td><td>c₃ &gt; 0,75 → x₂ entra. c₃ &lt; 0 → x₅ entra. Simplex Primal.</td>
+              <td><span style="background:#8e44ad;color:#fff;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;">Tipo 2</span></td>
+              <td>c₃ (custo de x₃ — NA base)</td><td>0</td><td>[0 ; 0,75]</td>
+              <td>Todos os números da linha z continuam ≤ 0. Mesma base.</td>
+              <td>c₃ &gt; 0,75 → x₂ quer entrar. c₃ &lt; 0 → x₅ quer entrar. Roda <strong>Simplex Primal</strong>.</td>
             </tr>
             <tr>
-              <td>C — RHS</td><td>b₁</td><td>2</td><td>(−∞, 5]</td>
-              <td>Base ótima e viável. Valores mudam mas base não.</td><td>b₁ &gt; 5 → x₄ &lt; 0. Usar Dual Simplex.</td>
+              <td><span style="background:#27ae60;color:#fff;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;">Tipo 3</span></td>
+              <td>b₁ (recurso da restrição 1)</td><td>2</td><td>(−∞ , 5]</td>
+              <td>x₄ e x₃ têm novos valores, mas ambos ≥ 0. Mesma base.</td>
+              <td>b₁ &gt; 5 → x₄ ficaria negativo → roda <strong>Dual Simplex</strong>.</td>
             </tr>
             <tr>
-              <td>C — RHS</td><td>b₂</td><td>5</td><td>[2, +∞)</td>
-              <td>Base ótima e viável. Valores mudam mas base não.</td><td>b₂ &lt; 2 → x₄ &lt; 0. Usar Dual Simplex.</td>
+              <td><span style="background:#27ae60;color:#fff;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;">Tipo 3</span></td>
+              <td>b₂ (recurso da restrição 2)</td><td>5</td><td>[2 , +∞)</td>
+              <td>x₄ e x₃ têm novos valores, mas ambos ≥ 0. Mesma base.</td>
+              <td>b₂ &lt; 2 → x₄ ficaria negativo → roda <strong>Dual Simplex</strong>.</td>
             </tr>
           </tbody>
         </table>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1rem;">
-          <div style="background:var(--bg-alt);border-left:3px solid #e74c3c;border-radius:6px;padding:.7rem 1rem;font-size:.87rem;">
-            <strong>🔴 Parâmetro sai do intervalo por c (custo):</strong><br>
-            → Otimalidade quebra → algum custo reduzido &gt; 0 → variável quer entrar na base<br>
-            → Ação: Simplex <strong>Primal</strong> (pivoteia quem quer entrar)
+          <div style="background:#fde8e8;border-left:4px solid #e74c3c;border-radius:6px;padding:.8rem 1rem;">
+            <strong>🔴 Quando o parâmetro que mudou era um custo (c):</strong><br><br>
+            O problema é de <em>otimalidade</em> — a linha z vai ter um número positivo, sinalizando que uma variável que estava fora agora quer entrar.<br><br>
+            → Ação: <strong>Simplex Primal</strong> (essa variável entra pela regra normal de pivô).
           </div>
-          <div style="background:var(--bg-alt);border-left:3px solid #2980b9;border-radius:6px;padding:.7rem 1rem;font-size:.87rem;">
-            <strong>🔵 Parâmetro sai do intervalo por b (recurso):</strong><br>
-            → Viabilidade quebra → alguma básica fica &lt; 0<br>
-            → Ação: Simplex <strong>Dual</strong> (pivoteia quem ficou negativo para fora)
+          <div style="background:#dbeafe;border-left:4px solid #2980b9;border-radius:6px;padding:.8rem 1rem;">
+            <strong>🔵 Quando o parâmetro que mudou era um recurso (b):</strong><br><br>
+            O problema é de <em>viabilidade</em> — a coluna b vai ter um número negativo, o que é impossível (não dá ter −3 unidades de algo).<br><br>
+            → Ação: <strong>Dual Simplex</strong> (a variável com valor negativo sai da base).
           </div>
         </div>
       </div>
@@ -3728,23 +3879,27 @@ End</div>
       <div style="display:flex;align-items:center;gap:1rem;padding-bottom:1.2rem;border-bottom:2px solid var(--border);margin-bottom:2rem;">
         <div class="q-num" style="min-width:2.2rem;height:2.2rem;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;">16</div>
         <div>
-          <div class="q-title">Aplicações Reais de Programação Inteira</div>
+          <div class="q-title">Aplicações Reais de Programação Inteira — Modelos CPLEX Completos</div>
           <div class="q-tags">
             <span class="q-tag qt-method">5 tipos de problema</span>
-            <span class="q-tag qt-method">Modelagem PI</span>
+            <span class="q-tag qt-method">Formato CPLEX · todas as restrições explícitas</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- a) Mochila 0-1 Multidimensional -->
+    <div class="alert alert-info" style="margin-bottom:1.4rem;">
+      <strong>Como ler os modelos abaixo:</strong> cada problema tem dados numéricos concretos e o modelo CPLEX com <em>todas</em> as restrições escritas uma a uma — exatamente como o professor espera na prova. Os comentários começam com <code>\</code> (contrabarra).
+    </div>
+
+    <!-- ══ a) MOCHILA 0-1 MULTIDIMENSIONAL ══ -->
     <div class="phase">
-      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">a)</div><div class="phase-title">Problema da Mochila 0-1 Multidimensional</div><div class="phase-line"></div></div>
+      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">a)</div><div class="phase-title">Mochila 0-1 Multidimensional — Seleção de Projetos</div><div class="phase-line"></div></div>
       <div class="phase-body">
-        <p><strong>Definição:</strong> selecionar itens para colocar em mochilas (ou contêineres) maximizando o valor total, respeitando múltiplas restrições de capacidade (peso, volume, orçamento).</p>
-        <p><strong>Aplicação real:</strong> Um gestor de carteira de investimentos tem R$500k de capital e limite de risco. Há 4 projetos disponíveis. Cada projeto só pode ser feito por completo (variável binária). O gestor quer maximizar o retorno.</p>
-        <table class="gtbl" style="max-width:480px;margin:.5rem 0;">
-          <thead><tr><th>Projeto</th><th>Custo (R$k)</th><th>Risco</th><th>Retorno (R$k)</th></tr></thead>
+        <p><strong>O que é:</strong> escolher quais projetos (ou itens) incluir para maximizar o retorno total, sem ultrapassar múltiplos limites (capital, risco, prazo etc.). Cada projeto é tudo-ou-nada: não dá para fazer metade.</p>
+        <p><strong>Situação:</strong> gestor de investimentos tem R$500k de capital e limite de 60 pontos de risco. Há 4 projetos disponíveis:</p>
+        <table class="gtbl" style="max-width:520px;margin:.5rem 0 .8rem;">
+          <thead><tr><th>Projeto</th><th>Custo (R$k)</th><th>Risco (pts)</th><th>Retorno (R$k)</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>200</td><td>30</td><td>80</td></tr>
             <tr><td>2</td><td>150</td><td>20</td><td>60</td></tr>
@@ -3752,56 +3907,336 @@ End</div>
             <tr><td>4</td><td>100</td><td>15</td><td>40</td></tr>
           </tbody>
         </table>
-        <div class="math-block" style="font-size:.85rem;">MAX z = 80x₁ + 60x₂ + 120x₃ + 40x₄<br>s.a.:<br>&emsp;200x₁ + 150x₂ + 300x₃ + 100x₄ ≤ 500  (capital)<br>&emsp;30x₁ + 20x₂ + 40x₃ + 15x₄ ≤ 60  (risco)<br>&emsp;xⱼ ∈ {0,1}  para j=1,...,4</div>
+        <p><strong>Variáveis:</strong> xⱼ = 1 se o projeto j é selecionado; 0 caso contrário. (j = 1, 2, 3, 4)</p>
+        <div class="math-block" style="font-size:.82rem;line-height:1.9;white-space:pre-wrap;">\Problema da Mochila 0-1 Multidimensional
+\xj = 1 se projeto j e selecionado (j=1..4)
+
+Maximize
+ obj: 80 x1 + 60 x2 + 120 x3 + 40 x4
+
+Subject To
+ \Capital disponivel: maximo R$500k
+ capital: 200 x1 + 150 x2 + 300 x3 + 100 x4 &lt;= 500
+ \Risco total: maximo 60 pontos
+ risco: 30 x1 + 20 x2 + 40 x3 + 15 x4 &lt;= 60
+
+Binary
+ x1 x2 x3 x4
+
+End</div>
+        <div class="alert alert-info" style="font-size:.86rem;margin-top:.6rem;">
+          <strong>Como ler:</strong> a linha <code>capital</code> diz "a soma dos custos dos projetos escolhidos não pode passar de 500". A linha <code>risco</code> faz o mesmo com os pontos de risco. Se tentarmos escolher projetos 1+3 (custo=500 ✓, risco=70 ✗) — o risco ultrapassa 60, então esta combinação é inviável.
+        </div>
       </div>
     </div>
 
-    <!-- b) Localização de Facilidades -->
+    <!-- ══ b) LOCALIZAÇÃO DE FACILIDADES ══ -->
     <div class="phase">
-      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">b)</div><div class="phase-title">Problema de Localização de Facilidades</div><div class="phase-line"></div></div>
+      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">b)</div><div class="phase-title">Localização de Facilidades — Armazéns e Lojas</div><div class="phase-line"></div></div>
       <div class="phase-body">
-        <p><strong>Definição:</strong> Decide ONDE abrir instalações (depósitos, lojas, hospitais) e QUAIS clientes cada instalação serve, minimizando custo de abertura + custo de atendimento.</p>
-        <p><strong>Aplicação real:</strong> Uma rede de supermercados quer abrir armazéns em 3 cidades possíveis (SP, RJ, BH) para abastecer 4 lojas. Cada armazém tem custo fixo de abertura. Custo de transporte armazém→loja depende da distância.</p>
-        <div class="math-block" style="font-size:.85rem;">Variáveis:<br>&emsp;yᵢ = 1 se abre armazém em local i (binária)<br>&emsp;xᵢⱼ = 1 se loja j é atendida pelo armazém i (binária)<br><br>MIN z = Σᵢ fᵢyᵢ + Σᵢ Σⱼ cᵢⱼxᵢⱼ<br>s.a.:<br>&emsp;Σᵢ xᵢⱼ = 1  ∀j  (cada loja atendida por exatamente 1 armazém)<br>&emsp;xᵢⱼ ≤ yᵢ  ∀i,j  (só atende se o armazém estiver aberto)<br>&emsp;yᵢ ∈ {0,1},  xᵢⱼ ∈ {0,1}</div>
-      </div>
-    </div>
-
-    <!-- c) p-Medianas Capacitado -->
-    <div class="phase">
-      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">c)</div><div class="phase-title">Problema das p-Medianas Capacitado</div><div class="phase-line"></div></div>
-      <div class="phase-body">
-        <p><strong>Definição:</strong> Escolher exatamente <em>p</em> locais como "medianas" (centros de serviço) para minimizar a distância total de atendimento, com limite de capacidade por mediana.</p>
-        <p><strong>Aplicação real:</strong> Prefeitura quer designar p=2 postos de saúde (entre 4 possíveis bairros) para atender todos os moradores, minimizando distância total percorrida, com limite de pacientes por posto.</p>
-        <div class="math-block" style="font-size:.85rem;">Variáveis:<br>&emsp;yᵢ = 1 se bairro i é escolhido como mediana<br>&emsp;xᵢⱼ = fração da demanda de j atendida pela mediana i<br><br>MIN z = Σᵢ Σⱼ dᵢⱼ · dⱼ · xᵢⱼ<br>s.a.:<br>&emsp;Σᵢ xᵢⱼ = 1  ∀j  (toda demanda de j atendida)<br>&emsp;xᵢⱼ ≤ yᵢ  ∀i,j  (só usa mediana aberta)<br>&emsp;Σⱼ dⱼxᵢⱼ ≤ Cᵢyᵢ  ∀i  (capacidade)<br>&emsp;Σᵢ yᵢ = p  (exatamente p medianas)<br>&emsp;yᵢ ∈ {0,1},  0 ≤ xᵢⱼ ≤ 1</div>
-      </div>
-    </div>
-
-    <!-- d) TSP -->
-    <div class="phase">
-      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">d)</div><div class="phase-title">Problema do Caixeiro Viajante (TSP)</div><div class="phase-line"></div></div>
-      <div class="phase-body">
-        <p><strong>Definição:</strong> Um vendedor deve visitar N cidades exatamente uma vez e retornar à origem, minimizando a distância (ou custo) total percorrida.</p>
-        <p><strong>Aplicação real:</strong> Técnico de manutenção precisa visitar 4 estações de energia (A, B, C, D) partindo da base e retornar. Minimizar km rodados.</p>
-        <div class="math-block" style="font-size:.85rem;">Variável: xᵢⱼ = 1 se vai de cidade i para j (binária)<br><br>MIN z = Σᵢ Σⱼ cᵢⱼ xᵢⱼ<br>s.a.:<br>&emsp;Σⱼ xᵢⱼ = 1  ∀i  (sai de cada cidade exatamente 1 vez)<br>&emsp;Σᵢ xᵢⱼ = 1  ∀j  (chega em cada cidade exatamente 1 vez)<br>&emsp;uᵢ − uⱼ + (n−1)xᵢⱼ ≤ n−2  ∀i≠j  (eliminação de sub-rotas — Miller-Tucker-Zemlin)<br>&emsp;xᵢⱼ ∈ {0,1},  uᵢ ≥ 0</div>
-        <div class="alert alert-warning" style="font-size:.85rem;margin-top:.5rem;">A restrição de <strong>eliminação de sub-rotas</strong> (u) é essencial: sem ela, a solução poderia ter ciclos separados (ex: A→B→A e C→D→C) em vez de uma rota única.</div>
-      </div>
-    </div>
-
-    <!-- e) VRPTW -->
-    <div class="phase">
-      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">e)</div><div class="phase-title">Roteamento de Veículos com Janelas de Tempo (VRPTW)</div><div class="phase-line"></div></div>
-      <div class="phase-body">
-        <p><strong>Definição:</strong> Extensão do TSP com múltiplos veículos e janelas de tempo: cada cliente deve ser atendido dentro de um intervalo [aⱼ, bⱼ] (abertura e fechamento). Minimiza veículos usados e/ou distância.</p>
-        <p><strong>Aplicação real:</strong> Empresa de delivery tem 2 caminhões e 3 clientes. Cada cliente tem horário de entrega permitido. Minimizar rotas.</p>
-        <table class="gtbl" style="max-width:480px;margin:.5rem 0 .8rem;">
-          <thead><tr><th>Cliente</th><th>Demanda</th><th>Janela de tempo</th></tr></thead>
+        <p><strong>O que é:</strong> decidir em quais locais abrir instalações (armazéns, hospitais, depósitos) e quais clientes cada instalação vai servir, minimizando custo fixo de abertura + custo variável de atendimento. Uma instalação só pode servir clientes se estiver aberta.</p>
+        <p><strong>Situação:</strong> rede de supermercados pode abrir armazéns em SP (custo fixo=100), RJ (80) ou BH (60) para abastecer 4 lojas. Custo de transporte (armazém→loja):</p>
+        <table class="gtbl" style="max-width:520px;margin:.5rem 0 .8rem;">
+          <thead><tr><th>Armazém</th><th>Custo fixo</th><th>→Loja1</th><th>→Loja2</th><th>→Loja3</th><th>→Loja4</th></tr></thead>
           <tbody>
-            <tr><td>1</td><td>3 un</td><td>[8h, 10h]</td></tr>
-            <tr><td>2</td><td>5 un</td><td>[9h, 12h]</td></tr>
-            <tr><td>3</td><td>2 un</td><td>[11h, 14h]</td></tr>
+            <tr><td>SP (y1)</td><td>100</td><td>10</td><td>8</td><td>15</td><td>20</td></tr>
+            <tr><td>RJ (y2)</td><td>80</td><td>12</td><td>6</td><td>18</td><td>9</td></tr>
+            <tr><td>BH (y3)</td><td>60</td><td>15</td><td>12</td><td>10</td><td>14</td></tr>
           </tbody>
         </table>
-        <div class="math-block" style="font-size:.85rem;">Variáveis principais:<br>&emsp;xᵢⱼᵏ = 1 se veículo k vai de i para j<br>&emsp;tⱼᵏ = horário de chegada do veículo k no cliente j<br><br>MIN z = Σₖ Σᵢ Σⱼ cᵢⱼ xᵢⱼᵏ<br>s.a. (simplificado):<br>&emsp;Σₖ Σᵢ xᵢⱼᵏ = 1  ∀j≠0  (cada cliente atendido por 1 veículo)<br>&emsp;Σⱼ dⱼ Σᵢ xᵢⱼᵏ ≤ Qₖ  ∀k  (capacidade do veículo)<br>&emsp;aⱼ ≤ tⱼᵏ ≤ bⱼ  ∀j,k  (janela de tempo)<br>&emsp;xᵢⱼᵏ ∈ {0,1}</div>
+        <p><strong>Variáveis:</strong><br>
+        yᵢ = 1 se o armazém i está aberto (i = SP=1, RJ=2, BH=3)<br>
+        xᵢⱼ = 1 se a loja j é atendida pelo armazém i (i=1..3, j=1..4)</p>
+        <p><strong>Restrição-chave:</strong> xᵢⱼ ≤ yᵢ — só pode atribuir loja a armazém que esteja aberto. No CPLEX isso vira xᵢⱼ − yᵢ ≤ 0 (reescrito para forma padrão).</p>
+        <div class="math-block" style="font-size:.82rem;line-height:1.9;white-space:pre-wrap;">\Localizacao de Facilidades: 3 armazens, 4 lojas
+\yi = 1 se armazem i abre  (1=SP, 2=RJ, 3=BH)
+\xij = 1 se loja j e atendida pelo armazem i
+
+Minimize
+ obj: 100 y1 + 80 y2 + 60 y3
+    + 10 x11 + 8 x12 + 15 x13 + 20 x14
+    + 12 x21 + 6 x22 + 18 x23 + 9 x24
+    + 15 x31 + 12 x32 + 10 x33 + 14 x34
+
+Subject To
+ \Cada loja atendida por exatamente 1 armazem
+ loja1: x11 + x21 + x31 = 1
+ loja2: x12 + x22 + x32 = 1
+ loja3: x13 + x23 + x33 = 1
+ loja4: x14 + x24 + x34 = 1
+ \So atende se o armazem estiver aberto (xij &lt;= yi → xij - yi &lt;= 0)
+ sp_l1: x11 - y1 &lt;= 0
+ sp_l2: x12 - y1 &lt;= 0
+ sp_l3: x13 - y1 &lt;= 0
+ sp_l4: x14 - y1 &lt;= 0
+ rj_l1: x21 - y2 &lt;= 0
+ rj_l2: x22 - y2 &lt;= 0
+ rj_l3: x23 - y2 &lt;= 0
+ rj_l4: x24 - y2 &lt;= 0
+ bh_l1: x31 - y3 &lt;= 0
+ bh_l2: x32 - y3 &lt;= 0
+ bh_l3: x33 - y3 &lt;= 0
+ bh_l4: x34 - y3 &lt;= 0
+
+Binary
+ y1 y2 y3
+ x11 x12 x13 x14
+ x21 x22 x23 x24
+ x31 x32 x33 x34
+
+End</div>
+        <div class="alert alert-info" style="font-size:.86rem;margin-top:.6rem;">
+          <strong>Por que 16 restrições em "Subject To"?</strong> 4 restrições de cobertura (uma por loja) + 12 restrições de abertura (3 armazéns × 4 lojas = 12). Cada restrição xij − yi ≤ 0 diz: "se o armazém i estiver fechado (yi=0), então xij deve ser 0 também".
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ c) p-MEDIANAS ══ -->
+    <div class="phase">
+      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">c)</div><div class="phase-title">p-Medianas — Postos de Saúde por Bairro</div><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>O que é:</strong> escolher exatamente p locais (medianas) entre vários candidatos para minimizar a distância total entre cada cliente e sua mediana mais próxima. Diferente da Localização de Facilidades: aqui o número de instalações é fixo (= p) e não há custo fixo de abertura.</p>
+        <p><strong>Situação:</strong> prefeitura quer abrir exatamente p = 2 postos de saúde entre 3 bairros candidatos (B1, B2, B3) para atender 4 bairros-clientes (C1, C2, C3, C4). Distâncias (km):</p>
+        <table class="gtbl" style="max-width:480px;margin:.5rem 0 .8rem;">
+          <thead><tr><th></th><th>C1</th><th>C2</th><th>C3</th><th>C4</th></tr></thead>
+          <tbody>
+            <tr><td><strong>B1 (y1)</strong></td><td>0</td><td>3</td><td>5</td><td>8</td></tr>
+            <tr><td><strong>B2 (y2)</strong></td><td>3</td><td>0</td><td>4</td><td>6</td></tr>
+            <tr><td><strong>B3 (y3)</strong></td><td>5</td><td>4</td><td>0</td><td>3</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Variáveis:</strong><br>
+        yᵢ = 1 se bairro i é escolhido como posto de saúde (i = 1, 2, 3)<br>
+        xᵢⱼ = 1 se cliente j é atendido pelo posto i (i=1..3, j=1..4)</p>
+        <div class="math-block" style="font-size:.82rem;line-height:1.9;white-space:pre-wrap;">\Problema das p-Medianas: p=2, 3 candidatos, 4 clientes
+\yi = 1 se bairro i e escolhido como mediana
+\xij = 1 se cliente j e atendido pelo bairro i
+
+Minimize
+ obj: 0 x11 + 3 x12 + 5 x13 + 8 x14
+    + 3 x21 + 0 x22 + 4 x23 + 6 x24
+    + 5 x31 + 4 x32 + 0 x33 + 3 x34
+
+Subject To
+ \Cada cliente atendido por exatamente 1 bairro
+ c1: x11 + x21 + x31 = 1
+ c2: x12 + x22 + x32 = 1
+ c3: x13 + x23 + x33 = 1
+ c4: x14 + x24 + x34 = 1
+ \So atende se for mediana (xij &lt;= yi → xij - yi &lt;= 0)
+ b1c1: x11 - y1 &lt;= 0
+ b1c2: x12 - y1 &lt;= 0
+ b1c3: x13 - y1 &lt;= 0
+ b1c4: x14 - y1 &lt;= 0
+ b2c1: x21 - y2 &lt;= 0
+ b2c2: x22 - y2 &lt;= 0
+ b2c3: x23 - y2 &lt;= 0
+ b2c4: x24 - y2 &lt;= 0
+ b3c1: x31 - y3 &lt;= 0
+ b3c2: x32 - y3 &lt;= 0
+ b3c3: x33 - y3 &lt;= 0
+ b3c4: x34 - y3 &lt;= 0
+ \Exatamente p = 2 medianas abertas
+ pmed: y1 + y2 + y3 = 2
+
+Binary
+ y1 y2 y3
+ x11 x12 x13 x14
+ x21 x22 x23 x24
+ x31 x32 x33 x34
+
+End</div>
+        <div class="alert alert-info" style="font-size:.86rem;margin-top:.6rem;">
+          <strong>Diferença da Localização de Facilidades:</strong> aqui tem a restrição extra <code>pmed: y1+y2+y3 = 2</code> (= exatamente p medianas). Na Localização de Facilidades não existe essa restrição — você pode abrir 0, 1, 2 ou 3 armazéns conforme o custo compensar.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ d) TSP ══ -->
+    <div class="phase">
+      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">d)</div><div class="phase-title">Caixeiro Viajante (TSP) — Técnico de Manutenção</div><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>O que é:</strong> um viajante precisa visitar N cidades exatamente uma vez e voltar à origem, percorrendo a menor distância total possível.</p>
+        <p><strong>Situação:</strong> técnico de manutenção parte da Base (cidade 1) e precisa visitar as estações A (2), B (3) e C (4), retornando à Base. Distâncias em km:</p>
+        <table class="gtbl" style="max-width:420px;margin:.5rem 0 .8rem;">
+          <thead><tr><th>De \ Para</th><th>1-Base</th><th>2-A</th><th>3-B</th><th>4-C</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1-Base</strong></td><td>—</td><td>10</td><td>15</td><td>20</td></tr>
+            <tr><td><strong>2-A</strong></td><td>10</td><td>—</td><td>8</td><td>12</td></tr>
+            <tr><td><strong>3-B</strong></td><td>15</td><td>8</td><td>—</td><td>6</td></tr>
+            <tr><td><strong>4-C</strong></td><td>20</td><td>12</td><td>6</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Variáveis:</strong><br>
+        xᵢⱼ = 1 se o técnico vai diretamente da cidade i para a cidade j (i≠j)<br>
+        uᵢ = posição da cidade i na rota (inteiro, só para cidades 2, 3, 4 — usada para eliminar sub-rotas)</p>
+        <div class="alert alert-warning" style="font-size:.86rem;margin-bottom:.8rem;">
+          <strong>O que é sub-rota e por que precisamos eliminá-la?</strong> Sem as restrições MTZ, o solver poderia criar duas rotas separadas como Base→A→Base e B→C→B, que cumprem os fluxos mas não formam uma rota única. As variáveis uᵢ forçam uma ordem sequencial, impedindo ciclos separados.
+        </div>
+        <div class="math-block" style="font-size:.82rem;line-height:1.9;white-space:pre-wrap;">\TSP: 4 cidades (1=Base, 2=A, 3=B, 4=C)
+\xij = 1 se vai da cidade i para j (i != j)
+\ui = posicao de i na rota (inteiro, apenas i=2,3,4)
+\Restricoes MTZ: ui - uj + (n-1)*xij &lt;= n-2, com n=4
+
+Minimize
+ obj: 10 x12 + 15 x13 + 20 x14
+    + 10 x21 + 8 x23 + 12 x24
+    + 15 x31 + 8 x32 + 6 x34
+    + 20 x41 + 12 x42 + 6 x43
+
+Subject To
+ \Sai de cada cidade exatamente 1 vez
+ sai1: x12 + x13 + x14 = 1
+ sai2: x21 + x23 + x24 = 1
+ sai3: x31 + x32 + x34 = 1
+ sai4: x41 + x42 + x43 = 1
+ \Chega em cada cidade exatamente 1 vez
+ chega1: x21 + x31 + x41 = 1
+ chega2: x12 + x32 + x42 = 1
+ chega3: x13 + x23 + x43 = 1
+ chega4: x14 + x24 + x34 = 1
+ \Eliminacao de sub-rotas (Miller-Tucker-Zemlin)
+ \ui - uj + 3*xij &lt;= 2  para todos i,j em {2,3,4} com i!=j
+ mtz23: u2 - u3 + 3 x23 &lt;= 2
+ mtz24: u2 - u4 + 3 x24 &lt;= 2
+ mtz32: u3 - u2 + 3 x32 &lt;= 2
+ mtz34: u3 - u4 + 3 x34 &lt;= 2
+ mtz42: u4 - u2 + 3 x42 &lt;= 2
+ mtz43: u4 - u3 + 3 x43 &lt;= 2
+ \Limites das variaveis de posicao (1 &lt;= ui &lt;= n-1 = 3)
+ u2min: u2 >= 1
+ u2max: u2 &lt;= 3
+ u3min: u3 >= 1
+ u3max: u3 &lt;= 3
+ u4min: u4 >= 1
+ u4max: u4 &lt;= 3
+
+Binary
+ x12 x13 x14
+ x21 x23 x24
+ x31 x32 x34
+ x41 x42 x43
+
+General
+ u2 u3 u4
+
+End</div>
+        <div class="alert alert-info" style="font-size:.86rem;margin-top:.6rem;">
+          <strong>Como ler as restrições MTZ:</strong> a linha <code>mtz23: u2 − u3 + 3·x23 ≤ 2</code> diz: "se o técnico vai de A(2) para B(3), então a posição de A na rota deve ser menor que a de B". Isso impede que A e B formem um ciclo separado entre si.
+          <br><br>
+          <strong>General vs Binary:</strong> as variáveis xᵢⱼ são binárias (0 ou 1). As variáveis uᵢ são inteiras (1, 2 ou 3) — por isso ficam na seção <code>General</code>.
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ e) VRPTW ══ -->
+    <div class="phase">
+      <div class="phase-head"><div class="phase-line"></div><div class="phase-tag">e)</div><div class="phase-title">VRPTW — Roteamento com Janelas de Tempo</div><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>O que é:</strong> extensão do TSP onde existem múltiplos veículos e cada cliente só pode ser atendido dentro de uma janela de tempo [abertura, fechamento]. O objetivo é minimizar a distância total percorrida por todos os veículos.</p>
+        <p><strong>Situação:</strong> empresa de delivery tem 2 caminhões (V1 e V2), cada um com capacidade Q = 8 unidades. Há 3 clientes para entregar, além do depósito (D=nó 0). Tempos de viagem (horas) e janelas:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.4rem 0 .8rem;">
+          <table class="gtbl">
+            <thead><tr><th>De \ Para</th><th>D(0)</th><th>C1</th><th>C2</th><th>C3</th></tr></thead>
+            <tbody>
+              <tr><td><strong>D(0)</strong></td><td>—</td><td>2</td><td>3</td><td>4</td></tr>
+              <tr><td><strong>C1</strong></td><td>2</td><td>—</td><td>2</td><td>3</td></tr>
+              <tr><td><strong>C2</strong></td><td>3</td><td>2</td><td>—</td><td>2</td></tr>
+              <tr><td><strong>C3</strong></td><td>4</td><td>3</td><td>2</td><td>—</td></tr>
+            </tbody>
+          </table>
+          <table class="gtbl">
+            <thead><tr><th>Cliente</th><th>Demanda</th><th>Janela [a, b]</th></tr></thead>
+            <tbody>
+              <tr><td>C1</td><td>3 un</td><td>[8h, 10h]</td></tr>
+              <tr><td>C2</td><td>5 un</td><td>[9h, 12h]</td></tr>
+              <tr><td>C3</td><td>2 un</td><td>[11h, 14h]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong>Variáveis:</strong><br>
+        xᵢⱼᵏ = 1 se o veículo k vai do nó i para o nó j. Na notação CPLEX: <code>xij1</code> (veículo V1) ou <code>xij2</code> (veículo V2), onde i,j ∈ {0=D, 1=C1, 2=C2, 3=C3}.<br>
+        tᵢᵏ = horário de chegada do veículo k no cliente i. Notação: <code>ta1, ta2, ta3</code> (V1) e <code>tb1, tb2, tb3</code> (V2).<br>
+        Big-M = 20 (valor grande para as restrições de janela de tempo).</p>
+        <div class="math-block" style="font-size:.82rem;line-height:1.9;white-space:pre-wrap;">\VRPTW: 2 veiculos, deposito=0, clientes=1,2,3, Q=8
+\xij1 = V1 vai do no i ao no j
+\xij2 = V2 vai do no i ao no j
+\tai = hora de chegada de V1 no cliente i
+\tbi = hora de chegada de V2 no cliente i
+\Big-M = 20
+
+Minimize
+ obj: 2 x011 + 3 x021 + 4 x031
+    + 2 x121 + 3 x131 + 2 x211 + 2 x231 + 3 x311 + 2 x321
+    + 2 x101 + 3 x201 + 4 x301
+    + 2 x012 + 3 x022 + 4 x032
+    + 2 x122 + 3 x132 + 2 x212 + 2 x232 + 3 x312 + 2 x322
+    + 2 x102 + 3 x202 + 4 x302
+
+Subject To
+ \Cada cliente visitado por exatamente 1 veiculo
+ cob1: x011 + x211 + x311 + x012 + x212 + x312 = 1
+ cob2: x021 + x121 + x321 + x022 + x122 + x322 = 1
+ cob3: x031 + x131 + x231 + x032 + x132 + x232 = 1
+ \Conservacao de fluxo - V1 (entra = sai em cada cliente)
+ flv1c1: x011 + x211 + x311 - x101 - x121 - x131 = 0
+ flv1c2: x021 + x121 + x321 - x201 - x211 - x231 = 0
+ flv1c3: x031 + x131 + x231 - x301 - x311 - x321 = 0
+ \Conservacao de fluxo - V2
+ flv2c1: x012 + x212 + x312 - x102 - x122 - x132 = 0
+ flv2c2: x022 + x122 + x322 - x202 - x212 - x232 = 0
+ flv2c3: x032 + x132 + x232 - x302 - x312 - x322 = 0
+ \Capacidade - V1 (demandas: C1=3, C2=5, C3=2, Q=8)
+ capv1: 3 x011 + 3 x211 + 3 x311 + 5 x021 + 5 x121 + 5 x321 + 2 x031 + 2 x131 + 2 x231 &lt;= 8
+ \Capacidade - V2
+ capv2: 3 x012 + 3 x212 + 3 x312 + 5 x022 + 5 x122 + 5 x322 + 2 x032 + 2 x132 + 2 x232 &lt;= 8
+ \Janelas de tempo - V1
+ \Se V1 vai deposito->C1 (t=2h): chegada em C1 entre [8,10]
+ tw1a_lo: ta1 >= 8
+ tw1a_hi: ta1 &lt;= 10
+ \Se V1 vai deposito->C2 (t=3h): chegada em C2 entre [9,12]
+ tw2a_lo: ta2 >= 9
+ tw2a_hi: ta2 &lt;= 12
+ \Se V1 vai deposito->C3 (t=4h): chegada em C3 entre [11,14]
+ tw3a_lo: ta3 >= 11
+ tw3a_hi: ta3 &lt;= 14
+ \Propagacao de tempo - V1 (Big-M=20): se V1 vai Ci->Cj, ta_j >= ta_i + t_ij
+ \ta_j - ta_i - t_ij + 20*(1-x_ij1) >= 0 → ta_j - ta_i + 20*x_ij1 >= t_ij - 20 + 20
+ prop_v1_12: ta2 - ta1 + 20 x121 >= 22
+ prop_v1_13: ta3 - ta1 + 20 x131 >= 23
+ prop_v1_21: ta1 - ta2 + 20 x211 >= 22
+ prop_v1_23: ta3 - ta2 + 20 x231 >= 22
+ prop_v1_31: ta1 - ta3 + 20 x311 >= 23
+ prop_v1_32: ta2 - ta3 + 20 x321 >= 22
+ \Janelas de tempo - V2 (iguais)
+ tw1b_lo: tb1 >= 8
+ tw1b_hi: tb1 &lt;= 10
+ tw2b_lo: tb2 >= 9
+ tw2b_hi: tb2 &lt;= 12
+ tw3b_lo: tb3 >= 11
+ tw3b_hi: tb3 &lt;= 14
+ \Propagacao de tempo - V2
+ prop_v2_12: tb2 - tb1 + 20 x122 >= 22
+ prop_v2_13: tb3 - tb1 + 20 x132 >= 23
+ prop_v2_21: tb1 - tb2 + 20 x212 >= 22
+ prop_v2_23: tb3 - tb2 + 20 x232 >= 22
+ prop_v2_31: tb1 - tb3 + 20 x312 >= 23
+ prop_v2_32: tb2 - tb3 + 20 x322 >= 22
+
+Binary
+ x011 x021 x031
+ x121 x131 x211 x231 x311 x321
+ x101 x201 x301
+ x012 x022 x032
+ x122 x132 x212 x232 x312 x322
+ x102 x202 x302
+
+End</div>
+        <div class="alert alert-info" style="font-size:.86rem;margin-top:.6rem;">
+          <strong>Como ler as restrições de propagação de tempo (prop_v1_12):</strong><br>
+          <code>ta2 − ta1 + 20·x121 ≥ 22</code> — se o veículo 1 vai de C1 para C2 (x121=1), então a equação fica ta2 − ta1 ≥ 2, ou seja, a chegada em C2 deve ser ao menos 2 horas depois de C1 (tempo de viagem C1→C2 = 2h). Se x121=0 (V1 não vai de C1 para C2), a restrição vira ta2 − ta1 ≥ 22−20=2, mas qualquer valor de ta2 ≥ 9 e ta1 ≤ 10 satisfaz isso — a restrição fica automaticamente válida.<br>
+          <strong>Por que Big-M=20?</strong> É um número grande o suficiente para "desligar" a restrição quando a variável xᵢⱼᵏ = 0.
+        </div>
       </div>
     </div>
     <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">

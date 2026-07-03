@@ -279,26 +279,64 @@ footer {
   margin-top: 3rem;
 }
 
-/* ── Responsivo ── */
+/* ── Tablet (até 768px) ── */
+@media (max-width: 768px) {
+  main { padding: 0 .9rem 2rem; }
+  .hero { padding: 2.5rem 1rem 2rem; }
+  .hero h1 { font-size: 1.9rem; }
+  .hero p  { font-size: 1rem; }
+  .hero-cards { gap: .8rem; }
+  .hero-card { width: 155px; }
+  .solver-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+}
+
+/* ── Mobile (até 600px) ── */
 @media (max-width: 600px) {
   /* Navbar */
-  nav { gap: .5rem; padding: .6rem 1rem; }
-  nav .brand { font-size: 1rem; }
-  nav a { font-size: .82rem; padding: .3rem .5rem; }
+  nav { gap: .4rem; padding: .55rem .8rem; flex-wrap: wrap; }
+  nav .brand { font-size: .95rem; }
+  nav a { font-size: .8rem; padding: .28rem .45rem; }
 
   /* Hero */
-  .hero { padding: 2rem 1rem 1.5rem; }
-  .hero h1 { font-size: 1.5rem; }
-  .hero p  { font-size: .95rem; }
-  .hero-cards { gap: .7rem; }
-  .hero-card { width: 130px; padding: 1rem .8rem; }
-  .hero-card-icon { font-size: 1.6rem; }
-  .hero-card h3 { font-size: .85rem; }
+  .hero { padding: 1.8rem .9rem 1.4rem; }
+  .hero h1 { font-size: 1.4rem; }
+  .hero p  { font-size: .9rem; margin-bottom: 1.2rem; }
+  .hero-cards { gap: .6rem; }
+  .hero-card { width: 120px; padding: .9rem .7rem; }
+  .hero-card .icon { font-size: 1.5rem; }
+  .hero-card span  { font-size: .82rem; }
+
+  /* Layout */
+  main { padding: 0 .7rem 2rem; margin: 1.2rem auto; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.2rem; }
+  h3 { font-size: 1rem; }
 
   /* Seções internas */
-  .section { padding: 1.5rem 1rem; }
-  .section h2 { font-size: 1.3rem; }
+  .section { padding: 1.2rem .8rem; }
 
-  /* Alertas / cards genéricos */
-  .alert { font-size: .88rem; padding: .7rem .9rem; }
+  /* Alertas / cards */
+  .alert { font-size: .85rem; padding: .6rem .85rem; }
+  .card  { padding: 1rem 1rem; }
+
+  /* Math block global */
+  .math-block {
+    font-size: .8rem;
+    padding: .6rem .9rem;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+
+  /* Tableau global */
+  .tableau-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table.tableau { font-size: .8rem; }
+  table.tableau th, table.tableau td { padding: .35rem .55rem; }
+
+  /* Botões */
+  .btn { padding: .48rem 1rem; font-size: .9rem; }
+  .btn-group { gap: .4rem; }
+
+  /* Solver grid */
+  .solver-grid { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: .35rem; }
+  input[type="number"], input[type="text"], select { padding: .38rem .5rem; font-size: .88rem; }
 }
