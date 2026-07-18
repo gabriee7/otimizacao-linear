@@ -4426,7 +4426,7 @@ End</div>
       <div class="phase-body">
         <p>Problema de <strong>maximização</strong> com 3 variáveis, uma restrição ≤ e duas restrições ≥. As duas restrições ≥ não têm variável básica "de graça" — vão precisar de variável artificial. Como não há dica de método no enunciado, resolvemos por <strong>Duas Fases</strong>.</p>
         <div class="alert alert-info">
-          <strong>📌 Regra de notação (igual ao Guia de Prova Final):</strong> nenhum valor fica em fração — tudo em decimal, com 3 casas quando a divisão não fecha exata. O objetivo da Fase I chama-se <strong>x₀</strong>; o da Fase II, <strong>Z' = −Z</strong>. Operações de linha anotadas como <code>Lᵢ = Lᵢ ± c·Lⱼ</code>.
+          <strong>📌 Regra de notação (igual ao Guia de Prova Final):</strong> nenhum valor fica em fração — tudo em decimal, com 3 casas quando a divisão não fecha exata. O objetivo da Fase I chama-se <strong>x₀</strong>; o da Fase II é sempre <strong>−Z</strong>. Operações de linha anotadas como <code>Lᵢ = Lᵢ ± c·Lⱼ</code>.
         </div>
       </div>
     </div>
@@ -4440,7 +4440,7 @@ End</div>
       </div>
       <div class="phase-body">
         <p><strong>Converter para MIN</strong> (convenção do professor: o tableau só é montado em minimização):</p>
-        <div class="math-block">Maximizar Z = 2x₁ − x₂ + x₃ &nbsp;⟹&nbsp; <strong>Minimizar Z' = −2x₁ + x₂ − x₃</strong></div>
+        <div class="math-block">Maximizar Z = 2x₁ − x₂ + x₃ &nbsp;⟹&nbsp; <strong>Minimizar −Z = −2x₁ + x₂ − x₃</strong></div>
         <p><strong>Forma padrão</strong> — R1 é ≤ (recebe folga x₄); R2 e R3 são ≥ (recebem excesso e artificial):</p>
         <div class="math-block">
           R1: &nbsp;2x₁ + x₂ − 2x₃ + x₄ = 8<br>
@@ -4616,14 +4616,14 @@ End</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <p>Apague as colunas x₆ e x₈ (artificiais, não existem mais no problema original). Troque a linha x₀ pela linha Z' com os coeficientes originais convertidos (<code>Z' + 2x₁ − x₂ + x₃ = 0</code>) e zere as colunas das variáveis já básicas (x₁ e x₂) com Gauss:</p>
+        <p>Apague as colunas x₆ e x₈ (artificiais, não existem mais no problema original). Troque a linha x₀ pela linha −Z com os coeficientes originais convertidos (<code>−Z + 2x₁ − x₂ + x₃ = 0</code>) e zere as colunas das variáveis já básicas (x₁ e x₂) com Gauss:</p>
         <div class="math-block">
-          Z' pronta = Z' − 2·L(x₁) − (−1)·L(x₂) = Z' − 2·L(x₁) + L(x₂)
+          −Z pronta = −Z − 2·L(x₁) − (−1)·L(x₂) = −Z − 2·L(x₁) + L(x₂)
         </div>
         <div class="t-outer">
           <div class="t-base-col">
             <div class="t-base-spacer"></div>
-            <div class="t-base-cell">Z'</div>
+            <div class="t-base-cell">−Z</div>
             <div class="t-base-cell">x₄</div>
             <div class="t-base-cell">x₁</div>
             <div class="t-base-cell">x₂</div>
@@ -4641,7 +4641,7 @@ End</div>
           </div>
         </div>
         <div class="alert alert-warning">
-          <strong>⚠️ Ponto de atenção:</strong> esse Gauss em cima da linha Z' é o passo mais esquecido — a base mudou na Fase I, então a linha Z' "crua" (com os coeficientes 2 e −1 direto do enunciado) quase sempre chega com colunas de variável básica diferentes de zero.
+          <strong>⚠️ Ponto de atenção:</strong> esse Gauss em cima da linha −Z é o passo mais esquecido — a base mudou na Fase I, então a linha −Z "crua" (com os coeficientes 2 e −1 direto do enunciado) quase sempre chega com colunas de variável básica diferentes de zero.
         </div>
       </div>
     </div>
@@ -4654,7 +4654,7 @@ End</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <p><strong>Quem entra:</strong> maior célula positiva da linha Z' é x₅ (0,571, contra nenhuma outra positiva — x₃ e x₇ são negativas).</p>
+        <p><strong>Quem entra:</strong> maior célula positiva da linha −Z é x₅ (0,571, contra nenhuma outra positiva — x₃ e x₇ são negativas).</p>
         <div class="tableau-wrap">
           <table class="rtbl">
             <thead><tr><th>Linha</th><th>Coef. de x₅</th><th>b</th><th>Razão b ÷ coef.</th><th>Escolha?</th></tr></thead>
@@ -4673,7 +4673,7 @@ End</div>
         <div class="t-outer">
           <div class="t-base-col">
             <div class="t-base-spacer"></div>
-            <div class="t-base-cell">Z'</div>
+            <div class="t-base-cell">−Z</div>
             <div class="t-base-cell">x₁</div>
             <div class="t-base-cell">x₅</div>
             <div class="t-base-cell">x₄</div>
@@ -4691,7 +4691,7 @@ End</div>
           </div>
         </div>
         <div class="alert alert-info">
-          <strong>📌 Comentário no ponto:</strong> x₂ zerou e saiu, x₅ entrou com valor 6. A linha Z' ainda tem duas células positivas (x₃ = 2 e x₇ = 1) — segue mais uma iteração.
+          <strong>📌 Comentário no ponto:</strong> x₂ zerou e saiu, x₅ entrou com valor 6. A linha −Z ainda tem duas células positivas (x₃ = 2 e x₇ = 1) — segue mais uma iteração.
         </div>
       </div>
     </div>
@@ -4704,7 +4704,7 @@ End</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <p><strong>Quem entra:</strong> maior célula positiva da linha Z' é x₃ (valor 2, contra 1 de x₇).</p>
+        <p><strong>Quem entra:</strong> maior célula positiva da linha −Z é x₃ (valor 2, contra 1 de x₇).</p>
         <div class="tableau-wrap">
           <table class="rtbl">
             <thead><tr><th>Linha</th><th>Coef. de x₃</th><th>b</th><th>Razão</th><th>Escolha?</th></tr></thead>
@@ -4724,7 +4724,7 @@ End</div>
           x₅ = 6 + 4·x₃ &nbsp;&nbsp;&nbsp;(cresce)<br>
           x₄ = 4 + 1·x₃ &nbsp;&nbsp;&nbsp;(cresce)
         </div>
-        <p>Nenhuma das três diminui — todas <em>aumentam</em> junto com x₃, então x₃ pode ir a infinito sem tornar nenhuma variável básica negativa. Como Z' = −4 − 2x₃ (substituindo na linha Z'), Z' → −∞, ou seja <strong>Z = −Z' → +∞</strong>.</p>
+        <p>Nenhuma das três diminui — todas <em>aumentam</em> junto com x₃, então x₃ pode ir a infinito sem tornar nenhuma variável básica negativa. Como −Z = −4 − 2x₃ (substituindo na linha −Z), −Z → −∞, ou seja <strong>Z → +∞</strong>.</p>
       </div>
     </div>
 
