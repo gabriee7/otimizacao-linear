@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Sobrevivência — Prova Final</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1.4rem;overflow:hidden;}
+  .phase-head{display:flex;align-items:center;gap:.7rem;background:#f1f5f9;padding:.7rem 1.1rem;border-bottom:1px solid var(--border);}
+  .phase-tag{background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:999px;white-space:nowrap;}
+  .phase-title{font-weight:700;font-size:1.02rem;}
+  .phase-body{padding:1.1rem 1.3rem;}
+  .roman{display:flex;gap:.9rem;margin-bottom:1rem;align-items:flex-start;}
+  .roman-num{min-width:2.4rem;height:2.4rem;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex-shrink:0;}
+  .roman-body{flex:1;}
+  .roman-body strong.h{display:block;margin-bottom:.25rem;font-size:1rem;}
+  .attn{background:#fffbeb;border-left:4px solid var(--warning);border-radius:0 8px 8px 0;padding:.7rem 1rem;margin:.6rem 0;font-size:.9rem;}
+  .attn b{color:#92400e;}
+  .exemplo{background:#eff6ff;border-left:4px solid var(--primary);border-radius:0 8px 8px 0;padding:.7rem 1rem;margin:.6rem 0;font-size:.9rem;}
+  .toc{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem;}
+  .toc a{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:.35rem .9rem;font-size:.85rem;text-decoration:none;color:var(--primary);font-weight:600;}
+  .toc a:hover{background:var(--primary);color:#fff;}
+  table.tab{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.88rem;}
+  table.tab th,table.tab td{border:1px solid var(--border);padding:.4rem .6rem;text-align:center;}
+  table.tab th{background:var(--primary);color:#fff;}
+  table.tab td.hi{background:#fef3c7;font-weight:700;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="brand">📐 Otimização Linear</a>
+  <a href="teoria.html">Teoria</a>
+  <a href="exercicios.html">Exercícios</a>
+  <a href="solver.html">Solver</a>
+  <a href="grafico.html">Gráfico</a>
+  <a href="guia-prova-final.html" class="active">Guia Prova Final</a>
+</nav>
+
+<div class="hero" style="padding:2.4rem 1.5rem 1.8rem;">
+  <h1 style="font-size:1.9rem;">🆘 Guia de Sobrevivência — Prova Final</h1>
+  <p>Foco total no que mais cai: <strong>Big-M</strong> e <strong>Análise de Sensibilidade</strong>. Passo a passo em algarismos romanos, sem pular etapas.</p>
+</div>
+
+<main>
+
+<div class="alert alert-warning">
+  <strong>Como a prova final é estruturada (padrão observado em 2021/2 e nas listas):</strong><br>
+  Q1 (2,0) — escrever o <strong>modelo dual</strong>. Q2 e Q3 (3,0 cada) — <strong>análise de sensibilidade</strong> a partir de um tableau ótimo já dado (retirar variável, mudar coeficiente/recurso). Q4 (3,0) — resolver um problema do zero via <strong>Big-M, Duas Fases ou Dual Simplex</strong> (sem CPLEX).
+  Ou seja: <strong>3 das 4 questões (8 dos 10 pontos)</strong> giram em torno exatamente do que você disse ter mais dificuldade.
+</div>
+
+<div class="toc">
+  <a href="#bigm">① Big-M</a>
+  <a href="#sensib">② Análise de Sensibilidade</a>
+  <a href="#casos">③ Tabela-resumo dos 7 casos</a>
+  <a href="#erros">④ Erros que derrubam nota</a>
+</div>
+
+<!-- ============================================================ -->
+<!-- BIG M -->
+<!-- ============================================================ -->
+<h2 id="bigm">① Método Big-M — Manual Passo a Passo</h2>
+
+<div class="alert alert-info">
+<strong>Para que serve, em uma frase:</strong> quando o problema tem restrições <code>=</code> ou <code>≥</code>, não existe uma base inicial "de graça" (identidade). O Big-M cria variáveis artificiais para forçar essa base, e as pune com um custo gigantesco (M) na função objetivo para que o Simplex trate de expulsá-las o quanto antes.
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Padronizar o sinal das restrições</div></div>
+  <div class="phase-body">
+    <div class="roman"><div class="roman-body">
+      <strong>Convenção do professor (siga sempre esta, é a usada em todos os exercícios corrigidos):</strong> o tableau só é montado em <strong>MINIMIZAÇÃO</strong>. Se o problema original for <em>Maximizar Z</em>, reescreva como <em>Minimizar −Z</em> logo no início — trocando o sinal de todos os coeficientes da FO. Resolva o problema inteiro normalmente e, <strong>só no final</strong>, multiplique o valor ótimo encontrado por −1 para voltar ao Z do problema original (as variáveis x* não mudam de valor, só o Z muda de sinal).
+    </div></div>
+    <div class="exemplo"><strong>Exemplo (padrão dos exercícios 7/8 e da P2):</strong> "Maximizar Z = −3x₁−2x₂+x₃" vira "Minimizar Z' = 3x₁+2x₂−x₃". Resolve-se tudo em Z'. Se o ótimo achado for Z'* = 4, o Z do problema original é <strong>Z* = −4</strong>.</div>
+    <div class="attn"><b>Ponto de atenção 1:</b> depois de converter para MIN, a linha Z do tableau é sempre escrita na forma <code>Z − cx = 0</code> — ou seja, a linha guarda os coeficientes <strong>com sinal trocado</strong> (−c) da FO já convertida para MIN. Esse é o layout que o professor usa em toda correção.</div>
+    <div class="attn"><b>Ponto de atenção 2:</b> restrições do tipo <code>≤ negativo</code> (ex.: <code>−x₁+x₂ ≤ −1</code>) NÃO precisam ser invertidas de sinal por conta própria — deixe o b negativo, ele é justamente o gatilho que indica "primal inviável" e aponta para o Dual Simplex. Só multiplique restrição por −1 quando for transformá-la de ≥ para ≤ (ou vice-versa) por exigência do método (ex.: preparar variável de excesso).</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Colocar em forma padrão (adicionar folga/excesso)</div></div>
+  <div class="phase-body">
+    <table class="tab">
+      <thead><tr><th>Tipo de restrição</th><th>O que adicionar</th><th>Sinal na equação</th></tr></thead>
+      <tbody>
+        <tr><td>≤ b</td><td>folga s (slack)</td><td>+ s</td></tr>
+        <tr><td>≥ b</td><td>excesso e (surplus)</td><td>− e</td></tr>
+        <tr><td>= b</td><td>nada de folga/excesso</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Ponto de atenção:</b> a variável de excesso (subtraída) <u>nunca</u> serve como variável básica inicial, porque teria coeficiente −1 na coluna dela — não forma identidade. É exatamente por isso que ela sozinha não resolve o problema e precisamos da variável artificial.
+    </div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Adicionar variável artificial onde falta identidade</div></div>
+  <div class="phase-body">
+    Toda restrição do tipo <code>≥</code> (depois de subtrair o excesso) e toda restrição <code>=</code> recebe uma variável artificial <code>a</code>, com coeficiente <code>+1</code>, para fechar a base identidade inicial.
+    <div class="exemplo">
+      <strong>Exemplo (questão 21 da lista 2 / estilo prova):</strong><br>
+      Maximizar 5x₁ − 2x₂ + x₃, sujeito a x₁+4x₂+x₃ ≤ 6 e 2x₁+x₂+3x₃ ≥ 2.<br>
+      → 1ª restrição: + s₁. 2ª restrição (≥): − e₂ + a₂.<br>
+      Base inicial: {s₁, a₂}.
+    </div>
+    <div class="attn"><b>Ponto de atenção — variável irrestrita:</b> se alguma variável não tem restrição de sinal (ex. "x₂ irrestrito"), ela precisa ser substituída por <code>x₂ = x₂' − x₂''</code>, com x₂', x₂'' ≥ 0, ANTES de montar o tableau. Isso é citado em quase toda prova (P1, P2 e final trazem variável irrestrita).
+    </div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">IV</span><div class="phase-title">Penalizar as artificiais na função objetivo</div></div>
+  <div class="phase-body">
+    Para cada variável artificial <code>aᵢ</code>, subtraia <code>M·aᵢ</code> da FO (se maximizando) ou some <code>+M·aᵢ</code> (se minimizando). <strong>M é um número positivo enorme</strong> (trate-o como uma variável simbólica, não substitua por número — vai comparar sinais de expressões em M no fim).
+    <div class="math-block">Maximizar: Z = 5x₁ − 2x₂ + x₃ + 0s₁ − 0e₂ − M·a₂</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">V</span><div class="phase-title">Zerar a linha Z na coluna das variáveis básicas (linha 0)</div></div>
+  <div class="phase-body">
+    No tableau inicial, a linha Z aparece com <code>M</code> na coluna de cada artificial que está na base — isso está ERRADO para operar (uma variável básica deve ter 0 na linha Z). Corrija: some <code>M ×</code> (linha da restrição onde a artificial é básica) à linha Z, para cada artificial na base.
+    <div class="attn"><b>Ponto de atenção — o erro mais comum de toda a matéria:</b> esquecer esse passo faz o simplex inteiro sair errado, porque o teste de otimalidade compara a linha Z como se as artificiais já estivessem "zeradas" ali, mas elas não estão até você fazer essa eliminação de Gauss.
+    </div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">VI</span><div class="phase-title">Rodar o Simplex normalmente, comparando coeficientes em M</div></div>
+  <div class="phase-body">
+    Como tudo já foi convertido para MIN (linha Z = −c, Passo I), o teste de entrada é sempre o mesmo: entra a variável com o coeficiente mais negativo na linha Z, tratando M como "um número positivo muito maior que qualquer outro". Ou seja, compare primeiro o termo em M; só desempate com a parte sem M.
+    <div class="exemplo">
+      Se a linha Z tem <code>3 − 2M</code> para x₁ e <code>−5 + M</code> para x₃: como o termo em M domina, −2M "vence" (é mais negativo) e x₁ entra antes de x₃, mesmo x₃ tendo um número "solto" pior.
+    </div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">VII</span><div class="phase-title">Critério de saída: teste da razão mínima (igual ao simplex comum)</div></div>
+  <div class="phase-body">
+    Divida a coluna <code>b</code> pelos coeficientes positivos da coluna que está entrando; quem tiver a menor razão sai da base. Ignore linhas com coeficiente ≤ 0 nessa coluna (razão infinita/não entra na disputa).
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">VIII</span><div class="phase-title">Ler o resultado final — e verificar se é realmente viável</div></div>
+  <div class="phase-body">
+    Pare quando não houver mais coeficiente negativo (incluindo em M) na linha Z.
+    <table class="tab">
+      <thead><tr><th>Situação final das artificiais</th><th>O que significa</th></tr></thead>
+      <tbody>
+        <tr><td>Todas as artificiais saíram da base (ou ficaram na base com valor 0)</td><td>Solução ótima e viável — pode reportar normalmente</td></tr>
+        <tr><td class="hi">Alguma artificial ficou na base com valor &gt; 0 no ótimo</td><td class="hi">Problema é <strong>INVIÁVEL</strong> — não existe solução que satisfaça todas as restrições originais</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Ponto de atenção:</b> essa é justamente a "pegadinha" da questão 2 da lista 2 (o exercício resolvido mostra exatamente isso: no tableau final a variável artificial x5 não conseguia sair, e a conclusão certa era "sistema inviável", não continuar calculando).
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-success">
+<strong>Atalho de decisão na prova:</strong> se o enunciado disser "Big-M <u>ou</u> Duas Fases" — escolha sempre Big-M se as restrições ≥/= forem poucas (1 ou 2), porque Duas Fases exige rodar o simplex duas vezes inteiras. Se o professor já deu Dual Simplex como pedido específico, é outro método (veja a Questão 2 da prova2 — usa Dual Simplex, que parte de uma solução <em>ótima porém inviável</em> e conserta a viabilidade, ao contrário do Big-M que parte de uma solução viável e busca a otimalidade).
+</div>
+
+<!-- ============================================================ -->
+<!-- SENSIBILIDADE -->
+<!-- ============================================================ -->
+<h2 id="sensib">② Análise de Sensibilidade — Manual Passo a Passo</h2>
+
+<div class="alert alert-info">
+<strong>Para que serve, em uma frase:</strong> você já tem o tableau ótimo pronto. A pergunta é sempre a mesma disfarçada: <em>"esse tableau continua sendo ótimo e viável depois dessa mudança, ou preciso recalcular algo?"</em> Você NUNCA resolve o problema do zero de novo — sempre reaproveita o tableau ótimo dado.
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Identificar as peças do tableau ótimo</div></div>
+  <div class="phase-body">
+    Antes de qualquer conta, escreva explicitamente:
+    <ul style="margin-left:1.3rem;margin-top:.4rem;">
+      <li><strong>Base atual</strong> — quais variáveis estão na base e seus valores (coluna b)</li>
+      <li><strong>cB</strong> — vetor com os custos originais das variáveis da base (não os da linha Z!)</li>
+      <li><strong>B⁻¹</strong> — geralmente aparece "escondida" nas colunas das variáveis de folga/artificiais do tableau ótimo, ou é dada como dica pelo professor (como nas provas: "Dica: B⁻¹ = [...]")</li>
+    </ul>
+    <div class="attn"><b>Ponto de atenção:</b> em praticamente toda prova da UFES nessa disciplina, o professor <u>dá</u> B⁻¹ de presente ("Dica"). Se ele deu, USE — não perca tempo tentando reconstruir B⁻¹ pelas colunas de folga quando ela já está pronta no enunciado.
+    </div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Classificar qual dos 7 casos a questão está pedindo</div></div>
+  <div class="phase-body">
+    Toda questão de sensibilidade se encaixa em um destes 7 tipos (veja a tabela-resumo completa na seção ③ mais abaixo). Descubra qual ANTES de calcular qualquer coisa, porque cada um usa uma fórmula diferente:
+    <ol style="margin-left:1.3rem;">
+      <li>Mudar custo (cⱼ) de variável <strong>fora</strong> da base (não-básica)</li>
+      <li>Mudar custo (cⱼ) de variável <strong>dentro</strong> da base (básica)</li>
+      <li>Mudar o vetor de recursos <strong>b</strong></li>
+      <li>Mudar coluna da matriz de restrições (aⱼ) de variável não-básica</li>
+      <li>Adicionar nova restrição</li>
+      <li>Adicionar nova variável</li>
+      <li>Remover restrição ou remover variável</li>
+    </ol>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Caso 1 — custo de variável NÃO-básica muda</div></div>
+  <div class="phase-body">
+    <div class="roman"><div class="roman-body"><strong class="h">O que muda:</strong> só o valor na linha Z daquela coluna. Nada mais no tableau se mexe.</div></div>
+    <div class="roman"><div class="roman-body"><strong class="h">Fórmula:</strong> novo z̄ⱼ = z̄ⱼ,antigo + Δcⱼ, onde Δcⱼ = c'ⱼ − cⱼ,antigo.</div></div>
+    <div class="roman"><div class="roman-body"><strong class="h">Critério de manter ótimo:</strong> em maximização, precisa continuar z̄ⱼ ≤ 0 (não-negativo é quem "quer entrar"). Isole Δcⱼ (ou diretamente c'ⱼ) na desigualdade e ache o intervalo permitido.</div></div>
+    <div class="exemplo"><strong>Exemplo direto (Q11-a da lista 2):</strong> tableau tem z̄₂ = 3 na linha Z (coluna x₂, não-básica). Se c₂ vai de 1 para 6, Δc₂ = 5 → novo z̄₂ = 3+5 = 8 &gt; 0 → deixa de ser ótimo, x₂ entraria na base (precisaria rodar mais uma iteração de simplex a partir daqui).</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">IV</span><div class="phase-title">Caso 2 — custo de variável BÁSICA muda</div></div>
+  <div class="phase-body">
+    <div class="roman"><div class="roman-body"><strong class="h">O que muda:</strong> a linha Z inteira, porque cB mudou e cB entra na fórmula de TODA coluna.</div></div>
+    <div class="roman"><div class="roman-body"><strong class="h">Fórmula:</strong> para cada coluna j, novo z̄ⱼ = z̄ⱼ,antigo + Δcᵢ × (coeficiente da linha i, coluna j no tableau), onde i é a linha em que a variável básica alterada está.</div></div>
+    <div class="roman"><div class="roman-body"><strong class="h">Critério:</strong> recalcule z̄ⱼ para TODAS as colunas não-básicas e exija que todas continuem ≤ 0 simultaneamente (maximização). Isso te dá várias desigualdades em Δcᵢ — o intervalo final é a interseção de todas.</div></div>
+    <div class="attn"><b>Ponto de atenção:</b> é o caso onde mais gente erra por esquecer de recalcular TODAS as colunas — se você mexe no custo de uma variável básica e só olha uma coluna, sua resposta fica incompleta.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">V</span><div class="phase-title">Caso 3 — vetor de recursos b muda</div></div>
+  <div class="phase-body">
+    <div class="roman"><div class="roman-body"><strong class="h">O que muda:</strong> a linha Z (valor de Z) e a coluna b inteira (os valores das variáveis básicas) — mas NUNCA os z̄ⱼ das outras colunas.</div></div>
+    <div class="roman"><div class="roman-body"><strong class="h">Fórmula-chave:</strong> nova coluna b = B⁻¹ · b'. Se só um bₖ muda para bₖ+β, isso é o mesmo que somar β × (coluna k de B⁻¹) ao vetor b atual.</div></div>
+    <div class="roman"><div class="roman-body"><strong class="h">Critério de manter viável:</strong> exija que toda entrada do novo vetor b (que são os valores das variáveis básicas) continue ≥ 0. Isso dá um sistema de inequações em β — o intervalo de β é a interseção de todas.</div></div>
+    <div class="exemplo"><strong>Exemplo (Q3 da prova2, exatamente esse caso):</strong> B⁻¹ dada, b atual [4,1,6], substitui-se b₁ por β. B⁻¹b' vira um vetor em função de β: [β, β+1, −β+6]. Exigir os 3 ≥ 0 dá β≥0, β≥−1, β≤6 → interseção: <strong>0 ≤ β ≤ 6</strong>.</div>
+    <div class="attn"><b>Ponto de atenção:</b> o Z ótimo muda também (novo Z = cB · B⁻¹ · b'), mas isso é conta separada — não confunda "intervalo de viabilidade de β" com "novo valor de Z". A prova geralmente pede as duas coisas.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">VI</span><div class="phase-title">Casos 4 a 7 — coluna aⱼ, nova restrição, nova variável, remoção</div></div>
+  <div class="phase-body">
+    <table class="tab" style="text-align:left;">
+      <thead><tr><th style="width:16%">Caso</th><th>Procedimento resumido</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mudar coluna aⱼ</strong> de variável não-básica</td><td>Recalcule a coluna transformada: nova coluna no tableau = B⁻¹ × (nova aⱼ original). Depois recalcule só o z̄ⱼ dessa coluna (fórmula do Caso 1) para testar otimalidade.</td></tr>
+        <tr><td><strong>Inserir restrição nova</strong></td><td>Substitua a solução ótima atual na nova restrição. Se satisfaz → nada muda, tableau continua ótimo. Se viola → adicione a restrição ao tableau (com folga/artificial) e rode mais iterações (geralmente Dual Simplex, pois fica inviável mas "otimizada").</td></tr>
+        <tr><td><strong>Inserir variável nova</strong> xₙₒᵥₐ</td><td>Calcule a coluna transformada B⁻¹·aₙₒᵥₐ e o custo relativo z̄ₙₒᵥₐ = cB·B⁻¹·aₙₒᵥₐ − cₙₒᵥₐ. Se z̄ ≤ 0 (max), a variável nova não compensa, tableau continua ótimo do jeito que está. Se z̄ &gt; 0, ela entraria — rode mais uma iteração.</td></tr>
+        <tr><td><strong>Remover restrição</strong></td><td>Se a variável de folga daquela restrição estava na base com valor ≥0 (ou seja, a restrição não era ativa/apertada), pode simplesmente apagar a linha e a coluna dela — nada muda. Se ela era ativa (folga = 0 ou era básica de outra forma), o problema muda de fato e precisa recalcular.</td></tr>
+        <tr><td><strong>Remover variável</strong> xₖ</td><td>Se xₖ era não-básica (valor 0), simplesmente apague a coluna dela — a solução ótima nem muda. Se xₖ era básica, você precisa "tirar" ela da base (regra de saída) antes de apagar, e depois recomputar.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="casos">③ Tabela-resumo dos 7 casos (cola rápida para revisão de última hora)</h2>
+<div class="phase"><div class="phase-body">
+<table class="tab" style="text-align:left;">
+<thead><tr><th>Caso</th><th>O que recalcula</th><th>O que testa</th></tr></thead>
+<tbody>
+<tr><td>1. Δc não-básica</td><td>só z̄ⱼ daquela coluna</td><td>z̄ⱼ ≤ 0</td></tr>
+<tr><td>2. Δc básica</td><td>z̄ⱼ de TODAS as colunas</td><td>todos z̄ⱼ ≤ 0 (interseção)</td></tr>
+<tr><td>3. Δb</td><td>coluna b = B⁻¹b'</td><td>todo bᵢ ≥ 0 (interseção)</td></tr>
+<tr><td>4. Δaⱼ não-básica</td><td>coluna = B⁻¹aⱼ' e depois z̄ⱼ</td><td>z̄ⱼ ≤ 0</td></tr>
+<tr><td>5. Nova restrição</td><td>testa solução atual na restrição nova</td><td>satisfaz? se não, dual simplex</td></tr>
+<tr><td>6. Nova variável</td><td>coluna B⁻¹aₙₒᵥₐ e z̄ₙₒᵥₐ</td><td>z̄ₙₒᵥₐ ≤ 0</td></tr>
+<tr><td>7. Remover var./restr.</td><td>depende se era básica/ativa</td><td>se não era → nada muda</td></tr>
+</tbody>
+</table>
+</div></div>
+
+<!-- ============================================================ -->
+<h2 id="erros">④ Erros que mais derrubam nota nessa disciplina</h2>
+<div class="phase"><div class="phase-body">
+<div class="roman"><div class="roman-num">!</div><div class="roman-body">Não zerar a linha Z na coluna das artificiais logo no início do Big-M (Passo V) — o tableau inteiro fica errado a partir daí mesmo que o resto da conta esteja certo.</div></div>
+<div class="roman"><div class="roman-num">!</div><div class="roman-body">Esquecer de tratar variável irrestrita (xⱼ = xⱼ' − xⱼ'') antes de montar qualquer tableau.</div></div>
+<div class="roman"><div class="roman-num">!</div><div class="roman-body">Em análise de sensibilidade, misturar "linha Z do tableau" com "vetor c original" — cB é sempre o custo ORIGINAL das variáveis básicas, não o número que aparece na linha Z.</div></div>
+<div class="roman"><div class="roman-num">!</div><div class="roman-body">Ao final do Big-M, não checar se sobrou variável artificial positiva na base — declarar "ótimo" quando na verdade é "inviável".</div></div>
+<div class="roman"><div class="roman-num">!</div><div class="roman-body">No caso 3 (Δb), esquecer que o intervalo final é a <strong>interseção</strong> de todas as inequações — não apenas a primeira que aparecer.</div></div>
+<div class="roman"><div class="roman-num">!</div><div class="roman-body">Confundir o momento de usar Dual Simplex (parte de ótimo-mas-inviável, corrige viabilidade) com Big-M (parte de viável, busca otimalidade). São ferramentas para situações diferentes.</div></div>
+</div></div>
+
+<div class="alert alert-success">
+<strong>Próximos passos combinados:</strong> reforçar Simplex e Dual Simplex clássicos, e montar juntos a "Questão 1" (modelagem de texto → modelo matemático), que se repete em P1, P2 e final. Me chame quando quiser seguir por aí ou tirar dúvida em qualquer passo acima — aponte o número romano exato que travou.
+</div>
+
+</main>
+
+<footer>Material de estudo — Otimização Linear — Guia de Prova Final</footer>
+
+</body>
+</html>
