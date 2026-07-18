@@ -5,7 +5,7 @@
 
 $ErrorActionPreference = "Stop"
 $destino = "$env:USERPROFILE\Desktop\otimizacao-linear"
-$origem  = Split-Path -Parent $MyInvocation.MyCommand.Path
+$origem  = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 Write-Host ""
 Write-Host "=== Atualizar: Otimizacao Linear ===" -ForegroundColor Cyan
@@ -16,8 +16,10 @@ if (-not (Test-Path "$destino\.git")) {
 }
 
 Write-Host "`n[1/4] Copiando arquivos..." -ForegroundColor Yellow
-$arquivos = @("index.html","teoria.html","exercicios.html","solver.html","grafico.html","guia-prova-final.html","style.css","DEPLOY.md")
+$arquivos = @("index.html","pages\teoria.html","pages\exercicios.html","pages\solver.html","pages\grafico.html","pages\guia-prova-final.html","assets\css\style.css","docs\DEPLOY.md")
 foreach ($f in $arquivos) {
+    $destDir = Split-Path -Parent "$destino\$f"
+    if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
     Copy-Item "$origem\$f" "$destino\$f" -Force
     Write-Host "      $f" -ForegroundColor Gray
 }

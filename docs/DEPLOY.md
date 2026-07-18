@@ -74,11 +74,17 @@ O GitHub Pages atualiza automaticamente após o push.
 
 ```
 otimizacao-linear/
-├── index.html        ← Página inicial
-├── teoria.html       ← Teoria completa (Simplex, Dualidade, etc.)
-├── exercicios.html   ← Exercícios resolvidos (estilo detalhado)
-├── solver.html       ← Solver interativo Simplex
-├── grafico.html      ← Visualização gráfica 2D
-├── style.css         ← Estilos do site principal
-└── DEPLOY.md         ← Este arquivo
+├── index.html                    ← Página inicial (precisa ficar na raiz p/ o GitHub Pages)
+├── pages/
+│   ├── teoria.html                   ← Teoria completa (Simplex, Dualidade, etc.)
+│   ├── exercicios.html               ← Exercícios resolvidos (estilo detalhado)
+│   ├── solver.html                   ← Solver interativo Simplex
+│   ├── grafico.html                  ← Visualização gráfica 2D
+│   └── guia-prova-final.html         ← Guia de prova final (Big-M, Duas Fases, sensibilidade)
+├── assets/css/style.css          ← Estilos do site principal
+├── scripts/                      ← Scripts .ps1 de apoio (uso pessoal, não afetam o Pages)
+├── docs/
+│   ├── DEPLOY.md                     ← Este arquivo
+│   └── design-prompt.md              ← Especificação de design
+└── materiais/                    ← Material de estudo pessoal (gitignored, não publicado)
 ```

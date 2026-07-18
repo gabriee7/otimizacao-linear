@@ -6,7 +6,7 @@
 $ErrorActionPreference = "Stop"
 
 $destino = "$env:USERPROFILE\Desktop\otimizacao-linear"
-$origem  = Split-Path -Parent $MyInvocation.MyCommand.Path
+$origem  = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $remote  = "https://github.com/gabriee7/otimizacao-linear.git"
 
 Write-Host ""
@@ -21,8 +21,10 @@ New-Item -ItemType Directory -Path $destino | Out-Null
 
 # 2. Copia arquivos do projeto
 Write-Host "[2/5] Copiando arquivos do projeto..." -ForegroundColor Yellow
-$arquivos = @("index.html","teoria.html","exercicios.html","solver.html","grafico.html","style.css","DEPLOY.md")
+$arquivos = @("index.html","pages\teoria.html","pages\exercicios.html","pages\solver.html","pages\grafico.html","pages\guia-prova-final.html","assets\css\style.css","docs\DEPLOY.md")
 foreach ($f in $arquivos) {
+    $destDir = Split-Path -Parent "$destino\$f"
+    if (-not (Test-Path $destDir)) { New-Item -ItemType Directory -Path $destDir -Force | Out-Null }
     Copy-Item "$origem\$f" "$destino\$f"
     Write-Host "      $f" -ForegroundColor Gray
 }
