@@ -143,10 +143,11 @@
     <p><strong>Problema inviável:</strong> nenhuma SBV inicial pode ser encontrada (variáveis artificiais na base com valor > 0 ao final da Fase I).</p>
   </div>
 
-  <!-- ===== 5. Duas Fases / Big-M ===== -->
-  <h2>5. Método das Duas Fases e Método Big-M</h2>
+  <!-- ===== 5. Duas Fases ===== -->
+  <h2>5. Método das Duas Fases</h2>
   <p>
-    Quando há restrições do tipo ≥ ou =, não há SBV imediata. Dois métodos resolvem isso:
+    Quando há restrições do tipo ≥ ou =, não há SBV imediata. O método das Duas Fases resolve isso
+    criando variáveis artificiais e rodando o simplex em duas rodadas:
   </p>
 
   <div class="card">
@@ -157,15 +158,6 @@
     </p>
     <p>
       <strong>Fase II:</strong> Usar a SBV final da Fase I como ponto de partida para resolver o PL original.
-    </p>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Método Big-M</div>
-    <p>
-      Adicionar às variáveis artificiais um coeficiente M muito grande (penalidade) na função objetivo.
-      Se o problema for viável, as artificiais sairão da base naturalmente. É mais simples de implementar,
-      porém pode ter instabilidade numérica para M muito grande.
     </p>
   </div>
 

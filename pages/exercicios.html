@@ -162,6 +162,30 @@
       .pill { font-size: .72rem; padding: 2px 8px; }
     }
 
+    .ex-lista-tabs {
+      display: flex;
+      gap: .5rem;
+      margin: 1.2rem 0 1rem;
+    }
+    .ex-lista-tab {
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 600;
+      padding: .5rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all .12s;
+    }
+    .ex-lista-tab:hover { background: #eff6ff; color: var(--text); }
+    .ex-lista-tab.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
     .ex-sidebar {
       position: sticky;
       top: 72px;
@@ -422,10 +446,25 @@
   <a href="guia-prova-final.html">🆘 Guia Prova Final</a>
 </nav>
 
+<!-- ── Abas: Lista 1 / Lista 2 ── -->
+<div class="ex-lista-tabs">
+  <button type="button" class="ex-lista-tab" data-lista="1">Lista 1</button>
+  <button type="button" class="ex-lista-tab active" data-lista="2">Lista 2</button>
+</div>
+
 <!-- ── Navegação mobile (visível apenas em telas pequenas) ── -->
-<div class="ex-mobile-nav">
-  <label for="ex-select">Selecionar exercício</label>
-  <select id="ex-select">
+<div class="ex-mobile-nav" data-lista="1" style="display:none">
+  <label for="ex-select-l1">Selecionar exercício</label>
+  <select id="ex-select-l1">
+    <optgroup label="Duas Fases">
+      <option value="l1-q18">Q18 — MAX · restrições ≥ · Duas Fases</option>
+    </optgroup>
+  </select>
+</div>
+
+<div class="ex-mobile-nav" data-lista="2">
+  <label for="ex-select-l2">Selecionar exercício</label>
+  <select id="ex-select-l2">
     <optgroup label="Modelo Dual">
       <option value="q1">Q1 — MAX · todas ≤ · x≥0</option>
       <option value="q2">Q2 — MIN · mista (≤ = ≥)</option>
@@ -458,8 +497,20 @@
 
 <div class="ex-layout">
 
-  <!-- ── Sidebar ── -->
-  <aside class="ex-sidebar">
+  <!-- ── Sidebar Lista 1 ── -->
+  <aside class="ex-sidebar" data-lista="1" style="display:none">
+    <div class="ex-sidebar-label">Duas Fases</div>
+    <a href="#l1-q18" style="margin-top:.2rem;">
+      <span class="ex-num">18</span>
+      <div>
+        <div>Duas Fases</div>
+        <div class="ex-sidebar-meta">MAX · restrições ≥</div>
+      </div>
+    </a>
+  </aside>
+
+  <!-- ── Sidebar Lista 2 ── -->
+  <aside class="ex-sidebar" data-lista="2">
     <div class="ex-sidebar-label">Modelo Dual</div>
     <a href="#q1" style="margin-top:.2rem;">
       <span class="ex-num">1</span>
@@ -3324,7 +3375,7 @@
         <ol style="padding-left:1.4rem;line-height:2.1;">
           <li>Adicionar variável artificial x₆: &nbsp; x₂ + x₃ + x₆ = 3</li>
           <li>Montar o tableau aumentado com a nova linha</li>
-          <li>Aplicar <strong>Fase 1 (Duas Fases)</strong> ou Big-M para conduzir x₆ → 0</li>
+          <li>Aplicar <strong>Fase 1 (Duas Fases)</strong> para conduzir x₆ → 0</li>
           <li>Se x₆ = 0 na Fase 1: solução viável encontrada → otimizar na Fase 2</li>
         </ol>
         <p style="margin-top:.6rem;">A nova restrição é <em>igualdade</em>, portanto não aceita folga — artificial é obrigatória. Note que a nova linha no tableau, expressa nas variáveis não-básicas atuais, é simplesmente: <span style="font-family:'Courier New',monospace;"> x₂ + x₃ = 3</span> (sem x₁ nem x₅).</p>
@@ -4338,6 +4389,370 @@ End</div>
     <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
   </div><!-- /q17 -->
 
+  <!-- ════════════════════════════════════════════════════════════
+       LISTA 1 · Q18 — Duas Fases: problema ilimitado
+  ════════════════════════════════════════════════════════════ -->
+  <div id="l1-q18" style="display:none">
+
+    <div class="q-header">
+      <div class="q-label">Questão 18 — Lista 1</div>
+      <div class="q-title">Método das Duas Fases</div>
+      <div class="q-tags">
+        <span class="q-tag qt-method">Duas Fases</span>
+        <span class="q-tag qt-result">Problema ILIMITADO</span>
+      </div>
+    </div>
+
+    <!-- Enunciado -->
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MAX &nbsp; Z = 2x₁ − x₂ + x₃<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;2x₁ + x₂ − 2x₃ ≤ 8 &nbsp;&nbsp;(R1)<br>
+        &nbsp;&nbsp;4x₁ − x₂ + 2x₃ ≥ 2 &nbsp;&nbsp;(R2)<br>
+        &nbsp;&nbsp;2x₁ + 3x₂ − x₃ ≥ 4 &nbsp;&nbsp;(R3)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃ ≥ 0
+      </div>
+    </div>
+
+    <!-- R1 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R1</span>
+        <span class="phase-title">Leitura e por que Duas Fases</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Problema de <strong>maximização</strong> com 3 variáveis, uma restrição ≤ e duas restrições ≥. As duas restrições ≥ não têm variável básica "de graça" — vão precisar de variável artificial. Como não há dica de método no enunciado, resolvemos por <strong>Duas Fases</strong>.</p>
+        <div class="alert alert-info">
+          <strong>📌 Regra de notação (igual ao Guia de Prova Final):</strong> nenhum valor fica em fração — tudo em decimal, com 3 casas quando a divisão não fecha exata. O objetivo da Fase I chama-se <strong>x₀</strong>; o da Fase II, <strong>π = −Z</strong>. Operações de linha anotadas como <code>Lᵢ = Lᵢ ± c·Lⱼ</code>.
+        </div>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R2</span>
+        <span class="phase-title">Passo 0 — padronizar sinal e montar a forma padrão</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Converter para MIN</strong> (convenção do professor: o tableau só é montado em minimização):</p>
+        <div class="math-block">Maximizar Z = 2x₁ − x₂ + x₃ &nbsp;⟹&nbsp; <strong>Minimizar π = −2x₁ + x₂ − x₃</strong></div>
+        <p><strong>Forma padrão</strong> — R1 é ≤ (recebe folga x₄); R2 e R3 são ≥ (recebem excesso e artificial):</p>
+        <div class="math-block">
+          R1: &nbsp;2x₁ + x₂ − 2x₃ + x₄ = 8<br>
+          R2: &nbsp;4x₁ − x₂ + 2x₃ − x₅ + x₆ = 2 &nbsp;<span style="color:var(--text-muted)">(x₅ excesso, x₆ artificial)</span><br>
+          R3: &nbsp;2x₁ + 3x₂ − x₃ − x₇ + x₈ = 4 &nbsp;<span style="color:var(--text-muted)">(x₇ excesso, x₈ artificial)</span>
+        </div>
+        <div class="alert alert-warning">
+          <strong>⚠️ Ponto de atenção:</strong> x₅ e x₇ (excesso) nunca podem ser básicas iniciais — têm coeficiente −1 na própria coluna. Por isso a base inicial usa as artificiais: <strong>{x₄, x₆, x₈}</strong>.
+        </div>
+      </div>
+    </div>
+
+    <!-- R3 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R3</span>
+        <span class="phase-title">Fase I — montar x₀ e zerar sua linha</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>A FO da Fase I é sempre <strong>minimizar a soma das artificiais</strong>: aqui há duas, então <code>x₀ − x₆ − x₈ = 0</code>.</p>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">x₀</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₆</div>
+            <div class="t-base-cell">x₈</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₆</th><th>x₇</th><th>x₈</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="t-pc">−1</td><td>0</td><td class="t-pc">−1</td><td>0</td></tr>
+                <tr><td>2</td><td>1</td><td>−2</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>8</td></tr>
+                <tr><td>4</td><td>−1</td><td>2</td><td>0</td><td>−1</td><td>1</td><td>0</td><td>0</td><td>2</td></tr>
+                <tr><td>2</td><td>3</td><td>−1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>1</td><td>4</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="alert alert-warning">
+          <strong>⚠️ Ponto de atenção:</strong> x₆ e x₈ são básicas mas aparecem com coeficiente −1 na linha x₀ — isso está errado para operar. Corrija somando as duas linhas onde elas são básicas: <code>L0 = L0 + L(x₆) + L(x₈)</code>.
+        </div>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">x₀</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₆</div>
+            <div class="t-base-cell">x₈</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₆</th><th>x₇</th><th>x₈</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-pc">6</td><td>2</td><td>1</td><td>0</td><td>−1</td><td>0</td><td>−1</td><td>0</td><td>6</td></tr>
+                <tr><td>2</td><td>1</td><td>−2</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>8</td></tr>
+                <tr><td class="t-pr">4</td><td>−1</td><td>2</td><td>0</td><td>−1</td><td>1</td><td>0</td><td>0</td><td>2</td></tr>
+                <tr><td>2</td><td>3</td><td>−1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>1</td><td>4</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R4 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R4</span>
+        <span class="phase-title">Fase I — iteração 1</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Quem entra:</strong> maior célula positiva da linha x₀ é x₁ (valor 6, contra 2 de x₂ e 1 de x₃).</p>
+        <div class="tableau-wrap">
+          <table class="rtbl">
+            <thead><tr><th>Linha</th><th>Coef. de x₁</th><th>b</th><th>Razão b ÷ coef.</th><th>Escolha?</th></tr></thead>
+            <tbody>
+              <tr><td>x₄</td><td>2</td><td>8</td><td>8 ÷ 2 = 4</td><td class="skip">não é a menor</td></tr>
+              <tr class="winner"><td>x₆</td><td>4</td><td>2</td><td>2 ÷ 4 = 0,5</td><td>✓ menor → x₆ sai</td></tr>
+              <tr><td>x₈</td><td>2</td><td>4</td><td>4 ÷ 2 = 2</td><td class="skip">não é a menor</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pv-row">
+          <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₆</strong></div>
+          <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₁</strong></div>
+          <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Elemento pivô: <strong>4</strong></div>
+        </div>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">x₀</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₈</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₆</th><th>x₇</th><th>x₈</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td class="t-pc">3,5</td><td>−2</td><td>0</td><td>0,5</td><td>−1,5</td><td>−1</td><td>0</td><td>3</td></tr>
+                <tr><td>0</td><td>1,5</td><td>−3</td><td>1</td><td>0,5</td><td>−0,5</td><td>0</td><td>0</td><td>7</td></tr>
+                <tr><td>1</td><td>−0,25</td><td>0,5</td><td>0</td><td>−0,25</td><td>0,25</td><td>0</td><td>0</td><td>0,5</td></tr>
+                <tr><td class="t-pr">0</td><td class="t-pr">3,5</td><td>−2</td><td>0</td><td>0,5</td><td>−0,5</td><td>−1</td><td>1</td><td>3</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="alert alert-info">
+          <strong>📌 Comentário no ponto:</strong> x₆ saiu da base (custo cumprido, artificial descartável) e x₁ entrou com valor 0,5. A linha x₀ ainda tem célula positiva (x₂ = 3,5) — ainda não é ótimo, falta mais uma iteração.
+        </div>
+      </div>
+    </div>
+
+    <!-- R5 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R5</span>
+        <span class="phase-title">Fase I — iteração 2 e resultado</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Quem entra:</strong> única célula positiva restante na linha x₀ é x₂ (valor 3,5).</p>
+        <div class="tableau-wrap">
+          <table class="rtbl">
+            <thead><tr><th>Linha</th><th>Coef. de x₂</th><th>b</th><th>Razão b ÷ coef.</th><th>Escolha?</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td>−0,25</td><td>0,5</td><td class="skip">coef. negativo — ignora</td><td class="skip">não</td></tr>
+              <tr><td>x₄</td><td>1,5</td><td>7</td><td>7 ÷ 1,5 = 4,667</td><td class="skip">não é a menor</td></tr>
+              <tr class="winner"><td>x₈</td><td>3,5</td><td>3</td><td>3 ÷ 3,5 = 0,857</td><td>✓ menor → x₈ sai</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pv-row">
+          <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₈</strong></div>
+          <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₂</strong></div>
+          <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Elemento pivô: <strong>3,5</strong></div>
+        </div>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">x₀</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₂</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₆</th><th>x₇</th><th>x₈</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>0</td><td class="t-opt">0</td><td>0</td><td class="t-opt">0</td><td class="t-opt">−1</td><td class="t-opt">0</td><td class="t-opt">−1</td><td class="t-opt">0</td></tr>
+                <tr><td>0</td><td>0</td><td>−2,143</td><td>1</td><td>0,286</td><td>−0,286</td><td>0,429</td><td>−0,429</td><td>5,714</td></tr>
+                <tr><td>1</td><td>0</td><td>0,357</td><td>0</td><td>−0,214</td><td>0,214</td><td>−0,071</td><td>0,071</td><td>0,714</td></tr>
+                <tr><td>0</td><td>1</td><td>−0,571</td><td>0</td><td>0,143</td><td>−0,143</td><td>−0,286</td><td>0,286</td><td>0,857</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="alert alert-success">
+          <strong>✅ x₀* = 0</strong> (todas as células da linha x₀ ≤ 0, e nenhuma artificial sobrou na base) → existe SBV viável para o problema original. Base final da Fase I: <strong>{x₁ = 0,714 &nbsp; x₂ = 0,857 &nbsp; x₄ = 5,714}</strong>. Pode seguir para a Fase II.
+        </div>
+      </div>
+    </div>
+
+    <!-- R6 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R6</span>
+        <span class="phase-title">Preparar a Fase II</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p>Apague as colunas x₆ e x₈ (artificiais, não existem mais no problema original). Troque a linha x₀ pela linha π com os coeficientes originais convertidos (<code>π + 2x₁ − x₂ + x₃ = 0</code>) e zere as colunas das variáveis já básicas (x₁ e x₂) com Gauss:</p>
+        <div class="math-block">
+          π pronta = π − 2·L(x₁) − (−1)·L(x₂) = π − 2·L(x₁) + L(x₂)
+        </div>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">π</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₂</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₇</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>0</td><td class="t-pc">−0,286</td><td>0</td><td class="t-pc">0,571</td><td class="t-pc">−0,143</td><td>−0,571</td></tr>
+                <tr><td>0</td><td>0</td><td>−2,143</td><td>1</td><td>0,286</td><td>0,429</td><td>5,714</td></tr>
+                <tr><td>1</td><td>0</td><td>0,357</td><td>0</td><td>−0,214</td><td>−0,071</td><td>0,714</td></tr>
+                <tr><td>0</td><td>1</td><td>−0,571</td><td>0</td><td class="t-pr">0,143</td><td>−0,286</td><td class="t-pr">0,857</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="alert alert-warning">
+          <strong>⚠️ Ponto de atenção:</strong> esse Gauss em cima da linha π é o passo mais esquecido — a base mudou na Fase I, então a linha π "crua" (com os coeficientes 2 e −1 direto do enunciado) quase sempre chega com colunas de variável básica diferentes de zero.
+        </div>
+      </div>
+    </div>
+
+    <!-- R7 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R7</span>
+        <span class="phase-title">Fase II — iteração 1</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Quem entra:</strong> maior célula positiva da linha π é x₅ (0,571, contra nenhuma outra positiva — x₃ e x₇ são negativas).</p>
+        <div class="tableau-wrap">
+          <table class="rtbl">
+            <thead><tr><th>Linha</th><th>Coef. de x₅</th><th>b</th><th>Razão b ÷ coef.</th><th>Escolha?</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td>−0,214</td><td>0,714</td><td class="skip">coef. negativo — ignora</td><td class="skip">não</td></tr>
+              <tr class="winner"><td>x₂</td><td>0,143</td><td>0,857</td><td>0,857 ÷ 0,143 = 6</td><td>✓ menor → x₂ sai</td></tr>
+              <tr><td>x₄</td><td>0,286</td><td>5,714</td><td>5,714 ÷ 0,286 = 20</td><td class="skip">não é a menor</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pv-row">
+          <div class="pv-item"><div class="pv-dot" style="background:var(--danger)"></div>Sai: <strong>x₂</strong></div>
+          <div class="pv-item"><div class="pv-dot" style="background:var(--success)"></div>Entra: <strong>x₅</strong></div>
+          <div class="pv-item"><div class="pv-dot" style="background:var(--primary)"></div>Elemento pivô: <strong>0,143</strong></div>
+        </div>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">π</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₅</div>
+            <div class="t-base-cell">x₄</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₇</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>−4</td><td class="t-pc">2</td><td>0</td><td>0</td><td>1</td><td>−4</td></tr>
+                <tr><td>1</td><td>1,5</td><td>−0,5</td><td>0</td><td>0</td><td>−0,5</td><td>2</td></tr>
+                <tr><td>0</td><td>7</td><td>−4</td><td>0</td><td>1</td><td>−2</td><td>6</td></tr>
+                <tr><td>0</td><td>−2</td><td>−1</td><td>1</td><td>0</td><td>1</td><td>4</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="alert alert-info">
+          <strong>📌 Comentário no ponto:</strong> x₂ zerou e saiu, x₅ entrou com valor 6. A linha π ainda tem duas células positivas (x₃ = 2 e x₇ = 1) — segue mais uma iteração.
+        </div>
+      </div>
+    </div>
+
+    <!-- R8 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R8</span>
+        <span class="phase-title">Fase II — iteração 2: detectando o problema ilimitado</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <p><strong>Quem entra:</strong> maior célula positiva da linha π é x₃ (valor 2, contra 1 de x₇).</p>
+        <div class="tableau-wrap">
+          <table class="rtbl">
+            <thead><tr><th>Linha</th><th>Coef. de x₃</th><th>b</th><th>Razão</th><th>Escolha?</th></tr></thead>
+            <tbody>
+              <tr><td>x₁</td><td>−0,5</td><td>2</td><td class="skip">coef. negativo — ignora</td><td class="skip">—</td></tr>
+              <tr><td>x₅</td><td>−4</td><td>6</td><td class="skip">coef. negativo — ignora</td><td class="skip">—</td></tr>
+              <tr><td>x₄</td><td>−1</td><td>4</td><td class="skip">coef. negativo — ignora</td><td class="skip">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-warning" style="border-left-color:var(--danger);">
+          <strong>🛑 Nenhuma linha tem coeficiente positivo na coluna que entra (x₃).</strong> Isso é exatamente a condição de parada de "problema ilimitado" (teoria.html, seção de condições de parada): quando a coluna pivô tem todos os coeficientes ≤ 0 nas linhas de restrição, x₃ pode crescer <strong>indefinidamente</strong> sem que nenhuma variável básica seja forçada a zero — ou seja, sem violar nenhuma restrição.
+        </div>
+        <p>Confirmando algebricamente: aumentando x₃ a partir daqui (com x₂ = x₇ = 0 fixos), as linhas básicas dão:</p>
+        <div class="math-block">
+          x₁ = 2 + 0,5·x₃ &nbsp;(cresce)<br>
+          x₅ = 6 + 4·x₃ &nbsp;&nbsp;&nbsp;(cresce)<br>
+          x₄ = 4 + 1·x₃ &nbsp;&nbsp;&nbsp;(cresce)
+        </div>
+        <p>Nenhuma das três diminui — todas <em>aumentam</em> junto com x₃, então x₃ pode ir a infinito sem tornar nenhuma variável básica negativa. Como π = −4 − 2x₃ (substituindo na linha π), π → −∞, ou seja <strong>Z = −π → +∞</strong>.</p>
+      </div>
+    </div>
+
+    <!-- R9 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-tag">R9</span>
+        <span class="phase-title">Conclusão</span>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="alert alert-danger" style="background:#fef2f2;border-left:4px solid var(--danger);">
+          <strong>🛑 Problema ILIMITADO (unbounded).</strong> Não existe Z* finito — Z cresce sem limite ao longo da direção x₁ = 2+0,5x₃, x₅ = 6+4x₃, x₄ = 4+x₃, x₂ = x₇ = 0, com x₃ → ∞.
+        </div>
+        <div class="alert alert-info" style="line-height:1.75;">
+          <strong>O que esse resultado significa, em detalhe:</strong>
+          <ul style="margin-left:1.2rem;margin-top:.4rem;">
+            <li><strong>A Fase I não detecta isso</strong> — ela só garante viabilidade (existe algum ponto que satisfaz as restrições), nunca otimalidade. O sistema é perfeitamente viável (achamos x₁=0,714, x₂=0,857 na Fase I); o problema é que a região viável é <em>ilimitada na direção que aumenta Z</em>.</li>
+            <li><strong>Por que faz sentido geometricamente:</strong> a restrição R3 (2x₁+3x₂−x₃≥4) é a única que envolve −x₃, e ela só <em>limita o quanto x₃ pode ser maior que x₁,x₂</em> — não impede que x₁, x₂ e x₃ cresçam juntos proporcionalmente. R1 (que tem −2x₃, poderia conter x₃) folga cada vez mais conforme x₃ cresce, em vez de restringir.</li>
+            <li><strong>Confirmação direta:</strong> tome x₁=100, x₂=0, x₃=196 (satisfazendo R3 no limite: 2(100)−196=4 ✓). R1: 2(100)−2(196)=200−392=−192≤8 ✓ (folga enorme). R2: 4(100)+2(196)=792≥2 ✓. Z=2(100)+196=396 — e dá pra repetir com qualquer x₁ maior, sempre viável, sempre com Z maior.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
+  </div><!-- /l1-q18 -->
+
   </div><!-- /content -->
 </div><!-- /ex-layout -->
 
@@ -4345,13 +4760,21 @@ End</div>
 
 <script>
   (function () {
-    var sections = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17'];
-    var links    = document.querySelectorAll('.ex-sidebar a[href^="#q"]');
-    var mSel     = document.getElementById('ex-select');
+    var sectionsByLista = {
+      '1': ['l1-q18'],
+      '2': ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17']
+    };
+    var allSections = sectionsByLista['1'].concat(sectionsByLista['2']);
+    var links       = document.querySelectorAll('.ex-sidebar a[href^="#"]');
+    var selects      = { '1': document.getElementById('ex-select-l1'), '2': document.getElementById('ex-select-l2') };
+    var tabs         = document.querySelectorAll('.ex-lista-tab');
+    var sidebars     = document.querySelectorAll('.ex-sidebar');
+    var mobileNavs   = document.querySelectorAll('.ex-mobile-nav');
+    var currentLista = '2';
 
     function showSection(id) {
       // Mostra/esconde seções
-      sections.forEach(function (s) {
+      allSections.forEach(function (s) {
         var el = document.getElementById(s);
         if (el) el.style.display = (s === id) ? '' : 'none';
       });
@@ -4359,12 +4782,28 @@ End</div>
       links.forEach(function (a) {
         a.classList.toggle('active', a.getAttribute('href').slice(1) === id);
       });
-      // Sincroniza select mobile
-      if (mSel) mSel.value = id;
+      // Sincroniza select mobile correspondente
+      var sel = selects[currentLista];
+      if (sel) sel.value = id;
       // Scroll suave
       var top = document.getElementById(id);
       if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    function showLista(lista) {
+      currentLista = lista;
+      tabs.forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-lista') === lista); });
+      sidebars.forEach(function (s) { s.style.display = (s.getAttribute('data-lista') === lista) ? '' : 'none'; });
+      mobileNavs.forEach(function (n) { n.style.display = (n.getAttribute('data-lista') === lista) ? '' : 'none'; });
+      showSection(sectionsByLista[lista][0]);
+    }
+
+    // Cliques nas abas Lista 1 / Lista 2
+    tabs.forEach(function (b) {
+      b.addEventListener('click', function () {
+        showLista(b.getAttribute('data-lista'));
+      });
+    });
 
     // Cliques na sidebar
     links.forEach(function (a) {
@@ -4374,17 +4813,18 @@ End</div>
       });
     });
 
-    // Select mobile
-    if (mSel) {
-      mSel.addEventListener('change', function () {
-        showSection(this.value);
-      });
-    }
+    // Selects mobile
+    Object.keys(selects).forEach(function (lista) {
+      var sel = selects[lista];
+      if (sel) {
+        sel.addEventListener('change', function () {
+          showSection(this.value);
+        });
+      }
+    });
 
-    // Carga inicial: Q1 como padrão
-    var activeLink = document.querySelector('.ex-sidebar a.active[href^="#q"]');
-    var initialId  = activeLink ? activeLink.getAttribute('href').slice(1) : 'q1';
-    showSection(initialId);
+    // Carga inicial: Lista 2 / Q1 como padrão
+    showLista('2');
   })();
 </script>
 
