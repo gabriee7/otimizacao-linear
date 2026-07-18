@@ -6,25 +6,35 @@
 <title>Guia de Sobrevivência — Prova Final</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  .phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:1.4rem;overflow:hidden;}
-  .phase-head{display:flex;align-items:center;gap:.7rem;background:#f1f5f9;padding:.7rem 1.1rem;border-bottom:1px solid var(--border);}
+  h2{margin-top:2.6rem;margin-bottom:1.1rem;}
+  h2:first-of-type{margin-top:1.2rem;}
+  .phase{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:2rem;overflow:hidden;}
+  .phase-head{display:flex;align-items:center;gap:.7rem;background:#f1f5f9;padding:.9rem 1.1rem;border-bottom:1px solid var(--border);}
   .phase-tag{background:var(--primary);color:#fff;font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:999px;white-space:nowrap;}
   .phase-title{font-weight:700;font-size:1.02rem;}
-  .phase-body{padding:1.1rem 1.3rem;}
-  .roman{display:flex;gap:.9rem;margin-bottom:1rem;align-items:flex-start;}
+  .phase-body{padding:1.4rem 1.5rem;line-height:1.7;}
+  .phase-body > *{margin-top:1.3rem;}
+  .phase-body > *:first-child{margin-top:0;}
+  .phase-body ul,.phase-body ol{margin-top:1.3rem;}
+  .phase-body li{margin-bottom:.5rem;}
+  .roman{display:flex;gap:.9rem;margin-bottom:1.5rem;align-items:flex-start;}
+  .roman:last-child{margin-bottom:0;}
   .roman-num{min-width:2.4rem;height:2.4rem;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;flex-shrink:0;}
   .roman-body{flex:1;}
-  .roman-body strong.h{display:block;margin-bottom:.25rem;font-size:1rem;}
-  .attn{background:#fffbeb;border-left:4px solid var(--warning);border-radius:0 8px 8px 0;padding:.7rem 1rem;margin:.6rem 0;font-size:.9rem;}
-  .attn b{color:#92400e;}
-  .exemplo{background:#eff6ff;border-left:4px solid var(--primary);border-radius:0 8px 8px 0;padding:.7rem 1rem;margin:.6rem 0;font-size:.9rem;}
-  .toc{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem;}
+  .roman-body strong.h{display:block;margin-bottom:.4rem;font-size:1rem;}
+  .attn{background:#fffbeb;border-left:4px solid var(--warning);border-radius:0 8px 8px 0;padding:1rem 1.1rem;margin:1.3rem 0!important;font-size:.9rem;line-height:1.65;}
+  .attn b{color:#92400e;display:block;margin-bottom:.35rem;}
+  .exemplo{background:#eff6ff;border-left:4px solid var(--primary);border-radius:0 8px 8px 0;padding:1rem 1.1rem;margin:1.3rem 0!important;font-size:.9rem;line-height:1.65;}
+  .exemplo strong{display:block;margin-bottom:.4rem;}
+  .toc{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.8rem;}
   .toc a{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:.35rem .9rem;font-size:.85rem;text-decoration:none;color:var(--primary);font-weight:600;}
   .toc a:hover{background:var(--primary);color:#fff;}
-  table.tab{border-collapse:collapse;width:100%;margin:.6rem 0;font-size:.88rem;}
-  table.tab th,table.tab td{border:1px solid var(--border);padding:.4rem .6rem;text-align:center;}
+  table.tab{border-collapse:collapse;width:100%;margin:1.3rem 0;font-size:.88rem;}
+  table.tab th,table.tab td{border:1px solid var(--border);padding:.6rem .7rem;text-align:center;}
   table.tab th{background:var(--primary);color:#fff;}
   table.tab td.hi{background:#fef3c7;font-weight:700;}
+  .alert{margin-bottom:1.8rem;line-height:1.65;}
+  .math-block{line-height:1.8;margin:1rem 0;}
 </style>
 </head>
 <body>
@@ -168,71 +178,146 @@
 <!-- ============================================================ -->
 <!-- DUAS FASES -->
 <!-- ============================================================ -->
-<h2 id="duasfases">② Método das Duas Fases — o mesmo exemplo do Big-M, resolvido do outro jeito</h2>
+<h2 id="duasfases">② Método das Duas Fases — exemplo real da lista, com a notação do professor</h2>
 
 <div class="alert alert-info">
-<strong>Para que serve, em uma frase:</strong> resolve exatamente o mesmo problema que o Big-M (restrições <code>=</code> ou <code>≥</code> sem base identidade de graça), mas em vez de misturar tudo numa tabela só com M simbólico, separa em <strong>duas rodadas de simplex normal</strong>: uma só para achar viabilidade (Fase I), outra para achar a otimalidade de verdade (Fase II). Passos I a III (padronizar sinal, folga/excesso, variável artificial) são <u>idênticos</u> ao Big-M — só muda a partir da função objetivo.
+<strong>Para que serve, em uma frase:</strong> resolve o mesmo tipo de problema que o Big-M (restrições <code>=</code> ou <code>≥</code> sem base identidade de graça), mas em vez de misturar tudo numa tabela só com M simbólico, separa em <strong>duas rodadas de simplex normal</strong>: uma só para achar viabilidade (Fase I), outra para achar a otimalidade de verdade (Fase II).
+</div>
+
+<div class="alert alert-warning">
+<strong>Regra de notação usada daqui pra frente (e em toda a página):</strong> nenhum resultado fica em fração — todo valor é escrito já dividido, em decimal (ex.: <code>26/3</code> vira <code>8,667</code>). Quando a divisão não fecha exata, uso 3 casas decimais.
+</div>
+
+<div class="exemplo">
+  <strong>Exemplo do quadro (lista do professor):</strong> Maximizar Z = 2x₁ + 3x₂, sujeito a x₁+x₂ ≤ 12, 2x₁+3x₂ ≤ 30, x₁ ≥ 2, com x₁,x₂ ≥ 0.<br>
+  Conversão pra MIN (Passo I do Big-M, mesma regra aqui): <code>π = −Z = −2x₁ − 3x₂</code>.<br>
+  Forma padrão: x₁+x₂+x₃=12 &nbsp;|&nbsp; 2x₁+3x₂+x₄=30 &nbsp;|&nbsp; x₁−x₅+x₆=2. Base inicial: {x₃, x₄, x₆}.<br>
+  <strong>Notação do professor</strong> (diferente da que eu usava antes — é essa que vale para a prova): a linha do objetivo da Fase I é chamada de <code>x₀</code>, não de "W", com a equação <code>x₀ − x₆ = 0</code>. As operações de linha são anotadas explicitamente, tipo <code>L0 = L0 + L3</code>, indicando linha e multiplicador usados no Gauss.
 </div>
 
 <div class="phase">
-  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Montar a FO artificial da Fase I</div></div>
+  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Montar a FO artificial da Fase I (x₀)</div></div>
   <div class="phase-body">
-    Ignore completamente a FO original por enquanto. A FO da Fase I é sempre: <strong>minimizar a soma de todas as variáveis artificiais</strong>.
-    <div class="exemplo">
-      <strong>Mesmo exemplo da seção ①:</strong> Maximizar 5x₁ − 2x₂ + x₃, sujeito a x₁+4x₂+x₃ ≤ 6 e 2x₁+x₂+3x₃ ≥ 2.<br>
-      Forma padrão: x₁+4x₂+x₃+s₁ = 6 &nbsp;|&nbsp; 2x₁+x₂+3x₃−e₂+a₂ = 2. Base inicial: {s₁, a₂}.<br>
-      FO da Fase I: <strong>Minimizar W = a₂</strong> (não tem c₁,c₂,c₃ nenhum — só a artificial).
-    </div>
-    <div class="attn"><b>Ponto de atenção:</b> diferente do Big-M, aqui você <u>nem escreve</u> os coeficientes 5, −2, 1 da FO original nessa fase. Eles só voltam na Fase II.</div>
+    Ignore a FO original por enquanto. A FO da Fase I é sempre: <strong>minimizar x₀ = soma de todas as artificiais</strong>. Aqui só há uma artificial (x₆), então <code>x₀ − x₆ = 0</code>.
+    <div class="attn"><b>Ponto de atenção:</b> diferente do Big-M, aqui você <u>nem escreve</u> os coeficientes 2 e 3 da FO original nessa fase. Eles só voltam na Fase II.</div>
   </div>
 </div>
 
 <div class="phase">
-  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Zerar a linha W na coluna da artificial básica (mesmo Gauss do Passo V do Big-M)</div></div>
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Zerar a linha x₀ na coluna da artificial básica</div></div>
   <div class="phase-body">
-    Igual ao Big-M: como a₂ está na base mas aparece com coeficiente na linha W, some a linha da restrição de a₂ à linha W para zerar essa coluna antes de rodar o simplex.
-    <div class="math-block">
-Linha W inicial:  W − a₂ = 0  →  (coef. de a₂ na linha W tem que virar 0)
-Some a linha de a₂ (2x₁+x₂+3x₁−e₂+a₂=2) à linha W:
-W = 2x₁ + x₂ + 3x₃ − e₂  +  2   (agora sim, pronta pra rodar simplex de minimização)
-    </div>
+    Como x₆ está na base mas a linha x₀ chega com coeficiente −1 nela, faça <code>L0 = L0 + L3</code> (soma a linha da restrição de x₆ à linha x₀) para zerar essa coluna antes de rodar o simplex.
+    <table class="tab">
+      <thead><tr><th>Tableau 0 — Fase I, antes do Gauss</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₆</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>x₀</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="hi">−1</td><td>0</td></tr>
+        <tr><td>x₃ (básica)</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>12</td></tr>
+        <tr><td>x₄ (básica)</td><td>2</td><td>3</td><td>0</td><td>1</td><td>0</td><td>0</td><td>30</td></tr>
+        <tr><td>x₆ (básica)</td><td>1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>1</td><td>2</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Por que a célula de x₆ (destacada) impede operar direto:</b> x₆ é básica, então precisa ter coeficiente 0 na linha x₀ — <code>L0 = L0 + L3</code> corrige isso.</div>
+    <table class="tab">
+      <thead><tr><th>Tableau 0′ — Fase I pronta (depois do Gauss)</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₆</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>x₀</strong></td><td class="hi">1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>0</td><td>2</td></tr>
+        <tr><td>x₃ (básica)</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>12</td></tr>
+        <tr><td>x₄ (básica)</td><td>2</td><td>3</td><td>0</td><td>1</td><td>0</td><td>0</td><td>30</td></tr>
+        <tr><td class="hi">x₆ (básica)</td><td class="hi">1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>1</td><td>2</td></tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
 <div class="phase">
-  <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Rodar o simplex normal (sem M nenhum) até W = 0</div></div>
+  <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Rodar o simplex normal (sem M nenhum) até x₀ = 0</div></div>
   <div class="phase-body">
-    Entra/sai variável exatamente como no simplex comum (coeficiente mais negativo entra, teste da razão mínima decide quem sai). Continue até não haver mais coeficiente negativo na linha W.
+    <strong>Quem entra:</strong> x₁ é a única célula positiva na linha x₀ (valor 1) — é a única candidata.
+    <table class="tab">
+      <thead><tr><th>Teste da razão (coluna x₁)</th><th>Coeficiente de x₁</th><th>b</th><th>Razão b ÷ coef.</th><th>Resultado</th></tr></thead>
+      <tbody>
+        <tr><td>x₃</td><td>1</td><td>12</td><td>12 ÷ 1 = 12</td><td>não é a menor</td></tr>
+        <tr><td>x₄</td><td>2</td><td>30</td><td>30 ÷ 2 = 15</td><td>não é a menor</td></tr>
+        <tr><td>x₆</td><td>1</td><td>2</td><td>2 ÷ 1 = 2</td><td class="hi">menor → x₆ sai</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Quem sai e por quê:</b> a linha com a <em>menor razão positiva</em> sai — aqui é x₆ (2 é menor que 12 e 15). Elemento pivô = 1 (linha x₆, coluna x₁). Como o pivô já é 1, a linha pivô não precisa ser reescalada. Operações: <code>L1 = L1 − L3</code>, <code>L2 = L2 − 2L3</code>, <code>L0 = L0 − L3</code>.</div>
+    <table class="tab">
+      <thead><tr><th>Tableau 1 — Fase I depois do pivô (x₁ entrou, x₆ saiu)</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>x₀</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><strong>0</strong></td></tr>
+        <tr><td>x₃ (básica)</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>10</td></tr>
+        <tr><td>x₄ (básica)</td><td>0</td><td>3</td><td>0</td><td>1</td><td>2</td><td>26</td></tr>
+        <tr><td>x₁ (básica)</td><td>1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
+      </tbody>
+    </table>
     <table class="tab">
       <thead><tr><th>Resultado da Fase I</th><th>O que fazer</th></tr></thead>
       <tbody>
-        <tr><td>W* = 0 e todas as artificiais fora da base (ou na base com valor 0)</td><td>Existe SBV viável para o problema original → siga para a Fase II</td></tr>
-        <tr><td class="hi">W* &gt; 0 (sobrou artificial positiva mesmo no ótimo da Fase I)</td><td class="hi">Problema é <strong>INVIÁVEL</strong> — pare aqui, nem começa a Fase II</td></tr>
+        <tr><td>x₀* = 0 e a artificial saiu da base</td><td>Existe SBV viável para o problema original → siga para a Fase II</td></tr>
+        <tr><td class="hi">x₀* &gt; 0 (artificial fica na base com valor &gt; 0 no ótimo)</td><td class="hi">Problema é <strong>INVIÁVEL</strong> — pare aqui, nem começa a Fase II</td></tr>
       </tbody>
     </table>
-    <div class="exemplo">No exemplo, uma iteração já resolve: x₁ entra (coeficiente 2 é o único positivo disputando, razão mínima 2/2=1 na linha de a₂), a₂ sai da base com valor 0. W* = 0 → viável, pode avançar.</div>
+    <div class="exemplo">No exemplo, uma única iteração já basta: x₀* = 0, base final da Fase I = {x₁, x₃, x₄} com x₁ = 2, x₃ = 10, x₄ = 26. Viável → avança pra Fase II.</div>
   </div>
 </div>
 
 <div class="phase">
   <div class="phase-head"><span class="phase-tag">IV</span><div class="phase-title">Preparar a Fase II</div></div>
   <div class="phase-body">
-    Pegue o tableau final da Fase I (já com a base viável encontrada) e:
-    <ul style="margin-left:1.3rem;margin-top:.4rem;">
-      <li><strong>Apague a(s) coluna(s) da(s) variável(is) artificial(is)</strong> por completo — elas não existem mais no problema original.</li>
-      <li><strong>Troque a linha objetivo</strong>: descarte a linha W e escreva a linha Z com os coeficientes originais (5, −2, 1 no exemplo), mantendo as demais linhas (restrições) exatamente como saíram da Fase I.</li>
-      <li>Se alguma variável básica atual tiver coeficiente ≠ 0 na nova linha Z, zere-a com o mesmo tipo de eliminação de Gauss do Passo V do Big-M (soma da linha da restrição correspondente à linha Z).</li>
+    Pegue o tableau final da Fase I (Tableau 1 acima) e:
+    <ul style="margin-left:1.3rem;">
+      <li><strong>Apague a coluna de x₆</strong> por completo — ela não existe mais no problema original.</li>
+      <li><strong>Troque a linha objetivo</strong>: descarte a linha x₀ e escreva a linha π com os coeficientes originais convertidos (<code>π + 2x₁ + 3x₂ = 0</code>), mantendo as linhas de restrição exatamente como saíram da Fase I.</li>
+      <li>Zere na linha π a coluna de qualquer variável que já esteja na base (aqui, x₁) — mesma eliminação de Gauss do Big-M.</li>
     </ul>
-    <div class="attn"><b>Ponto de atenção:</b> esse passo de "zerar a linha Z de novo" é o mais esquecido da Fase II — a base mudou na Fase I (x₁ entrou), então a linha Z original quase sempre chega com a coluna de x₁ diferente de zero e precisa da mesma eliminação de Gauss de sempre.</div>
+    <table class="tab">
+      <thead><tr><th>Tableau 2 — Fase II, antes do Gauss</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>π</strong></td><td class="hi">2</td><td>3</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>x₃ (básica)</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>10</td></tr>
+        <tr><td>x₄ (básica)</td><td>0</td><td>3</td><td>0</td><td>1</td><td>2</td><td>26</td></tr>
+        <tr><td class="hi">x₁ (básica)</td><td class="hi">1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Ponto de atenção:</b> esse passo de "zerar a linha π de novo" é o mais esquecido da Fase II — a base mudou na Fase I (x₁ entrou), então a linha π original quase sempre chega com a coluna de x₁ diferente de zero. Aqui: <code>L0 = L0 − 2L(x₁)</code>.</div>
   </div>
 </div>
 
 <div class="phase">
   <div class="phase-head"><span class="phase-tag">V</span><div class="phase-title">Rodar o simplex normal de novo (Fase II) até o ótimo real</div></div>
   <div class="phase-body">
-    A partir daqui é simplex comum, sem M e sem artificiais — mesmos critérios de entrada (coeficiente mais negativo, já convertido pra MIN se o original era MAX) e saída (razão mínima) das seções anteriores.
-    <div class="exemplo">No exemplo, a Fase II parte da base {x₁, s₁} encontrada na Fase I e termina em poucas iterações no mesmo ótimo que o Big-M teria encontrado — a vantagem é que em nenhum momento você compara números com "M" no meio da conta.</div>
+    A partir daqui é simplex comum, sem M e sem artificiais — mesmo critério de entrada (maior célula positiva) e saída (razão mínima) da Fase I.
+    <table class="tab">
+      <thead><tr><th>Tableau 2′ — Fase II pronta</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>π</strong></td><td>0</td><td class="hi">3</td><td>0</td><td>0</td><td>2</td><td>−4</td></tr>
+        <tr><td>x₃ (básica)</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>10</td></tr>
+        <tr><td class="hi">x₄ (básica)</td><td>0</td><td class="hi">3</td><td>0</td><td>1</td><td>2</td><td>26</td></tr>
+        <tr><td>x₁ (básica)</td><td>1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Iteração 1 — quem entra e sai:</b> maior célula positiva na linha π é x₂ (valor 3, contra 2 de x₅) → x₂ entra. Razão: linha x₃ dá 10÷1=10, linha x₄ dá 26÷3=8,667 (menor), linha x₁ tem coeficiente 0 e é ignorada → x₄ sai. Elemento pivô = 3, então <code>L2 = L2 ÷ 3</code> primeiro, depois <code>L1 = L1 − L2</code> e <code>L0 = L0 − 3L2</code>.</div>
+    <table class="tab">
+      <thead><tr><th>Tableau 3 — ótimo (x₂ entrou, x₄ saiu)</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>π</strong></td><td>0</td><td>0</td><td>0</td><td>−1</td><td>0</td><td><strong>−30</strong></td></tr>
+        <tr><td>x₃ (básica)</td><td>0</td><td>0</td><td>1</td><td>−0,333</td><td>0,333</td><td>1,333</td></tr>
+        <tr><td>x₂ (básica)</td><td>0</td><td>1</td><td>0</td><td>0,333</td><td>0,667</td><td>8,667</td></tr>
+        <tr><td>x₁ (básica)</td><td>1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
+      </tbody>
+    </table>
+    <div class="exemplo">Todas as células da linha π agora são ≤ 0 → ótimo em uma única iteração de Fase II. π* = −30 → <strong>Z* = −π* = 30</strong>, com x₁ = 2, x₂ = 8,667, x₃ = 1,333 (folgas), x₄ = x₅ = 0. Confirmação direta: Z = 2(2) + 3(8,667) = 4 + 26 = 30.</div>
   </div>
+</div>
+
+<div class="alert alert-warning">
+<strong>Isso pode sair diferente em outra prova?</strong> Sim, em três situações — nenhuma delas muda o Z* final, só o caminho até lá:
+<ul style="margin-left:1.3rem;margin-top:.6rem;">
+  <li><strong>Empate em quem entra</strong> (duas colunas com a mesma célula positiva máxima): qualquer uma das empatadas pode ser escolhida — o número de iterações muda, o resultado final não.</li>
+  <li><strong>Empate no teste da razão</strong> (duas linhas com a mesma razão mínima): escolher qualquer uma gera um <strong>pivô degenerado</strong> (a variável que entra fica com valor 0) — o Z não melhora nessa iteração específica, mas o algoritmo segue normalmente. Em cursos que cobram "regra de Bland" para evitar ciclagem, é aqui que ela se aplica.</li>
+  <li><strong>Solução ótima não-única</strong>: se ao final alguma célula da linha π ficar em exatamente 0 numa coluna não-básica (em vez de estritamente negativa), existe mais de um vértice ótimo com o mesmo Z* — a prova pode pedir para você identificar essa segunda solução.</li>
+</ul>
 </div>
 
 <div class="alert alert-warning">
