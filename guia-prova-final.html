@@ -268,6 +268,15 @@
       </tbody>
     </table>
     <div class="exemplo">No exemplo, uma única iteração já basta: x₀* = 0, base final da Fase I = {x₁, x₃, x₄} com x₁ = 2, x₃ = 10, x₄ = 26. Viável → avança pra Fase II.</div>
+    <div class="attn" style="line-height:1.75;">
+      <b>O que esse resultado significa, em detalhe:</b>
+      <ul style="margin-left:1.2rem;margin-top:.4rem;">
+        <li><strong>x₀* = 0 não é "o problema deu zero"</strong> — é a prova de que a soma das artificiais virou zero, ou seja, dá pra satisfazer as restrições originais (x₁+x₂≤12, 2x₁+3x₂≤30, x₁≥2) sem precisar de nenhuma "muleta" artificial. Se sobrasse alguma artificial com valor positivo mesmo no ótimo da Fase I, seria matematicamente impossível zerá-la sem violar uma restrição real — por isso essa situação é declarada inviável.</li>
+        <li><strong>A base final da Fase I vira o ponto de partida da Fase II</strong> — não é descartada. Os valores x₁=2, x₃=10, x₄=26 (Tableau 1) continuam sendo a solução corrente; só a linha do objetivo muda (troca x₀ por π no próximo passo).</li>
+        <li><strong>Por que só precisou de 1 iteração aqui:</strong> a linha x₀ inicial já tinha só uma célula positiva (x₁), então não havia disputa de "quem entra" — só uma candidata possível. Em problemas com mais restrições ≥/= (mais de uma artificial), a Fase I costuma exigir várias iterações até todas as artificiais saírem da base ou zerarem.</li>
+        <li><strong>x₆ ter saído da base não significa que ela "sumiu"</strong> — ela continua existindo como coluna até você apagá-la no próximo passo (Passo IV). Enquanto ela for não-básica com valor 0, não atrapalha nada; só precisa ser removida antes da Fase II porque não faz mais sentido no problema original.</li>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -317,6 +326,15 @@
       </tbody>
     </table>
     <div class="exemplo">Todas as células da linha π agora são ≤ 0 → ótimo em uma única iteração de Fase II. π* = −30 → <strong>Z* = −π* = 30</strong>, com x₁ = 2, x₂ = 8,667, x₃ = 1,333 (folgas), x₄ = x₅ = 0. Confirmação direta: Z = 2(2) + 3(8,667) = 4 + 26 = 30.</div>
+    <div class="attn" style="line-height:1.75;">
+      <b>O que esse resultado significa, em detalhe:</b>
+      <ul style="margin-left:1.2rem;margin-top:.4rem;">
+        <li><strong>Por que π* = −30 vira Z* = 30:</strong> lá no Passo I do Big-M (mesma regra usada aqui) você converteu Maximizar Z em Minimizar π = −Z antes de montar qualquer tableau. O tableau inteiro resolve π, não Z — então, no final, você desfaz essa conversão: Z* = −π*. Esquecer esse último passo é o erro mais comum de quem "faz a conta certa e erra a resposta".</li>
+        <li><strong>Quem ficou básico e quem não ficou:</strong> a base ótima é {x₁, x₂, x₃} — ou seja, x₄ e x₅ (as folgas das duas primeiras restrições) ficaram fora, com valor 0. Isso significa que a restrição x₁≥2 folgou (x₅=0 → está exatamente em cima do limite, x₁=2) e a restrição 2x₁+3x₂≤30 também está apertada (x₄=0 → 2(2)+3(8,667)=30,001≈30, no limite). Já a restrição x₁+x₂≤12 tem folga de verdade: x₃=1,333 sobrando de capacidade.</li>
+        <li><strong>Como confirmar sem refazer a conta:</strong> substitua x₁ e x₂ direto nas restrições originais (não nas convertidas) — se todas baterem e o Z bater também, é sinal de que não teve erro de sinal em nenhuma conversão MIN/MAX ao longo do caminho.</li>
+        <li><strong>Se sobrasse alguma célula = 0</strong> numa coluna não-básica da linha π final (em vez de estritamente negativa), seria sinal de solução ótima não-única — não é o caso aqui (−1 na coluna x₄ é estritamente negativo), mas vale sempre checar antes de fechar a resposta.</li>
+      </ul>
+    </div>
   </div>
 </div>
 
