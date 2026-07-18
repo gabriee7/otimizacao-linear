@@ -195,6 +195,15 @@
   <strong>Notação do professor</strong> (diferente da que eu usava antes — é essa que vale para a prova): a linha do objetivo da Fase I é chamada de <code>x₀</code>, não de "W", com a equação <code>x₀ − x₆ = 0</code>. As operações de linha são anotadas explicitamente, tipo <code>L0 = L0 + L3</code>, indicando linha e multiplicador usados no Gauss.
 </div>
 
+<div class="alert alert-success" style="line-height:1.75;">
+<strong>📌 Lembrete fixo — como decidir quem entra e quem sai em QUALQUER tableau (guarde isso, vai usar em todo pivô, tanto na Fase I quanto na Fase II):</strong>
+<ol style="margin-left:1.3rem;margin-top:.6rem;">
+  <li><strong>Quem entra → olhe só a linha zero (linha do objetivo: x₀, π ou Z), apenas nas colunas das variáveis não-básicas.</strong> Procure a maior célula <em>positiva</em> entre elas — essa coluna é quem entra. Se não sobrar nenhuma célula positiva (todas ≤ 0), o tableau já está ótimo e ninguém mais entra.</li>
+  <li><strong>Quem sai → só depois de saber a coluna que entra, saia da linha zero e olhe as linhas de restrição</strong> (nunca a linha zero de novo), especificamente os coeficientes dessa coluna em cada linha. Faça o teste da razão <code>b ÷ coeficiente</code> só para os coeficientes <em>positivos</em> dessa coluna (ignore os ≤ 0, eles não participam da disputa e nem limitam quem entra). A linha com a <strong>menor razão</strong> é quem sai — vira a nova linha do pivô.</li>
+</ol>
+<div style="margin-top:.6rem;">Ou seja: a <strong>linha zero decide quem entra</strong>; o <strong>teste da razão nas linhas de restrição decide quem sai</strong>. Célula em coluna de variável <em>básica</em> na linha zero é sempre 0 (é o próprio Gauss garantindo isso); célula em coluna <em>não-básica</em> pode ser qualquer número — é justamente esse número que você compara para achar quem entra.</div>
+</div>
+
 <div class="phase">
   <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Montar a FO artificial da Fase I (x₀)</div></div>
   <div class="phase-body">
