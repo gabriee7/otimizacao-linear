@@ -40,7 +40,7 @@
 
 <div class="hero" style="padding:2.4rem 1.5rem 1.8rem;">
   <h1 style="font-size:1.9rem;">🆘 Guia de Sobrevivência — Prova Final</h1>
-  <p>Foco total no que mais cai: <strong>Big-M</strong> e <strong>Análise de Sensibilidade</strong>. Passo a passo em algarismos romanos, sem pular etapas.</p>
+  <p>Foco total no que mais cai: <strong>Big-M</strong>, <strong>Duas Fases</strong> e <strong>Análise de Sensibilidade</strong>. Passo a passo em algarismos romanos, sem pular etapas.</p>
 </div>
 
 <main>
@@ -53,9 +53,10 @@
 
 <div class="toc">
   <a href="#bigm">① Big-M</a>
-  <a href="#sensib">② Análise de Sensibilidade</a>
-  <a href="#casos">③ Tabela-resumo dos 7 casos</a>
-  <a href="#erros">④ Erros que derrubam nota</a>
+  <a href="#duasfases">② Duas Fases</a>
+  <a href="#sensib">③ Análise de Sensibilidade</a>
+  <a href="#casos">④ Tabela-resumo dos 7 casos</a>
+  <a href="#erros">⑤ Erros que derrubam nota</a>
 </div>
 
 <!-- ============================================================ -->
@@ -165,9 +166,83 @@
 </div>
 
 <!-- ============================================================ -->
+<!-- DUAS FASES -->
+<!-- ============================================================ -->
+<h2 id="duasfases">② Método das Duas Fases — o mesmo exemplo do Big-M, resolvido do outro jeito</h2>
+
+<div class="alert alert-info">
+<strong>Para que serve, em uma frase:</strong> resolve exatamente o mesmo problema que o Big-M (restrições <code>=</code> ou <code>≥</code> sem base identidade de graça), mas em vez de misturar tudo numa tabela só com M simbólico, separa em <strong>duas rodadas de simplex normal</strong>: uma só para achar viabilidade (Fase I), outra para achar a otimalidade de verdade (Fase II). Passos I a III (padronizar sinal, folga/excesso, variável artificial) são <u>idênticos</u> ao Big-M — só muda a partir da função objetivo.
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Montar a FO artificial da Fase I</div></div>
+  <div class="phase-body">
+    Ignore completamente a FO original por enquanto. A FO da Fase I é sempre: <strong>minimizar a soma de todas as variáveis artificiais</strong>.
+    <div class="exemplo">
+      <strong>Mesmo exemplo da seção ①:</strong> Maximizar 5x₁ − 2x₂ + x₃, sujeito a x₁+4x₂+x₃ ≤ 6 e 2x₁+x₂+3x₃ ≥ 2.<br>
+      Forma padrão: x₁+4x₂+x₃+s₁ = 6 &nbsp;|&nbsp; 2x₁+x₂+3x₃−e₂+a₂ = 2. Base inicial: {s₁, a₂}.<br>
+      FO da Fase I: <strong>Minimizar W = a₂</strong> (não tem c₁,c₂,c₃ nenhum — só a artificial).
+    </div>
+    <div class="attn"><b>Ponto de atenção:</b> diferente do Big-M, aqui você <u>nem escreve</u> os coeficientes 5, −2, 1 da FO original nessa fase. Eles só voltam na Fase II.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Zerar a linha W na coluna da artificial básica (mesmo Gauss do Passo V do Big-M)</div></div>
+  <div class="phase-body">
+    Igual ao Big-M: como a₂ está na base mas aparece com coeficiente na linha W, some a linha da restrição de a₂ à linha W para zerar essa coluna antes de rodar o simplex.
+    <div class="math-block">
+Linha W inicial:  W − a₂ = 0  →  (coef. de a₂ na linha W tem que virar 0)
+Some a linha de a₂ (2x₁+x₂+3x₁−e₂+a₂=2) à linha W:
+W = 2x₁ + x₂ + 3x₃ − e₂  +  2   (agora sim, pronta pra rodar simplex de minimização)
+    </div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Rodar o simplex normal (sem M nenhum) até W = 0</div></div>
+  <div class="phase-body">
+    Entra/sai variável exatamente como no simplex comum (coeficiente mais negativo entra, teste da razão mínima decide quem sai). Continue até não haver mais coeficiente negativo na linha W.
+    <table class="tab">
+      <thead><tr><th>Resultado da Fase I</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td>W* = 0 e todas as artificiais fora da base (ou na base com valor 0)</td><td>Existe SBV viável para o problema original → siga para a Fase II</td></tr>
+        <tr><td class="hi">W* &gt; 0 (sobrou artificial positiva mesmo no ótimo da Fase I)</td><td class="hi">Problema é <strong>INVIÁVEL</strong> — pare aqui, nem começa a Fase II</td></tr>
+      </tbody>
+    </table>
+    <div class="exemplo">No exemplo, uma iteração já resolve: x₁ entra (coeficiente 2 é o único positivo disputando, razão mínima 2/2=1 na linha de a₂), a₂ sai da base com valor 0. W* = 0 → viável, pode avançar.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">IV</span><div class="phase-title">Preparar a Fase II</div></div>
+  <div class="phase-body">
+    Pegue o tableau final da Fase I (já com a base viável encontrada) e:
+    <ul style="margin-left:1.3rem;margin-top:.4rem;">
+      <li><strong>Apague a(s) coluna(s) da(s) variável(is) artificial(is)</strong> por completo — elas não existem mais no problema original.</li>
+      <li><strong>Troque a linha objetivo</strong>: descarte a linha W e escreva a linha Z com os coeficientes originais (5, −2, 1 no exemplo), mantendo as demais linhas (restrições) exatamente como saíram da Fase I.</li>
+      <li>Se alguma variável básica atual tiver coeficiente ≠ 0 na nova linha Z, zere-a com o mesmo tipo de eliminação de Gauss do Passo V do Big-M (soma da linha da restrição correspondente à linha Z).</li>
+    </ul>
+    <div class="attn"><b>Ponto de atenção:</b> esse passo de "zerar a linha Z de novo" é o mais esquecido da Fase II — a base mudou na Fase I (x₁ entrou), então a linha Z original quase sempre chega com a coluna de x₁ diferente de zero e precisa da mesma eliminação de Gauss de sempre.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">V</span><div class="phase-title">Rodar o simplex normal de novo (Fase II) até o ótimo real</div></div>
+  <div class="phase-body">
+    A partir daqui é simplex comum, sem M e sem artificiais — mesmos critérios de entrada (coeficiente mais negativo, já convertido pra MIN se o original era MAX) e saída (razão mínima) das seções anteriores.
+    <div class="exemplo">No exemplo, a Fase II parte da base {x₁, s₁} encontrada na Fase I e termina em poucas iterações no mesmo ótimo que o Big-M teria encontrado — a vantagem é que em nenhum momento você compara números com "M" no meio da conta.</div>
+  </div>
+</div>
+
+<div class="alert alert-warning">
+<strong>Big-M vs. Duas Fases — o que muda e o que não muda:</strong> os passos I–III (padronizar sinal, folga/excesso, variável artificial) são idênticos nos dois métodos — a diferença começa só na função objetivo. Big-M resolve tudo em <em>um</em> tableau com M simbólico; Duas Fases troca isso por <em>duas</em> rodadas de simplex 100% numérico (sem M), ao custo de rodar o algoritmo duas vezes. O resultado final — Z ótimo, valores de x*, e a detecção de inviabilidade — é sempre o mesmo, não importa qual dos dois você escolher.
+</div>
+
+<!-- ============================================================ -->
 <!-- SENSIBILIDADE -->
 <!-- ============================================================ -->
-<h2 id="sensib">② Análise de Sensibilidade — Manual Passo a Passo</h2>
+<h2 id="sensib">③ Análise de Sensibilidade — Manual Passo a Passo</h2>
 
 <div class="alert alert-info">
 <strong>Para que serve, em uma frase:</strong> você já tem o tableau ótimo pronto. A pergunta é sempre a mesma disfarçada: <em>"esse tableau continua sendo ótimo e viável depois dessa mudança, ou preciso recalcular algo?"</em> Você NUNCA resolve o problema do zero de novo — sempre reaproveita o tableau ótimo dado.
@@ -251,7 +326,7 @@
 </div>
 
 <!-- ============================================================ -->
-<h2 id="casos">③ Tabela-resumo dos 7 casos (cola rápida para revisão de última hora)</h2>
+<h2 id="casos">④ Tabela-resumo dos 7 casos (cola rápida para revisão de última hora)</h2>
 <div class="phase"><div class="phase-body">
 <table class="tab" style="text-align:left;">
 <thead><tr><th>Caso</th><th>O que recalcula</th><th>O que testa</th></tr></thead>
@@ -268,7 +343,7 @@
 </div></div>
 
 <!-- ============================================================ -->
-<h2 id="erros">④ Erros que mais derrubam nota nessa disciplina</h2>
+<h2 id="erros">⑤ Erros que mais derrubam nota nessa disciplina</h2>
 <div class="phase"><div class="phase-body">
 <div class="roman"><div class="roman-num">!</div><div class="roman-body">Não zerar a linha Z na coluna das artificiais logo no início do Big-M (Passo V) — o tableau inteiro fica errado a partir daí mesmo que o resto da conta esteja certo.</div></div>
 <div class="roman"><div class="roman-num">!</div><div class="roman-body">Esquecer de tratar variável irrestrita (xⱼ = xⱼ' − xⱼ'') antes de montar qualquer tableau.</div></div>
