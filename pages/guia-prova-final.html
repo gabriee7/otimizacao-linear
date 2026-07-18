@@ -81,7 +81,7 @@
   <div class="phase-head"><span class="phase-tag">0</span><div class="phase-title">Antes de tudo: padronizar sinal e forma padrão</div></div>
   <div class="phase-body">
     <div class="roman"><div class="roman-body">
-      <strong>Convenção do professor (siga sempre esta, é a usada em todos os exercícios corrigidos):</strong> o tableau só é montado em <strong>MINIMIZAÇÃO</strong>. Se o problema original for <em>Maximizar Z</em>, reescreva como <em>Minimizar π = −Z</em> logo no início — trocando o sinal de todos os coeficientes da FO. Resolva o problema inteiro normalmente e, <strong>só no final</strong>, multiplique o valor ótimo encontrado por −1 para voltar ao Z do problema original (as variáveis x* não mudam de valor, só o Z muda de sinal).
+      <strong>Convenção do professor (siga sempre esta, é a usada em todos os exercícios corrigidos):</strong> o tableau só é montado em <strong>MINIMIZAÇÃO</strong>. Se o problema original for <em>Maximizar Z</em>, reescreva como <em>Minimizar Z' = −Z</em> logo no início — trocando o sinal de todos os coeficientes da FO. Resolva o problema inteiro normalmente e, <strong>só no final</strong>, multiplique o valor ótimo encontrado por −1 para voltar ao Z do problema original (as variáveis x* não mudam de valor, só o Z muda de sinal).
     </div></div>
     <table class="tab">
       <thead><tr><th>Tipo de restrição</th><th>O que adicionar</th><th>Sinal na equação</th></tr></thead>
@@ -103,7 +103,7 @@
 
 <div class="exemplo">
   <strong>Exemplo do quadro (lista do professor):</strong> Maximizar Z = 2x₁ + 3x₂, sujeito a x₁+x₂ ≤ 12, 2x₁+3x₂ ≤ 30, x₁ ≥ 2, com x₁,x₂ ≥ 0.<br>
-  Conversão pra MIN (Passo 0 acima): <code>π = −Z = −2x₁ − 3x₂</code>.<br>
+  Conversão pra MIN (Passo 0 acima): <code>Z' = −Z = −2x₁ − 3x₂</code>.<br>
   Forma padrão: x₁+x₂+x₃=12 &nbsp;|&nbsp; 2x₁+3x₂+x₄=30 &nbsp;|&nbsp; x₁−x₅+x₆=2. Base inicial: {x₃, x₄, x₆}.<br>
   <strong>Notação do professor</strong> (diferente da que eu usava antes — é essa que vale para a prova): a linha do objetivo da Fase I é chamada de <code>x₀</code>, não de "W", com a equação <code>x₀ − x₆ = 0</code>. As operações de linha são anotadas explicitamente, tipo <code>L0 = L0 + L3</code>, indicando linha e multiplicador usados no Gauss.
 </div>
@@ -111,7 +111,7 @@
 <div class="alert alert-success" style="line-height:1.75;">
 <strong>📌 Lembrete fixo — como decidir quem entra e quem sai em QUALQUER tableau (guarde isso, vai usar em todo pivô, tanto na Fase I quanto na Fase II):</strong>
 <ol style="margin-left:1.3rem;margin-top:.6rem;">
-  <li><strong>Quem entra → olhe só a linha zero (linha do objetivo: x₀, π ou Z), apenas nas colunas das variáveis não-básicas.</strong> Procure a maior célula <em>positiva</em> entre elas — essa coluna é quem entra. Se não sobrar nenhuma célula positiva (todas ≤ 0), o tableau já está ótimo e ninguém mais entra.</li>
+  <li><strong>Quem entra → olhe só a linha zero (linha do objetivo: x₀, Z' ou Z), apenas nas colunas das variáveis não-básicas.</strong> Procure a maior célula <em>positiva</em> entre elas — essa coluna é quem entra. Se não sobrar nenhuma célula positiva (todas ≤ 0), o tableau já está ótimo e ninguém mais entra.</li>
   <li><strong>Quem sai → só depois de saber a coluna que entra, saia da linha zero e olhe as linhas de restrição</strong> (nunca a linha zero de novo), especificamente os coeficientes dessa coluna em cada linha. Faça o teste da razão <code>b ÷ coeficiente</code> só para os coeficientes <em>positivos</em> dessa coluna (ignore os ≤ 0, eles não participam da disputa e nem limitam quem entra). A linha com a <strong>menor razão</strong> é quem sai — vira a nova linha do pivô.</li>
 </ol>
 <div style="margin-top:.6rem;">Ou seja: a <strong>linha zero decide quem entra</strong>; o <strong>teste da razão nas linhas de restrição decide quem sai</strong>. Célula em coluna de variável <em>básica</em> na linha zero é sempre 0 (é o próprio Gauss garantindo isso); célula em coluna <em>não-básica</em> pode ser qualquer número — é justamente esse número que você compara para achar quem entra.</div>
@@ -185,7 +185,7 @@
       <b>O que esse resultado significa, em detalhe:</b>
       <ul style="margin-left:1.2rem;margin-top:.4rem;">
         <li><strong>x₀* = 0 não é "o problema deu zero"</strong> — é a prova de que a soma das artificiais virou zero, ou seja, dá pra satisfazer as restrições originais (x₁+x₂≤12, 2x₁+3x₂≤30, x₁≥2) sem precisar de nenhuma "muleta" artificial. Se sobrasse alguma artificial com valor positivo mesmo no ótimo da Fase I, seria matematicamente impossível zerá-la sem violar uma restrição real — por isso essa situação é declarada inviável.</li>
-        <li><strong>A base final da Fase I vira o ponto de partida da Fase II</strong> — não é descartada. Os valores x₁=2, x₃=10, x₄=26 (Tableau 1) continuam sendo a solução corrente; só a linha do objetivo muda (troca x₀ por π no próximo passo).</li>
+        <li><strong>A base final da Fase I vira o ponto de partida da Fase II</strong> — não é descartada. Os valores x₁=2, x₃=10, x₄=26 (Tableau 1) continuam sendo a solução corrente; só a linha do objetivo muda (troca x₀ por Z' no próximo passo).</li>
         <li><strong>Por que só precisou de 1 iteração aqui:</strong> a linha x₀ inicial já tinha só uma célula positiva (x₁), então não havia disputa de "quem entra" — só uma candidata possível. Em problemas com mais restrições ≥/= (mais de uma artificial), a Fase I costuma exigir várias iterações até todas as artificiais saírem da base ou zerarem.</li>
         <li><strong>x₆ ter saído da base não significa que ela "sumiu"</strong> — ela continua existindo como coluna até você apagá-la no próximo passo (Passo IV). Enquanto ela for não-básica com valor 0, não atrapalha nada; só precisa ser removida antes da Fase II porque não faz mais sentido no problema original.</li>
       </ul>
@@ -199,19 +199,19 @@
     Pegue o tableau final da Fase I (Tableau 1 acima) e:
     <ul style="margin-left:1.3rem;">
       <li><strong>Apague a coluna de x₆</strong> por completo — ela não existe mais no problema original.</li>
-      <li><strong>Troque a linha objetivo</strong>: descarte a linha x₀ e escreva a linha π com os coeficientes originais convertidos (<code>π + 2x₁ + 3x₂ = 0</code>), mantendo as linhas de restrição exatamente como saíram da Fase I.</li>
-      <li>Zere na linha π a coluna de qualquer variável que já esteja na base (aqui, x₁) — mesma eliminação de Gauss do Passo II.</li>
+      <li><strong>Troque a linha objetivo</strong>: descarte a linha x₀ e escreva a linha Z' com os coeficientes originais convertidos (<code>Z' + 2x₁ + 3x₂ = 0</code>), mantendo as linhas de restrição exatamente como saíram da Fase I.</li>
+      <li>Zere na linha Z' a coluna de qualquer variável que já esteja na base (aqui, x₁) — mesma eliminação de Gauss do Passo II.</li>
     </ul>
     <table class="tab">
       <thead><tr><th>Tableau 2 — Fase II, antes do Gauss</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
       <tbody>
-        <tr><td><strong>π</strong></td><td class="hi">2</td><td>3</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Z'</strong></td><td class="hi">2</td><td>3</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
         <tr><td>x₃ (básica)</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>10</td></tr>
         <tr><td>x₄ (básica)</td><td>0</td><td>3</td><td>0</td><td>1</td><td>2</td><td>26</td></tr>
         <tr><td class="hi">x₁ (básica)</td><td class="hi">1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
       </tbody>
     </table>
-    <div class="attn"><b>Ponto de atenção:</b> esse passo de "zerar a linha π de novo" é o mais esquecido da Fase II — a base mudou na Fase I (x₁ entrou), então a linha π original quase sempre chega com a coluna de x₁ diferente de zero. Aqui: <code>L0 = L0 − 2L(x₁)</code>.</div>
+    <div class="attn"><b>Ponto de atenção:</b> esse passo de "zerar a linha Z' de novo" é o mais esquecido da Fase II — a base mudou na Fase I (x₁ entrou), então a linha Z' original quase sempre chega com a coluna de x₁ diferente de zero. Aqui: <code>L0 = L0 − 2L(x₁)</code>.</div>
   </div>
 </div>
 
@@ -222,30 +222,30 @@
     <table class="tab">
       <thead><tr><th>Tableau 2′ — Fase II pronta</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
       <tbody>
-        <tr><td><strong>π</strong></td><td>0</td><td class="hi">3</td><td>0</td><td>0</td><td>2</td><td>−4</td></tr>
+        <tr><td><strong>Z'</strong></td><td>0</td><td class="hi">3</td><td>0</td><td>0</td><td>2</td><td>−4</td></tr>
         <tr><td>x₃ (básica)</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>10</td></tr>
         <tr><td class="hi">x₄ (básica)</td><td>0</td><td class="hi">3</td><td>0</td><td>1</td><td>2</td><td>26</td></tr>
         <tr><td>x₁ (básica)</td><td>1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
       </tbody>
     </table>
-    <div class="attn"><b>Iteração 1 — quem entra e sai:</b> maior célula positiva na linha π é x₂ (valor 3, contra 2 de x₅) → x₂ entra. Razão: linha x₃ dá 10÷1=10, linha x₄ dá 26÷3=8,667 (menor), linha x₁ tem coeficiente 0 e é ignorada → x₄ sai. Elemento pivô = 3, então <code>L2 = L2 ÷ 3</code> primeiro, depois <code>L1 = L1 − L2</code> e <code>L0 = L0 − 3L2</code>.</div>
+    <div class="attn"><b>Iteração 1 — quem entra e sai:</b> maior célula positiva na linha Z' é x₂ (valor 3, contra 2 de x₅) → x₂ entra. Razão: linha x₃ dá 10÷1=10, linha x₄ dá 26÷3=8,667 (menor), linha x₁ tem coeficiente 0 e é ignorada → x₄ sai. Elemento pivô = 3, então <code>L2 = L2 ÷ 3</code> primeiro, depois <code>L1 = L1 − L2</code> e <code>L0 = L0 − 3L2</code>.</div>
     <table class="tab">
       <thead><tr><th>Tableau 3 — ótimo (x₂ entrou, x₄ saiu)</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
       <tbody>
-        <tr><td><strong>π</strong></td><td>0</td><td>0</td><td>0</td><td>−1</td><td>0</td><td><strong>−30</strong></td></tr>
+        <tr><td><strong>Z'</strong></td><td>0</td><td>0</td><td>0</td><td>−1</td><td>0</td><td><strong>−30</strong></td></tr>
         <tr><td>x₃ (básica)</td><td>0</td><td>0</td><td>1</td><td>−0,333</td><td>0,333</td><td>1,333</td></tr>
         <tr><td>x₂ (básica)</td><td>0</td><td>1</td><td>0</td><td>0,333</td><td>0,667</td><td>8,667</td></tr>
         <tr><td>x₁ (básica)</td><td>1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
       </tbody>
     </table>
-    <div class="exemplo">Todas as células da linha π agora são ≤ 0 → ótimo em uma única iteração de Fase II. π* = −30 → <strong>Z* = −π* = 30</strong>, com x₁ = 2, x₂ = 8,667, x₃ = 1,333 (folgas), x₄ = x₅ = 0. Confirmação direta: Z = 2(2) + 3(8,667) = 4 + 26 = 30.</div>
+    <div class="exemplo">Todas as células da linha Z' agora são ≤ 0 → ótimo em uma única iteração de Fase II. Z'* = −30 → <strong>Z* = −Z'* = 30</strong>, com x₁ = 2, x₂ = 8,667, x₃ = 1,333 (folgas), x₄ = x₅ = 0. Confirmação direta: Z = 2(2) + 3(8,667) = 4 + 26 = 30.</div>
     <div class="attn" style="line-height:1.75;">
       <b>O que esse resultado significa, em detalhe:</b>
       <ul style="margin-left:1.2rem;margin-top:.4rem;">
-        <li><strong>Por que π* = −30 vira Z* = 30:</strong> lá no Passo 0 você converteu Maximizar Z em Minimizar π = −Z antes de montar qualquer tableau. O tableau inteiro resolve π, não Z — então, no final, você desfaz essa conversão: Z* = −π*. Esquecer esse último passo é o erro mais comum de quem "faz a conta certa e erra a resposta".</li>
+        <li><strong>Por que Z'* = −30 vira Z* = 30:</strong> lá no Passo 0 você converteu Maximizar Z em Minimizar Z' = −Z antes de montar qualquer tableau. O tableau inteiro resolve Z', não Z — então, no final, você desfaz essa conversão: Z* = −Z'*. Esquecer esse último passo é o erro mais comum de quem "faz a conta certa e erra a resposta".</li>
         <li><strong>Quem ficou básico e quem não ficou:</strong> a base ótima é {x₁, x₂, x₃} — ou seja, x₄ e x₅ (as folgas das duas primeiras restrições) ficaram fora, com valor 0. Isso significa que a restrição x₁≥2 folgou (x₅=0 → está exatamente em cima do limite, x₁=2) e a restrição 2x₁+3x₂≤30 também está apertada (x₄=0 → 2(2)+3(8,667)=30,001≈30, no limite). Já a restrição x₁+x₂≤12 tem folga de verdade: x₃=1,333 sobrando de capacidade.</li>
         <li><strong>Como confirmar sem refazer a conta:</strong> substitua x₁ e x₂ direto nas restrições originais (não nas convertidas) — se todas baterem e o Z bater também, é sinal de que não teve erro de sinal em nenhuma conversão MIN/MAX ao longo do caminho.</li>
-        <li><strong>Se sobrasse alguma célula = 0</strong> numa coluna não-básica da linha π final (em vez de estritamente negativa), seria sinal de solução ótima não-única — não é o caso aqui (−1 na coluna x₄ é estritamente negativo), mas vale sempre checar antes de fechar a resposta.</li>
+        <li><strong>Se sobrasse alguma célula = 0</strong> numa coluna não-básica da linha Z' final (em vez de estritamente negativa), seria sinal de solução ótima não-única — não é o caso aqui (−1 na coluna x₄ é estritamente negativo), mas vale sempre checar antes de fechar a resposta.</li>
       </ul>
     </div>
   </div>
@@ -256,7 +256,7 @@
 <ul style="margin-left:1.3rem;margin-top:.6rem;">
   <li><strong>Empate em quem entra</strong> (duas colunas com a mesma célula positiva máxima): qualquer uma das empatadas pode ser escolhida — o número de iterações muda, o resultado final não.</li>
   <li><strong>Empate no teste da razão</strong> (duas linhas com a mesma razão mínima): escolher qualquer uma gera um <strong>pivô degenerado</strong> (a variável que entra fica com valor 0) — o Z não melhora nessa iteração específica, mas o algoritmo segue normalmente. Em cursos que cobram "regra de Bland" para evitar ciclagem, é aqui que ela se aplica.</li>
-  <li><strong>Solução ótima não-única</strong>: se ao final alguma célula da linha π ficar em exatamente 0 numa coluna não-básica (em vez de estritamente negativa), existe mais de um vértice ótimo com o mesmo Z* — a prova pode pedir para você identificar essa segunda solução.</li>
+  <li><strong>Solução ótima não-única</strong>: se ao final alguma célula da linha Z' ficar em exatamente 0 numa coluna não-básica (em vez de estritamente negativa), existe mais de um vértice ótimo com o mesmo Z* — a prova pode pedir para você identificar essa segunda solução.</li>
 </ul>
 </div>
 
@@ -367,7 +367,7 @@
 <!-- ============================================================ -->
 <h2 id="erros">④ Erros que mais derrubam nota nessa disciplina</h2>
 <div class="phase"><div class="phase-body">
-<div class="roman"><div class="roman-num">!</div><div class="roman-body">Não zerar a linha x₀ (Fase I) ou π (Fase II) na coluna da variável já básica antes de operar — o tableau inteiro fica errado a partir daí mesmo que o resto da conta esteja certo.</div></div>
+<div class="roman"><div class="roman-num">!</div><div class="roman-body">Não zerar a linha x₀ (Fase I) ou Z' (Fase II) na coluna da variável já básica antes de operar — o tableau inteiro fica errado a partir daí mesmo que o resto da conta esteja certo.</div></div>
 <div class="roman"><div class="roman-num">!</div><div class="roman-body">Esquecer de tratar variável irrestrita (xⱼ = xⱼ' − xⱼ'') antes de montar qualquer tableau.</div></div>
 <div class="roman"><div class="roman-num">!</div><div class="roman-body">Em análise de sensibilidade, misturar "linha Z do tableau" com "vetor c original" — cB é sempre o custo ORIGINAL das variáveis básicas, não o número que aparece na linha Z.</div></div>
 <div class="roman"><div class="roman-num">!</div><div class="roman-body">Ao final da Fase I, não checar se x₀* &gt; 0 (artificial sobrando na base) — declarar "ótimo" quando na verdade é "inviável", e seguir pra Fase II sem precisar.</div></div>
