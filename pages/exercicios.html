@@ -723,6 +723,9 @@
           </table>
         </div>
         <p style="margin-top:.7rem;">A <strong>função objetivo dual</strong> usa os termos independentes do primal como coeficientes: W = b₁y₁ + b₂y₂ + b₃y₃.</p>
+        <div class="alert alert-warning" style="margin-top:.7rem;">
+          <strong>⚠️ Ponto de atenção — as duas tabelas acima são as únicas fontes de verdade:</strong> não tente decorar o resultado, decore essas duas tabelas (restrição→yᵢ e variável→restrição dual) e aplique coluna por coluna. Em provas com restrições mistas (≤, ≥, =) ou variáveis de tipos diferentes (≥0, ≤0, irrestrita) na mesma questão — como nos exercícios Q2, Q3 e Q5 — cada linha/coluna usa a regra que é <em>dela</em>, nunca generalize "a maioria é ≤ então todas são ≥0". Processe uma restrição/variável de cada vez.
+        </div>
       </div>
     </div>
 
@@ -868,6 +871,9 @@
             </tbody>
           </table>
         </div>
+        <div class="alert alert-warning" style="margin-top:.7rem;">
+          <strong>⚠️ Ponto de atenção — o erro mais comum de todos em dualidade:</strong> quando o primal é MIN, os sinais das <u>duas</u> tabelas invertem <em>ao mesmo tempo</em> em relação ao caso MAX (Q1). É comum o aluno lembrar de inverter só uma das duas (por exemplo, inverter o sinal de yᵢ mas esquecer que a restrição dual de uma variável xⱼ ≥ 0 também vira ≤ cⱼ em vez de ≥ cⱼ). Sempre confira as duas tabelas juntas, nunca aplique só metade da regra.
+        </div>
       </div>
     </div>
 
@@ -1010,7 +1016,7 @@
         <div style="background:var(--bg-alt); border-radius:6px; padding:.6rem 1rem; font-family:monospace; margin:.5rem 0;">
           &minus;3y₁ + y₂ + 4y₃ + y₄ = 3
         </div>
-        <div class="alert alert-warn" style="margin-top:.5rem;">
+        <div class="alert alert-warning" style="margin-top:.5rem;">
           Variável primal irrestrita → restrição dual de <strong>igualdade</strong> (não pode ser desigualdade).
         </div>
 
@@ -1095,7 +1101,7 @@
             <tr><td>x₆</td><td>1</td><td>4</td><td>4y₁ ≥ 1</td></tr>
           </tbody>
         </table>
-        <div class="alert alert-warn" style="margin-top:.7rem;">
+        <div class="alert alert-warning" style="margin-top:.7rem;">
           x₄ ausente da FO equivale a c₄ = 0. A restrição dual correspondente é 2y₁ ≥ 0, que é sempre satisfeita para y₁ ≥ 0.
         </div>
       </div>
@@ -1186,7 +1192,7 @@
             <tr><td>x₄</td><td>x₄ ≥ 0</td><td>∑ aᵢ₄ yᵢ <strong>≥</strong> c₄ = &minus;3</td></tr>
           </tbody>
         </table>
-        <div class="alert alert-warn" style="margin-top:.7rem;">
+        <div class="alert alert-warning" style="margin-top:.7rem;">
           Variável ≤ 0 inverte o sentido da desigualdade na restrição dual (de ≥ para ≤).
           Variável irrestrita gera restrição de igualdade.
         </div>
@@ -3917,6 +3923,15 @@ Binary
 End</div>
         <div class="alert alert-info" style="margin-top:.8rem;font-size:.88rem;">
           <strong>Leitura do modelo:</strong> xᵢⱼ onde i = mala (1–3) e j = produto (1–5). A linha "Binary" declara que todas as variáveis são 0 ou 1. O comentário <code>\</code> (contrabarra) inicia linhas de comentário no CPLEX.
+        </div>
+        <div class="alert alert-warning" style="margin-top:.7rem;">
+          <strong>⚠️ Pontos de atenção — pegadinhas comuns no formato CPLEX:</strong>
+          <ul style="margin-left:1.2rem;margin-top:.4rem;">
+            <li><strong>"No máximo uma mala" é ≤ 1, nunca = 1</strong> — as restrições <code>prod1..prod5</code> usam <code>&lt;=1</code> porque um produto pode não ir para mala nenhuma. Trocar por <code>=1</code> forçaria todo produto a ser alocado, mudando o problema.</li>
+            <li><strong>Toda variável declarada na FO ou nas restrições precisa aparecer na seção <code>Binary</code>/<code>General</code></strong> — esquecer uma variável ali faz o solver tratá-la como contínua (0 a +∞) por padrão, o que muda a resposta.</li>
+            <li><strong>Nomeie cada restrição</strong> (<code>peso1:</code>, <code>prod1:</code>, <code>orcamento:</code>) — sem nome, o CPLEX aceita mas a correção da prova fica mais difícil de rastrear qual restrição é qual.</li>
+            <li><strong>Confira a direção da desigualdade contra o enunciado</strong>, não contra a intuição: "limite de peso" e "orçamento total" são sempre ≤; se a prova pedir um mínimo de alguma coisa (ex. "produzir no mínimo X"), a restrição correspondente vira ≥, mesmo dentro do mesmo modelo.</li>
+          </ul>
         </div>
       </div>
     </div>
