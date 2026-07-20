@@ -1475,6 +1475,15 @@
           </div>
         </div>
 
+        <div class="alert alert-warning" style="margin:.8rem 0">
+          <strong>⚠️ Pontos de atenção — empates no Dual Simplex (valem para Q6, Q7, Q8 e Q9):</strong>
+          <ul style="margin-left:1.2rem;margin-top:.4rem;">
+            <li><strong>Empate no critério de saída</strong> (duas linhas com o mesmo b mais negativo): qualquer uma das empatadas pode sair — a resposta final não muda, só o número de iterações.</li>
+            <li><strong>Empate no critério de entrada</strong> (duas colunas com a mesma razão mínima |Z|÷|coef.|, como quase aconteceu aqui entre x₃ e outra coluna): escolha qualquer uma das empatadas; se uma delas gerar pivô degenerado (razão 0, como x₃ aqui) e a outra não, prefira a degenerada só se isso evitar ciclagem — na prática, para os tamanhos de problema cobrados na disciplina, qualquer escolha funciona.</li>
+            <li><strong>Se NENHUM coeficiente da linha pivô for negativo</strong> (todos ≥ 0 na linha que teria que sair): o problema é <strong>primal inviável</strong> de verdade — não existe solução que satisfaça as restrições originais. Isso é diferente de "problema ilimitado" (que é uma condição do Simplex Primal, não do Dual Simplex).</li>
+          </ul>
+        </div>
+
         <div class="pills">
           <span class="pill pill-ok">✅ Dual viável</span>
           <span class="pill pill-ok">✅ Primal viável</span>
@@ -3597,6 +3606,15 @@
           </tbody>
         </table>
         <p style="font-size:.88rem;color:var(--text-muted);">⚠️ Neste problema, x₃, x₄, x₅ são <strong>contínuas</strong> (podem ser decimais) — só x₁ e x₂ precisam ser inteiras.</p>
+        <div class="alert alert-warning" style="margin-top:.7rem;">
+          <strong>⚠️ Pontos de atenção — decisões que o enunciado não toma por você (valem para Q12, Q13 e Q14):</strong>
+          <ul style="margin-left:1.2rem;margin-top:.4rem;">
+            <li><strong>Qual variável ramificar, se mais de uma estiver fracionária no mesmo nó:</strong> não há uma regra única obrigatória — a mais comum e mais fácil de justificar na prova é escolher a variável com <em>maior coeficiente na função objetivo</em> (maior impacto no z), ou alternativamente a "mais fracionária" (parte decimal mais próxima de 0,5). O importante é <strong>declarar qual critério você usou</strong> antes de ramificar — isso normalmente é cobrado na correção.</li>
+            <li><strong>Ordem de exploração dos ramos (qual nó visitar primeiro):</strong> visitar "≤" antes de "≥" (ou vice-versa) não muda a resposta final, só a ordem em que você chega lá — mas seja consistente durante toda a árvore para não se perder.</li>
+            <li><strong>Quando podar um ramo:</strong> três motivos válidos — (1) <strong>inviável</strong> (como o Nó 1b aqui, onde 2×4=8&gt;7), (2) já é <strong>solução inteira</strong> (vira candidata a ótimo, não precisa ramificar mais), ou (3) o <strong>z relaxado do nó já é pior</strong> que a melhor solução inteira já encontrada (mesmo viável, não vale a pena continuar — esse terceiro motivo costuma ser esquecido).</li>
+            <li><strong>Empate entre soluções inteiras com o mesmo z*:</strong> se dois ramos diferentes chegam ao mesmo z* ótimo, ambas são soluções ótimas alternativas — reporte a que você encontrou primeiro, mas mencione que existe mais de uma se a prova pedir "todas as soluções ótimas".</li>
+          </ul>
+        </div>
       </div>
     </div>
 
