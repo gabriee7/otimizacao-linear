@@ -4649,7 +4649,31 @@ End</div>
         <div class="phase-line"></div>
       </div>
       <div class="phase-body">
-        <p>Apague as colunas x₆ e x₈ (artificiais, não existem mais no problema original). Troque a linha x₀ pela linha −Z com os coeficientes originais convertidos (<code>−Z + 2x₁ − x₂ + x₃ = 0</code>) e zere as colunas das variáveis já básicas (x₁ e x₂) com Gauss:</p>
+        <p>Apague as colunas x₆ e x₈ (artificiais, não existem mais no problema original). Troque a linha x₀ pela linha −Z com os coeficientes originais convertidos (<code>−Z + 2x₁ − x₂ + x₃ = 0</code>):</p>
+        <div class="t-outer">
+          <div class="t-base-col">
+            <div class="t-base-spacer"></div>
+            <div class="t-base-cell">−Z</div>
+            <div class="t-base-cell">x₄</div>
+            <div class="t-base-cell">x₁</div>
+            <div class="t-base-cell">x₂</div>
+          </div>
+          <div>
+            <table class="tgrid">
+              <thead><tr><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>x₇</th><th>b</th></tr></thead>
+              <tbody>
+                <tr><td class="t-pc">2</td><td class="t-pc">−1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>−2,143</td><td>1</td><td>0,286</td><td>0,429</td><td>5,714</td></tr>
+                <tr><td class="t-pr">1</td><td>0</td><td>0,357</td><td>0</td><td>−0,214</td><td>−0,071</td><td>0,714</td></tr>
+                <tr><td>0</td><td class="t-pr">1</td><td>−0,571</td><td>0</td><td>0,143</td><td>−0,286</td><td>0,857</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="alert alert-warning">
+          <strong>⚠️ Ponto de atenção:</strong> essa linha −Z "crua" (destacada) chega com coeficiente <strong>2</strong> na coluna x₁ e <strong>−1</strong> na coluna x₂ — mas x₁ e x₂ já são básicas nesse tableau (a base mudou durante a Fase I). Toda variável básica precisa ter coeficiente 0 na linha do objetivo, então essa linha ainda <u>não</u> pode ser usada para decidir quem entra — precisa do mesmo tipo de Gauss do R3.
+        </div>
+        <p style="margin-top:1rem;">Zere as colunas x₁ e x₂ somando/subtraindo as linhas onde elas são básicas (destacadas acima): subtraia 2× a linha de x₁ (cancela o coeficiente 2) e some 1× a linha de x₂ (cancela o −1, já que <code>−(−1) = +1</code>):</p>
         <div class="math-block">
           −Z pronta = −Z − 2·L(x₁) − (−1)·L(x₂) = −Z − 2·L(x₁) + L(x₂)
         </div>
@@ -4673,8 +4697,8 @@ End</div>
             </table>
           </div>
         </div>
-        <div class="alert alert-warning">
-          <strong>⚠️ Ponto de atenção:</strong> esse Gauss em cima da linha −Z é o passo mais esquecido — a base mudou na Fase I, então a linha −Z "crua" (com os coeficientes 2 e −1 direto do enunciado) quase sempre chega com colunas de variável básica diferentes de zero.
+        <div class="alert alert-info">
+          <strong>📌 Comentário no ponto:</strong> agora as colunas x₁ e x₂ estão zeradas na linha −Z (compare com a tabela "crua" acima) — a linha está pronta. É só nela que o próximo passo (R7) vai olhar pra decidir quem entra.
         </div>
       </div>
     </div>
