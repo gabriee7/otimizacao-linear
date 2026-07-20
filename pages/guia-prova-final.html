@@ -78,6 +78,30 @@
 </div>
 
 <div class="phase">
+  <div class="phase-head"><span class="phase-tag">−1</span><div class="phase-title">O caminho das pedras — qual método usar? (Simplex, Duas Fases ou Dual Simplex)</div></div>
+  <div class="phase-body">
+    <p>Antes de escolher qualquer método, padronize sinais (converta pra MIN, trate variáveis ≤0/irrestritas — Passo 0 logo abaixo) e faça <strong>duas perguntas</strong> sobre o tableau resultante:</p>
+    <table class="tab">
+      <thead><tr><th>1. A linha −Z já fica toda ≤ 0?</th><th>2. Existe algum b negativo (restrição posta em forma ≤)?</th><th>Método</th></tr></thead>
+      <tbody>
+        <tr><td>Sim</td><td>Sim</td><td class="hi">Dual Simplex — mais rápido, sem variável artificial</td></tr>
+        <tr><td>Sim</td><td>Não</td><td>Simplex comum, direto — já está tudo pronto</td></tr>
+        <tr><td>Não</td><td>—</td><td>Duas Fases — precisa de artificial pra achar uma base viável primeiro</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Por que a pergunta 1 usa a convenção "−c":</b> a linha −Z guarda os coeficientes com sinal trocado (<code>−Z − cx = 0</code> → linha guarda −c). Não julgue "toda ≤0" olhando os coeficientes originais da FO — julgue depois de aplicar essa troca de sinal, senão a conclusão sai invertida.</div>
+    <div class="exemplo">
+      <strong>Exemplo real de prova (Questão 4, Problema 3):</strong> Maximizar Z = −x₁+7x₂−6x₃, sujeito a 3x₁+2x₂+8x₃≤13, 7x₁+4x₂+5x₃≥9, x₁≥0, <strong>x₂≤0</strong>, x₃≥0.<br><br>
+      <strong>Passo 0 aplicado:</strong> troque x₂ = −x₂' (x₂'≥0) → FO vira Max Z = −x₁−7x₂'−6x₃; R1 vira 3x₁−2x₂'+8x₃≤13; R2 vira 7x₁−4x₂'+5x₃≥9. Converter pra MIN: <code>Min −Z = x₁+7x₂'+6x₃</code>.<br><br>
+      <strong>Pergunta 1:</strong> linha −Z guarda −c = [−1, −7, −6] para (x₁,x₂',x₃) → todos ≤ 0 ✓.<br>
+      <strong>Pergunta 2:</strong> R1 (≤, b=13) já é viável. R2 (≥9) multiplicada por −1 vira <code>−7x₁+4x₂'−5x₃≤−9</code> → <strong>b=−9, negativo</strong> ✓.<br><br>
+      <strong>Conclusão: Dual Simplex</strong> — direto, sem Duas Fases, sem artificial nenhuma. Duas Fases também chegaria na resposta certa, mas seria trabalho a mais que a banca não espera quando o atalho do Dual Simplex está disponível.
+    </div>
+    <div class="attn"><b>Ponto de atenção — quando a resposta muda no meio do caminho:</b> às vezes a linha −Z não fica toda ≤0 <em>até você rodar uma iteração de Dual Simplex</em> — nesse caso ainda vale a pena tentar Dual Simplex primeiro (o critério de entrada dele exige justamente isso). Se depois de organizar tudo você tiver <u>ao mesmo tempo</u> alguma célula positiva na linha −Z <u>e</u> algum b negativo, nenhum dos dois atalhos serve sozinho — aí sim vá direto para Duas Fases.</div>
+  </div>
+</div>
+
+<div class="phase">
   <div class="phase-head"><span class="phase-tag">0</span><div class="phase-title">Antes de tudo: padronizar sinal e forma padrão</div></div>
   <div class="phase-body">
     <div class="roman"><div class="roman-body">
