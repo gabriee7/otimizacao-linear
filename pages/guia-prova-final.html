@@ -111,18 +111,18 @@
       </table>
     </div>
     <p style="margin-top:.7rem;">A <strong>função objetivo dual</strong> é sempre <code>Maximizar W = b₁y₁ + b₂y₂ + ...</code> (os termos independentes do primal viram os coeficientes do dual) — porque o dual de um MIN é sempre um MAX.</p>
-    <div class="attn"><b>Ponto de atenção — por que os sinais parecem "trocados":</b> se você já viu esse problema resolvido em outro material com yᵢ≥0 para restrição ≤ (a regra "clássica" de livro-texto, quando não se converte pra MIN antes), não é erro — é só uma variável dual com o sinal invertido (y = −y'). As duas respostas descrevem o mesmo dual, mas a convenção do professor exige a tabela acima, então é essa que vale na correção.</div>
+    <div class="attn"><b>Ponto de atenção — esse é um resultado intermediário, não a resposta final:</b> como você converteu o primal pra MIN antes de montar o dual, as variáveis y que saem daqui vêm com o sinal "trocado" em relação à forma padrão que se usa pra reportar a resposta (a mesma que aparece nos exercícios resolvidos, com yᵢ≥0). O Passo II mostra como desfazer isso no final — não pare por aqui.</div>
   </div>
 </div>
 
 <div class="phase">
-  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Montar o dual, coluna por coluna</div></div>
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Montar o dual (intermediário) e depois devolver para a forma padrão</div></div>
   <div class="phase-body">
     <div class="exemplo">
       <strong>Exemplo:</strong> Maximizar Z = 3000x₁ + 5000x₂, sujeito a 0,5x₁+0,2x₂≤16, 0,25x₁+0,3x₂≤11, 0,25x₁+0,5x₂≤15, x₁,x₂≥0.<br><br>
       <strong>Passo 0:</strong> converta pra MIN: <code>Minimizar −Z = −3000x₁ − 5000x₂</code>.<br>
       <strong>Passo I:</strong> as três restrições são ≤ → y₁,y₂,y₃ ≤ 0 (pela tabela). x₁,x₂ ≥ 0 → restrições duais do tipo ≤ cⱼ.<br>
-      <strong>Passo II — construção:</strong>
+      <strong>Passo II.a — construção intermediária:</strong>
       <table class="tab" style="margin-top:.5rem;">
         <thead><tr><th>Peça</th><th>Valor</th></tr></thead>
         <tbody>
@@ -133,7 +133,27 @@
         </tbody>
       </table>
     </div>
-    <div class="attn"><b>Ponto de atenção — confira com a substituição y=−y':</b> fazendo y₁=−y₁' etc. (y'≥0), a primeira restrição dual vira <code>0,5y₁'+0,25y₂'+0,25y₃' ≥ 3000</code> e o objetivo vira <code>Minimizar W' = 16y₁'+11y₂'+15y₃'</code> — exatamente o dual "clássico" de um MAX com yᵢ≥0. Use essa substituição só pra <em>conferir</em> sua resposta; a resposta que você entrega na prova é a de cima (com −3000, −5000 e y≤0), no formato da tabela única.</div>
+    <p style="margin-top:1rem;"><strong>Passo II.b — devolver pra forma padrão:</strong> essa construção intermediária tem y≤0 e coeficientes negativos porque carrega o sinal da conversão do Passo 0. Para reportar a resposta no formato usado nos exercícios (yᵢ≥0), substitua <code>y = −y'</code> em tudo — objetivo, restrições e domínio — e simplifique:</p>
+    <table class="tab" style="margin-top:.5rem;">
+      <thead><tr><th>Termo intermediário (y)</th><th>Substituindo y=−y'</th><th>Depois de simplificar</th></tr></thead>
+      <tbody>
+        <tr><td>Maximizar W = 16y₁+11y₂+15y₃</td><td>Max W = 16(−y₁')+11(−y₂')+15(−y₃') = −(16y₁'+11y₂'+15y₃')</td><td>Minimizar W = 16y₁'+11y₂'+15y₃'</td></tr>
+        <tr><td>0,5y₁+0,25y₂+0,25y₃ ≤ −3000</td><td>0,5(−y₁')+0,25(−y₂')+0,25(−y₃') ≤ −3000</td><td>0,5y₁'+0,25y₂'+0,25y₃' ≥ 3000</td></tr>
+        <tr><td>0,2y₁+0,3y₂+0,5y₃ ≤ −5000</td><td>0,2(−y₁')+0,3(−y₂')+0,5(−y₃') ≤ −5000</td><td>0,2y₁'+0,3y₂'+0,5y₃' ≥ 5000</td></tr>
+        <tr><td>y₁,y₂,y₃ ≤ 0</td><td>−y₁',−y₂',−y₃' ≤ 0</td><td>y₁',y₂',y₃' ≥ 0</td></tr>
+      </tbody>
+    </table>
+    <div class="result-box" style="margin-top:.8rem;">
+      <div style="font-weight:700; margin-bottom:.5rem; font-size:1rem;">Modelo Dual — resposta final (renomeando y' de volta pra y)</div>
+      <div style="font-family:monospace; line-height:2;">
+        Minimizar W = 16y₁ + 11y₂ + 15y₃<br>
+        Sujeito a:<br>
+        &emsp;0,5y₁ + 0,25y₂ + 0,25y₃ ≥ 3000<br>
+        &emsp;0,2y₁ + 0,3y₂ + 0,5y₃ ≥ 5000<br>
+        &emsp;y₁, y₂, y₃ ≥ 0
+      </div>
+    </div>
+    <div class="attn"><b>Ponto de atenção:</b> repare que essa resposta final é <u>idêntica</u> à do Q1 resolvido em Exercícios (Lista 2) — construído lá sem passar pelo Passo 0, direto com a tabela de regras pra primal MAX. Os dois caminhos levam ao mesmo lugar; a vantagem de converter pra MIN primeiro é só ter uma tabela só pra lembrar (Passo I), ao custo de precisar desfazer o sinal no final (Passo II.b). Se você já sabe de cor a tabela "MAX" também, pode pular direto pra ela e economizar o Passo II.b.</div>
   </div>
 </div>
 
