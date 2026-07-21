@@ -223,7 +223,7 @@
         <tr><td>x₁</td><td>1</td><td>0</td><td>0</td><td>−0,333</td><td>0,333</td><td>2</td></tr>
       </tbody>
     </table>
-    <div class="exemplo">Todas as células da linha −Z são ≤0 → ótimo. −Z*=−36 → <strong>Z*=36</strong>, com x₁=2, x₂=6, s₁=2 (folga), s₂=s₃=0. É exatamente o tableau usado como exemplo-base na seção de Sensibilidade — vale revisitar aquela seção depois de dominar este passo a passo.</div>
+    <div class="exemplo">Todas as células da linha −Z são ≤0 → ótimo. −Z*=−36 → <strong>Z*=36</strong>, com x₁=2, x₂=6, s₁=2 (folga), s₂=s₃=0. Guarde esse tableau — ele reaparece nos Casos 4 a 7 da seção de Sensibilidade.</div>
     <div class="attn"><b>Ponto de atenção:</b> Simplex Primal só serve de entrada quando a base de folgas já é viável (todos os b≥0 nas restrições ≤). Se aparecer qualquer restrição ≥ ou =, esse atalho não está disponível — use o teste do Passo −1 (seção de Duas Fases) pra escolher entre Dual Simplex e Duas Fases.</div>
   </div>
 </div>
@@ -546,34 +546,45 @@
 </div>
 
 <div class="exemplo">
-  <strong>Exemplo-base usado em todos os 7 casos abaixo</strong> (assim você vê os mesmos números mudando de caso pra caso, em vez de fórmulas soltas): <code>Maximizar Z = 3x₁ + 5x₂</code>, sujeito a <code>x₁ ≤ 4</code> (R1), <code>2x₂ ≤ 12</code> (R2), <code>3x₁ + 2x₂ ≤ 18</code> (R3), x₁,x₂ ≥ 0.<br>
-  Rodando o Simplex, a solução ótima é <strong>x₁=2, x₂=6, Z*=36</strong>, com s₁=2 de folga em R1 (s₂ e s₃ nulas). Esse é o tableau que vamos reaproveitar o tempo todo:
-  <table class="tab" style="margin-top:.7rem;">
-    <thead><tr><th>Base</th><th>x₁</th><th>x₂</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead>
+  <strong>Layout geral que o professor usa (decore este esqueleto, não decore números):</strong>
+  <table class="tab" style="margin-top:.6rem;">
     <tbody>
-      <tr><td><strong>Z</strong> (z̄ⱼ)</td><td>0</td><td>0</td><td>0</td><td class="hi">−1,5</td><td class="hi">−1</td><td>36</td></tr>
-      <tr><td>x₁</td><td>1</td><td>0</td><td>0</td><td>−0,333</td><td>0,333</td><td>2</td></tr>
-      <tr><td>x₂</td><td>0</td><td>1</td><td>0</td><td>0,5</td><td>0</td><td>6</td></tr>
-      <tr><td>s₁</td><td>0</td><td>0</td><td>1</td><td>0,333</td><td>−0,333</td><td>2</td></tr>
+      <tr><td><strong>Z</strong></td><td>z₁−c₁</td><td>z₂−c₂</td><td>...</td><td>zₙ−cₙ</td><td>cB·B⁻¹·b</td></tr>
+      <tr><td></td><td>B⁻¹a₁</td><td>B⁻¹a₂</td><td>...</td><td>B⁻¹aₘ</td><td>B⁻¹b</td></tr>
     </tbody>
   </table>
+  <p style="margin-top:.5rem;">Fórmula única que gera toda a linha Z: <code>zⱼ−cⱼ = cB · B⁻¹ · aⱼ − cⱼ</code>. Repare que essa fórmula é a MESMA coisa que o z̄ⱼ usado no resto desta seção — só com os termos cⱼ e zⱼ trocados de posição/sinal, então não se assuste se um material usa z̄ⱼ e outro usa zⱼ−cⱼ.</p>
+</div>
+
+<div class="exemplo">
+  <strong>Exemplo real de prova (Q9 da lista 2, usado nos Casos 1 e 2 abaixo):</strong> <code>Minimizar Z = −2x₁ + x₂ − x₃</code>, sujeito a <code>x₁+x₂+x₃ ≤ 6</code> (folga x₄), <code>−x₁+2x₂ ≤ 4</code> (folga x₅), x₁,x₂,x₃ ≥ 0.<br>
+  Tableau ótimo dado: base <strong>{x₁, x₅}</strong>, com x₁=6, x₅=10, Z*=−12:
+  <table class="tab" style="margin-top:.6rem;">
+    <thead><tr><th>Base</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>x₅</th><th>b</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Z</strong> (zⱼ−cⱼ)</td><td>0</td><td class="hi">−3</td><td>−1</td><td>−2</td><td>0</td><td>−12</td></tr>
+      <tr><td>x₁</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>6</td></tr>
+      <tr><td>x₅</td><td>0</td><td>3</td><td>1</td><td>1</td><td>1</td><td>10</td></tr>
+    </tbody>
+  </table>
+  <p style="margin-top:.5rem;">Critério de otimalidade nesse tableau (é um MIN): <strong>zⱼ−cⱼ ≤ 0</strong> em todas as colunas não-básicas. Confira: x₂=−3 ✓, x₃=−1 ✓, x₄=−2 ✓ — bate, é ótimo mesmo.</p>
 </div>
 
 <div class="phase">
   <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Identificar as peças do tableau ótimo</div></div>
   <div class="phase-body">
-    Antes de qualquer conta, escreva explicitamente três coisas. No nosso exemplo-base:
+    Antes de qualquer conta, escreva explicitamente três coisas. No nosso exemplo:
     <ul style="margin-left:1.3rem;margin-top:.4rem;">
-      <li><strong>Base atual</strong> — {x₁, x₂, s₁}, com valores 2, 6 e 2 (coluna b do tableau acima).</li>
-      <li><strong>cB</strong> — vetor com os custos <u>originais</u> das variáveis da base (não os da linha Z!): cB = [3, 5, 0] (custo de x₁, x₂ e s₁ na FO original).</li>
-      <li><strong>B⁻¹</strong> — geralmente é dada como dica pelo professor ("Dica: B⁻¹ = [...]"), ou aparece "escondida" nas colunas de s₁, s₂, s₃ do tableau ótimo (a coluna de cada folga é literalmente a coluna correspondente de B⁻¹). No nosso exemplo:
-        <table class="tab" style="max-width:340px;margin-top:.5rem;">
+      <li><strong>Base atual</strong> — {x₁, x₅}, com valores 6 e 10 (coluna b do tableau acima).</li>
+      <li><strong>cB</strong> — vetor com os custos <u>originais</u> das variáveis da base (não os da linha Z!): cB = [−2, 0] (custo de x₁ e x₅ na FO original).</li>
+      <li><strong>B⁻¹</strong> — geralmente é dada como dica pelo professor ("Dica: B⁻¹ = [...]"), ou aparece "escondida" nas colunas de x₄, x₅ do tableau ótimo (a coluna de cada folga é literalmente a coluna correspondente de B⁻¹). No nosso exemplo:
+        <table class="tab" style="max-width:240px;margin-top:.5rem;">
           <tbody>
-            <tr><td>0</td><td>−0,333</td><td>0,333</td></tr>
-            <tr><td>0</td><td>0,5</td><td>0</td></tr>
-            <tr><td>1</td><td>0,333</td><td>−0,333</td></tr>
+            <tr><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td></tr>
           </tbody>
         </table>
+        (repare que a coluna de x₄ no tableau [1,1] e a de x₅ [0,1] são exatamente as colunas de B⁻¹ — é assim que o professor espera que você identifique B⁻¹ quando ele não dá de presente.)
       </li>
     </ul>
     <div class="attn"><b>Ponto de atenção:</b> em praticamente toda prova da UFES nessa disciplina, o professor <u>dá</u> B⁻¹ de presente ("Dica"). Se ele deu, USE — não perca tempo tentando reconstruir B⁻¹ pelas colunas de folga quando ela já está pronta no enunciado.
@@ -600,40 +611,40 @@
 <div class="phase">
   <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Caso 1 — custo de variável NÃO-básica muda</div></div>
   <div class="phase-body">
-    <p><strong>O que muda:</strong> só o valor na linha Z daquela coluna. Nada mais no tableau se mexe — a base, os valores de b e as outras colunas ficam <u>exatamente iguais</u>.</p>
-    <p><strong>Por quê:</strong> z̄ⱼ = cⱼ − cB·B⁻¹·aⱼ. Se só cⱼ mudou (cB, B⁻¹ e aⱼ continuam os mesmos), a variação passa direto: novo z̄ⱼ = z̄ⱼ,antigo + Δcⱼ.</p>
-    <p><strong>Critério de manter ótimo</strong> (maximização): precisa continuar z̄ⱼ ≤ 0. Isole Δcⱼ na desigualdade.</p>
+    <p><strong>O que muda:</strong> só o valor na linha Z daquela coluna. Nada mais no tableau se mexe — a base, os valores de b e as outras colunas ficam <u>exatamente iguais</u>. Isso porque cB e B⁻¹ (que dependem só da base) não mudam quando o custo de uma variável <em>fora</em> da base muda.</p>
     <div class="exemplo">
-      <strong>Exemplo direto (Q11-a da lista 2):</strong> tableau tem z̄₂ = 3 na linha Z (coluna x₂, não-básica). Se c₂ vai de 1 para 6, Δc₂ = 5.
-      <table class="tab" style="margin-top:.5rem;max-width:420px;">
-        <thead><tr><th></th><th>z̄₂ antes</th><th>z̄₂ depois</th></tr></thead>
-        <tbody>
-          <tr><td>Valor</td><td>3</td><td class="hi">3 + 5 = 8</td></tr>
-        </tbody>
-      </table>
-      z̄₂ = 8 &gt; 0 → deixa de ser ótimo, x₂ entraria na base (precisaria rodar mais uma iteração de simplex a partir daqui).
+      <strong>No nosso exemplo:</strong> c₂ (custo de x₂, não-básica) passa a valer α. Recalcule <code>z₂−c₂</code> do zero com a fórmula do quadro:
+      <div class="math-block">
+        y = cB·B⁻¹ = [−2, 0]·[[1,0],[1,1]] = [−2, 0] &nbsp;<span style="color:var(--text-muted)">(não muda — mesma base)</span><br>
+        z₂−c₂ = y·a₂ − α = [−2,0]·[1,2] − α = −2 − α
+      </div>
+      <p style="margin-top:.5rem;">Critério de otimalidade (MIN): <code>z₂−c₂ ≤ 0</code> → <code>−2−α ≤ 0</code> → <strong>α ≥ −2</strong>.</p>
     </div>
-    <div class="attn"><b>Ponto de atenção — fronteira exata (z̄ⱼ = 0):</b> se o Δcⱼ encontrado deixar z̄ⱼ exatamente 0 (não negativo, nem positivo), o tableau <u>continua ótimo</u>, mas passa a existir <strong>solução ótima alternativa</strong> (outro vértice com o mesmo Z). Se a prova pedir "o maior Δc possível", a resposta é esse valor de fronteira — não um valor estritamente menor.</div>
+    <div class="attn"><b>Ponto de atenção — a₂ é sempre a coluna ORIGINAL:</b> repare que usamos a₂=[1,2] (a coluna de x₂ direto do enunciado, antes de qualquer conta), não uma coluna já transformada do tableau. É <code>y·a₂</code>, não "y·(coluna do tableau)".</div>
+    <div class="attn"><b>Ponto de atenção — fronteira exata (zⱼ−cⱼ = 0):</b> se o valor encontrado deixar zⱼ−cⱼ exatamente 0 (aqui, α=−2 exatamente), o tableau <u>continua ótimo</u>, mas passa a existir <strong>solução ótima alternativa</strong> (outro vértice com o mesmo Z). Se a prova pedir "o menor α possível", a resposta é esse valor de fronteira — não um valor estritamente maior.</div>
   </div>
 </div>
 
 <div class="phase">
   <div class="phase-head"><span class="phase-tag">IV</span><div class="phase-title">Caso 2 — custo de variável BÁSICA muda</div></div>
   <div class="phase-body">
-    <p><strong>O que muda:</strong> a linha Z inteira, porque cB mudou e cB entra na fórmula de TODA coluna — diferente do Caso 1, aqui não dá pra mexer só numa célula.</p>
-    <p><strong>Fórmula:</strong> para cada coluna j, novo z̄ⱼ = z̄ⱼ,antigo + Δcᵢ × (coeficiente da linha i, coluna j no tableau), onde i é a linha em que a variável básica alterada está.</p>
+    <p><strong>O que muda:</strong> a linha Z inteira, porque cB muda e cB entra na fórmula de TODA coluna — diferente do Caso 1, aqui não dá pra mexer só numa célula. Você precisa recalcular <code>y = cB·B⁻¹</code> de novo (com o cB novo) e depois <code>zⱼ−cⱼ</code> pra CADA coluna não-básica.</p>
     <div class="exemplo">
-      <strong>No exemplo-base:</strong> suponha que c₁ (custo de x₁, que é básica na linha 1) muda de 3 para 3+Δ. A linha de x₁ no tableau é <code>[1, 0, 0, −0,333, 0,333 | 2]</code> — os coeficientes de s₂ e s₃ nessa linha (−0,333 e 0,333) são os multiplicadores de Δ:
-      <table class="tab" style="margin-top:.6rem;">
-        <thead><tr><th>Coluna não-básica</th><th>z̄ⱼ antigo</th><th>Coef. na linha de x₁</th><th>Novo z̄ⱼ</th><th>Exigir ≤ 0 dá</th></tr></thead>
+      <strong>No nosso exemplo:</strong> c₁ (custo de x₁, básica) passa a valer θ → cB = [θ, 0].
+      <div class="math-block">y = cB·B⁻¹ = [θ, 0]·[[1,0],[1,1]] = [θ, 0]</div>
+      <p style="margin-top:.5rem;">Agora recalcule zⱼ−cⱼ pra CADA coluna não-básica (x₂, x₃, x₄), usando sempre a coluna original aⱼ:</p>
+      <table class="tab" style="margin-top:.5rem;">
+        <thead><tr><th>Coluna</th><th>aⱼ (original)</th><th>zⱼ−cⱼ = y·aⱼ − cⱼ</th><th>Exigir ≤ 0 dá</th></tr></thead>
         <tbody>
-          <tr><td>s₂</td><td>−1,5</td><td>−0,333</td><td>−1,5 − 0,333Δ</td><td>Δ ≥ −4,5</td></tr>
-          <tr><td>s₃</td><td>−1</td><td>0,333</td><td>−1 + 0,333Δ</td><td>Δ ≤ 3</td></tr>
+          <tr><td>x₂</td><td>[1,2]</td><td>θ×1 − 1 = θ−1</td><td>θ ≤ 1</td></tr>
+          <tr><td>x₃</td><td>[1,0]</td><td>θ×1 − (−1) = θ+1</td><td>θ ≤ −1</td></tr>
+          <tr><td>x₄</td><td>[1,0]</td><td>θ×1 − 0 = θ</td><td>θ ≤ 0</td></tr>
         </tbody>
       </table>
-      Interseção: <strong>−4,5 ≤ Δ ≤ 3</strong> → como c₁=3 originalmente, o intervalo de c₁ que mantém a base ótima é <strong>c₁ ∈ [−1,5 ; 6]</strong>.
+      <p style="margin-top:.5rem;">Interseção das três: <strong>θ ≤ −1</strong> (a mais restritiva vence — aqui, x₃). Como c₁=−2 originalmente, o intervalo de c₁ que mantém a base ótima é <strong>c₁ ≤ −1</strong>.</p>
+      <p style="margin-top:.5rem;"><strong>Bônus quase sempre pedido junto:</strong> o novo Z em função de θ é <code>cB·B⁻¹·b = [θ,0]·[6,10] = 6θ</code>.</p>
     </div>
-    <div class="attn"><b>Ponto de atenção:</b> é o caso onde mais gente erra por esquecer de recalcular TODAS as colunas não-básicas (aqui, s₂ <u>e</u> s₃) — se você mexe no custo de uma variável básica e só olha uma coluna, sua resposta fica incompleta. O intervalo final é sempre a <strong>interseção</strong> de todas as desigualdades geradas.</div>
+    <div class="attn"><b>Ponto de atenção:</b> é o caso onde mais gente erra por esquecer de recalcular TODAS as colunas não-básicas (aqui, x₂, x₃ <u>e</u> x₄) — se você mexe no custo de uma variável básica e só olha uma coluna, sua resposta fica incompleta. O intervalo final é sempre a <strong>interseção</strong> de todas as desigualdades geradas — a mais apertada é quem decide.</div>
   </div>
 </div>
 
@@ -684,7 +695,7 @@
   <div class="phase-body">
     <p><strong>Procedimento:</strong> substitua a solução ótima atual (x*) direto na nova restrição. Se ela satisfaz, nada muda. Se ela viola, a restrição entra no tableau e você precisa de mais iterações — geralmente Dual Simplex, porque o ponto fica <em>ótimo em custo mas inviável</em>.</p>
     <div class="exemplo">
-      <strong>No exemplo-base</strong> (x₁=2, x₂=6):
+      <strong>Exemplo (retomando o tableau de Simplex Primal, x₁=2, x₂=6, Z*=36):</strong>
       <table class="tab" style="margin-top:.6rem;">
         <thead><tr><th>Nova restrição</th><th>Teste com x₁=2, x₂=6</th><th>Resultado</th></tr></thead>
         <tbody>
@@ -702,7 +713,7 @@
   <div class="phase-body">
     <p><strong>Procedimento:</strong> calcule a coluna transformada B⁻¹·aₙₒᵥₐ e o custo relativo z̄ₙₒᵥₐ = cB·B⁻¹·aₙₒᵥₐ − cₙₒᵥₐ. Se z̄ ≤ 0 (max), a variável nova não compensa, tableau continua ótimo do jeito que está. Se z̄ &gt; 0, ela entraria — rode mais uma iteração.</p>
     <div class="exemplo">
-      <strong>No exemplo-base:</strong> surge x₃, com custo c₃=4 e coluna original a₃=[1,1,2] (uma unidade em cada restrição).
+      <strong>Exemplo (mesmo tableau de Simplex Primal):</strong> surge x₃, com custo c₃=4 e coluna original a₃=[1,1,2] (uma unidade em cada restrição).
       <table class="tab" style="margin-top:.6rem;max-width:480px;">
         <thead><tr><th>Passo</th><th>Cálculo</th><th>Resultado</th></tr></thead>
         <tbody>
@@ -723,7 +734,7 @@
     <table class="tab" style="text-align:left;">
       <thead><tr><th style="width:20%">Situação</th><th>O que fazer</th></tr></thead>
       <tbody>
-        <tr><td><strong>Remover restrição não-ativa</strong></td><td>Se a folga daquela restrição estava na base com valor &gt;0 (restrição não estava "apertada"), apague a linha e a coluna — nada muda. <span style="color:var(--text-muted)">No exemplo-base: R1 tem s₁=2&gt;0, não está apertada → removê-la não muda x₁=2,x₂=6,Z*=36.</span></td></tr>
+        <tr><td><strong>Remover restrição não-ativa</strong></td><td>Se a folga daquela restrição estava na base com valor &gt;0 (restrição não estava "apertada"), apague a linha e a coluna — nada muda. <span style="color:var(--text-muted)">No exemplo de Simplex Primal: R1 tem s₁=2&gt;0, não está apertada → removê-la não muda x₁=2,x₂=6,Z*=36.</span></td></tr>
         <tr><td><strong>Remover restrição ativa</strong></td><td>Se a folga era 0 (restrição no limite), o problema muda de fato — precisa recalcular do zero com as restrições restantes.</td></tr>
         <tr><td><strong>Remover variável não-básica</strong></td><td>Se xₖ era não-básica (valor 0), apague a coluna dela — a solução ótima nem muda, ela já não estava sendo usada.</td></tr>
         <tr><td><strong>Remover variável básica</strong></td><td>Precisa "tirar" ela da base (regra de saída do simplex) antes de apagar a coluna, e só depois recomputar — não dá pra simplesmente apagar, porque ela tem valor &gt;0 na solução atual.</td></tr>
