@@ -531,6 +531,20 @@
 <strong>Para que serve, em uma frase:</strong> você já tem o tableau ótimo pronto. A pergunta é sempre a mesma disfarçada: <em>"esse tableau continua sendo ótimo e viável depois dessa mudança, ou preciso recalcular algo?"</em> Você NUNCA resolve o problema do zero de novo — sempre reaproveita o tableau ótimo dado.
 </div>
 
+<div class="alert alert-success" style="line-height:1.8;">
+<strong>📌 A lógica por trás de tudo, sem fórmula nenhuma (leia isso primeiro):</strong>
+<p style="margin-top:.6rem;">Pensa numa padaria que já decidiu "vou fazer 6 pães doces e 2 salgados, esse é o lucro máximo". Essa decisão pronta é o tableau ótimo que a prova te dá. A pergunta nunca é "resolva de novo" — é sempre "se um número mudar, essa decisão continua valendo, ou estraga?"</p>
+<table class="tab" style="margin-top:.7rem;">
+  <thead><tr><th>O que mudou no enunciado</th><th>O que você verifica</th></tr></thead>
+  <tbody>
+    <tr><td>Preço de algo que a padaria <strong>não</strong> faz (variável = 0 na resposta)</td><td>Um número só — ele "trocou de time" (mudou de sinal)?</td></tr>
+    <tr><td>Preço de algo que a padaria <strong>já faz</strong> (variável &gt; 0 na resposta)</td><td>Todos os números de comparação ao mesmo tempo, não só um</td></tr>
+    <tr><td>Quantidade de recurso disponível (farinha, horas etc.)</td><td>As quantidades novas — alguma virou negativa?</td></tr>
+  </tbody>
+</table>
+<p style="margin-top:.6rem;">Isso é literalmente os Casos 1, 2 e 3 logo abaixo (os mais cobrados). O resto da seção só mostra <em>como fazer a conta</em> dessa verificação — a lógica de fundo é sempre essa tabela aqui.</p>
+</div>
+
 <div class="exemplo">
   <strong>Exemplo-base usado em todos os 7 casos abaixo</strong> (assim você vê os mesmos números mudando de caso pra caso, em vez de fórmulas soltas): <code>Maximizar Z = 3x₁ + 5x₂</code>, sujeito a <code>x₁ ≤ 4</code> (R1), <code>2x₂ ≤ 12</code> (R2), <code>3x₁ + 2x₂ ≤ 18</code> (R3), x₁,x₂ ≥ 0.<br>
   Rodando o Simplex, a solução ótima é <strong>x₁=2, x₂=6, Z*=36</strong>, com s₁=2 de folga em R1 (s₂ e s₃ nulas). Esse é o tableau que vamos reaproveitar o tempo todo:
