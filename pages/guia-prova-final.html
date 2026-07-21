@@ -50,28 +50,245 @@
 
 <div class="hero" style="padding:2.4rem 1.5rem 1.8rem;">
   <h1 style="font-size:1.9rem;">🆘 Guia de Sobrevivência — Prova Final</h1>
-  <p>Foco total no que mais cai: <strong>Duas Fases</strong> e <strong>Análise de Sensibilidade</strong>. Passo a passo em algarismos romanos, sem pular etapas.</p>
+  <p>Foco total no que mais cai: <strong>Modelo Dual</strong>, <strong>Simplex</strong>, <strong>Dual Simplex</strong>, <strong>Duas Fases</strong> e <strong>Análise de Sensibilidade</strong>. Passo a passo em algarismos romanos, sem pular etapas.</p>
 </div>
 
 <main>
 
 <div class="alert alert-warning">
   <strong>Como a prova final é estruturada (padrão observado em 2021/2 e nas listas):</strong><br>
-  Q1 (2,0) — escrever o <strong>modelo dual</strong>. Q2 e Q3 (3,0 cada) — <strong>análise de sensibilidade</strong> a partir de um tableau ótimo já dado (retirar variável, mudar coeficiente/recurso). Q4 (3,0) — resolver um problema do zero via <strong>Duas Fases ou Dual Simplex</strong> (sem CPLEX).
-  Ou seja: <strong>3 das 4 questões (8 dos 10 pontos)</strong> giram em torno exatamente do que você disse ter mais dificuldade.
+  Q1 (2,0) — escrever o <strong>modelo dual</strong>. Q2 e Q3 (3,0 cada) — <strong>análise de sensibilidade</strong> a partir de um tableau ótimo já dado (retirar variável, mudar coeficiente/recurso). Q4 (3,0) — resolver um problema do zero via <strong>Simplex, Duas Fases ou Dual Simplex</strong> (sem CPLEX) — o Passo −1 da seção de Duas Fases ensina como escolher entre os três.
+  Ou seja: <strong>todas as 4 questões (10 dos 10 pontos)</strong> giram em torno dos métodos cobertos neste guia.
 </div>
 
 <div class="toc">
-  <a href="#duasfases">① Duas Fases</a>
-  <a href="#sensib">② Análise de Sensibilidade</a>
-  <a href="#casos">③ Tabela-resumo dos 7 casos</a>
-  <a href="#erros">④ Erros que derrubam nota</a>
+  <a href="#dual">① Modelo Dual</a>
+  <a href="#simplex">② Simplex Primal</a>
+  <a href="#dualsimplex">③ Dual Simplex</a>
+  <a href="#duasfases">④ Duas Fases</a>
+  <a href="#sensib">⑤ Análise de Sensibilidade</a>
+  <a href="#casos">⑥ Tabela-resumo dos 7 casos</a>
+  <a href="#erros">⑦ Erros que derrubam nota</a>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODELO DUAL -->
+<!-- ============================================================ -->
+<h2 id="dual">① Modelo Dual — Construção (sempre convertendo pra MIN primeiro)</h2>
+
+<div class="alert alert-info">
+<strong>Para que serve, em uma frase:</strong> toda questão de dualidade pede pra transformar um modelo (o primal) em outro (o dual), usando uma regra fixa de conversão. A pegadinha mais comum é ter que decorar duas tabelas de conversão diferentes (uma pra primal MAX, outra pra primal MIN) — a convenção do professor evita isso: <strong>converta o primal pra MIN sempre</strong> (mesmo que ele já comece em MAX) e use <u>uma única tabela</u> a partir daí. O dual sai sempre como <strong>MAX</strong>.
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">0</span><div class="phase-title">Se o primal for MAX, converta pra MIN antes de tudo</div></div>
+  <div class="phase-body">
+    <p>Mesma regra do Passo 0 de Duas Fases: <code>Maximizar Z = cx</code> vira <code>Minimizar −Z = −cx</code> (troca o sinal de todos os coeficientes da FO). A partir daqui, o primal que você usa pra montar o dual é sempre esse, o convertido — nunca o original em MAX.</p>
+    <div class="attn"><b>Ponto de atenção:</b> as restrições e os domínios das variáveis (≥0, ≤0, irrestrita) <u>não mudam</u> nessa conversão — só o sinal dos coeficientes da função objetivo.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Aplicar a tabela única (primal já em MIN)</div></div>
+  <div class="phase-body">
+    <p>Com o primal em MIN, use só estas duas tabelas — não existe uma versão "para MAX" a decorar, porque você já converteu:</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:700px;">
+      <table class="tab">
+        <thead><tr><th colspan="2">Restrição → variável dual yᵢ</th></tr><tr><th>Tipo da restrição</th><th>Sinal de yᵢ</th></tr></thead>
+        <tbody>
+          <tr><td>≤ bᵢ</td><td>yᵢ ≤ 0</td></tr>
+          <tr><td>≥ bᵢ</td><td>yᵢ ≥ 0</td></tr>
+          <tr><td>= bᵢ</td><td>yᵢ irrestrita</td></tr>
+        </tbody>
+      </table>
+      <table class="tab">
+        <thead><tr><th colspan="2">Variável → restrição dual</th></tr><tr><th>Tipo de xⱼ</th><th>Restrição dual</th></tr></thead>
+        <tbody>
+          <tr><td>xⱼ ≥ 0</td><td>∑ aᵢⱼ yᵢ ≤ cⱼ</td></tr>
+          <tr><td>xⱼ ≤ 0</td><td>∑ aᵢⱼ yᵢ ≥ cⱼ</td></tr>
+          <tr><td>xⱼ irrestrita</td><td>∑ aᵢⱼ yᵢ = cⱼ</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:.7rem;">A <strong>função objetivo dual</strong> é sempre <code>Maximizar W = b₁y₁ + b₂y₂ + ...</code> (os termos independentes do primal viram os coeficientes do dual) — porque o dual de um MIN é sempre um MAX.</p>
+    <div class="attn"><b>Ponto de atenção — por que os sinais parecem "trocados":</b> se você já viu esse problema resolvido em outro material com yᵢ≥0 para restrição ≤ (a regra "clássica" de livro-texto, quando não se converte pra MIN antes), não é erro — é só uma variável dual com o sinal invertido (y = −y'). As duas respostas descrevem o mesmo dual, mas a convenção do professor exige a tabela acima, então é essa que vale na correção.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Montar o dual, coluna por coluna</div></div>
+  <div class="phase-body">
+    <div class="exemplo">
+      <strong>Exemplo:</strong> Maximizar Z = 3000x₁ + 5000x₂, sujeito a 0,5x₁+0,2x₂≤16, 0,25x₁+0,3x₂≤11, 0,25x₁+0,5x₂≤15, x₁,x₂≥0.<br><br>
+      <strong>Passo 0:</strong> converta pra MIN: <code>Minimizar −Z = −3000x₁ − 5000x₂</code>.<br>
+      <strong>Passo I:</strong> as três restrições são ≤ → y₁,y₂,y₃ ≤ 0 (pela tabela). x₁,x₂ ≥ 0 → restrições duais do tipo ≤ cⱼ.<br>
+      <strong>Passo II — construção:</strong>
+      <table class="tab" style="margin-top:.5rem;">
+        <thead><tr><th>Peça</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Objetivo dual</td><td>Maximizar W = 16y₁ + 11y₂ + 15y₃</td></tr>
+          <tr><td>Restrição dual de x₁ (coluna [0,5 ; 0,25 ; 0,25], c₁=−3000)</td><td>0,5y₁ + 0,25y₂ + 0,25y₃ ≤ −3000</td></tr>
+          <tr><td>Restrição dual de x₂ (coluna [0,2 ; 0,3 ; 0,5], c₂=−5000)</td><td>0,2y₁ + 0,3y₂ + 0,5y₃ ≤ −5000</td></tr>
+          <tr><td>Domínio</td><td>y₁, y₂, y₃ ≤ 0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="attn"><b>Ponto de atenção — confira com a substituição y=−y':</b> fazendo y₁=−y₁' etc. (y'≥0), a primeira restrição dual vira <code>0,5y₁'+0,25y₂'+0,25y₃' ≥ 3000</code> e o objetivo vira <code>Minimizar W' = 16y₁'+11y₂'+15y₃'</code> — exatamente o dual "clássico" de um MAX com yᵢ≥0. Use essa substituição só pra <em>conferir</em> sua resposta; a resposta que você entrega na prova é a de cima (com −3000, −5000 e y≤0), no formato da tabela única.</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SIMPLEX PRIMAL -->
+<!-- ============================================================ -->
+<h2 id="simplex">② Simplex Primal — Manual Passo a Passo</h2>
+
+<div class="alert alert-info">
+<strong>Para que serve, em uma frase:</strong> é o método mais simples dos três da Q4 — use quando, depois de converter pra MIN e montar a forma padrão, já existir uma base viável "de graça" (todas as restrições ≤ com b≥0, resolvidas com folga). Sem restrição ≥ ou =, sem variável artificial, sem Fase I.
+</div>
+
+<div class="exemplo">
+  <strong>Exemplo (mesmo problema usado na seção de Sensibilidade — repare que o tableau final bate certinho):</strong> Maximizar Z = 3x₁ + 5x₂, sujeito a x₁≤4, 2x₂≤12, 3x₁+2x₂≤18, x₁,x₂≥0.
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Converter pra MIN e montar a forma padrão</div></div>
+  <div class="phase-body">
+    <p>Mesma convenção de sempre: <code>Minimizar −Z = −3x₁ − 5x₂</code>. Como as três restrições já são ≤ com b≥0, cada uma recebe só uma folga — nenhuma variável artificial é necessária:</p>
+    <div class="math-block">x₁+s₁=4 &nbsp;|&nbsp; 2x₂+s₂=12 &nbsp;|&nbsp; 3x₁+2x₂+s₃=18</div>
+    <p>Base inicial de graça: <strong>{s₁, s₂, s₃}</strong>, com valores 4, 12, 18 — já é viável, pode começar a iterar direto.</p>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Iteração 1</div></div>
+  <div class="phase-body">
+    <p><strong>Quem entra:</strong> linha −Z pronta = <code>[3, 5, 0, 0, 0 | 0]</code> — maior célula positiva é x₂ (5, contra 3 de x₁).</p>
+    <table class="tab">
+      <thead><tr><th>Linha</th><th>Coef. de x₂</th><th>b</th><th>Razão</th><th>Escolha?</th></tr></thead>
+      <tbody>
+        <tr><td>s₁</td><td>0</td><td>4</td><td class="hi">coef. 0 — ignora</td><td>não</td></tr>
+        <tr class="hi"><td>s₂</td><td>2</td><td>12</td><td>12÷2=6</td><td>✓ menor → s₂ sai</td></tr>
+        <tr><td>s₃</td><td>2</td><td>18</td><td>18÷2=9</td><td>não é a menor</td></tr>
+      </tbody>
+    </table>
+    <table class="tab">
+      <thead><tr><th>Tableau — depois do pivô (x₂ entrou, s₂ saiu)</th><th>x₁</th><th>x₂</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>−Z</strong></td><td class="hi">3</td><td>0</td><td>0</td><td>−2,5</td><td>0</td><td>−30</td></tr>
+        <tr><td>s₁</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>4</td></tr>
+        <tr><td>x₂</td><td>0</td><td>1</td><td>0</td><td>0,5</td><td>0</td><td>6</td></tr>
+        <tr><td class="hi">s₃</td><td class="hi">3</td><td>0</td><td>0</td><td>−1</td><td>1</td><td>6</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Iteração 2 — ótimo</div></div>
+  <div class="phase-body">
+    <p><strong>Quem entra:</strong> única célula positiva restante é x₁ (3).</p>
+    <table class="tab">
+      <thead><tr><th>Linha</th><th>Coef. de x₁</th><th>b</th><th>Razão</th><th>Escolha?</th></tr></thead>
+      <tbody>
+        <tr><td>s₁</td><td>1</td><td>4</td><td>4÷1=4</td><td>não é a menor</td></tr>
+        <tr class="hi"><td>s₃</td><td>3</td><td>6</td><td>6÷3=2</td><td>✓ menor → s₃ sai</td></tr>
+      </tbody>
+    </table>
+    <table class="tab">
+      <thead><tr><th>Tableau ótimo (x₁ entrou, s₃ saiu)</th><th>x₁</th><th>x₂</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>−Z</strong></td><td>0</td><td>0</td><td>0</td><td>−1,5</td><td>−1</td><td><strong>−36</strong></td></tr>
+        <tr><td>s₁</td><td>0</td><td>0</td><td>1</td><td>0,333</td><td>−0,333</td><td>2</td></tr>
+        <tr><td>x₂</td><td>0</td><td>1</td><td>0</td><td>0,5</td><td>0</td><td>6</td></tr>
+        <tr><td>x₁</td><td>1</td><td>0</td><td>0</td><td>−0,333</td><td>0,333</td><td>2</td></tr>
+      </tbody>
+    </table>
+    <div class="exemplo">Todas as células da linha −Z são ≤0 → ótimo. −Z*=−36 → <strong>Z*=36</strong>, com x₁=2, x₂=6, s₁=2 (folga), s₂=s₃=0. É exatamente o tableau usado como exemplo-base na seção de Sensibilidade — vale revisitar aquela seção depois de dominar este passo a passo.</div>
+    <div class="attn"><b>Ponto de atenção:</b> Simplex Primal só serve de entrada quando a base de folgas já é viável (todos os b≥0 nas restrições ≤). Se aparecer qualquer restrição ≥ ou =, esse atalho não está disponível — use o teste do Passo −1 (seção de Duas Fases) pra escolher entre Dual Simplex e Duas Fases.</div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- DUAL SIMPLEX -->
+<!-- ============================================================ -->
+<h2 id="dualsimplex">③ Dual Simplex — Manual Passo a Passo</h2>
+
+<div class="alert alert-info">
+<strong>Para que serve, em uma frase:</strong> use quando, depois de converter pra MIN, a linha −Z <u>já nasce</u> toda ≤0 (dual viável) mas alguma restrição gera b negativo (primal inviável) — é o caso descrito no teste do Passo −1 da seção de Duas Fases. Ao contrário do Simplex Primal, aqui você parte de uma solução <em>ótima em custo, mas inviável</em>, e corrige a viabilidade sem precisar de variável artificial.
+</div>
+
+<div class="exemplo">
+  <strong>Continuando o exemplo do Passo −1 (Questão 4, Problema 3):</strong> Maximizar Z = −x₁+7x₂−6x₃, sujeito a 3x₁+2x₂+8x₃≤13, 7x₁+4x₂+5x₃≥9, x₁≥0, x₂≤0, x₃≥0. Já vimos que esse é um caso de Dual Simplex — agora vamos resolver de verdade.
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">I</span><div class="phase-title">Padronizar sinal e montar a forma padrão "ao contrário"</div></div>
+  <div class="phase-body">
+    <p>Troque x₂=−x₂' (x₂'≥0), converta pra MIN: <code>Minimizar −Z = x₁+7x₂'+6x₃</code>. R1 (≤13) recebe folga normal. R2 (≥9) é o pulo do gato do Dual Simplex: em vez de subtrair excesso e precisar de artificial, <strong>multiplique a restrição inteira por −1</strong> antes de padronizar, virando ≤ com b negativo:</p>
+    <div class="math-block">
+      R1: 3x₁−2x₂'+8x₃+s₁=13<br>
+      R2 (×−1 antes de padronizar): −7x₁+4x₂'−5x₃≤−9 &nbsp;→&nbsp; −7x₁+4x₂'−5x₃+s₂=−9
+    </div>
+    <div class="attn"><b>Ponto de atenção — por que não precisa de artificial aqui:</b> s₂ tem coeficiente <strong>+1</strong> (porque multiplicamos a restrição inteira por −1 antes de adicionar a folga), então s₂ pode ser básica direto, mesmo com valor negativo (−9). É exatamente essa "base inviável mas pronta" que o Dual Simplex usa como ponto de partida — no Simplex Primal ou Duas Fases isso seria proibido.</div>
+    <table class="tab">
+      <thead><tr><th>Tableau inicial</th><th>x₁</th><th>x₂'</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>−Z</strong></td><td>−1</td><td>−7</td><td>−6</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>s₁</td><td>3</td><td>−2</td><td>8</td><td>1</td><td>0</td><td>13</td></tr>
+        <tr><td class="hi">s₂</td><td>−7</td><td>4</td><td>−5</td><td>0</td><td>1</td><td class="hi">−9</td></tr>
+      </tbody>
+    </table>
+    <div class="attn"><b>Ponto de atenção — os dois testes, antes de qualquer pivô:</b> (1) linha −Z toda ≤0? Sim: −1,−7,−6 ✓ (dual viável). (2) algum b negativo? Sim: s₂=−9 ✓ (primal inviável). Os dois "sim" confirmam Dual Simplex — exatamente o teste do Passo −1.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Critério de saída — linha com o b mais negativo</div></div>
+  <div class="phase-body">
+    <p>Só existe uma linha com b negativo aqui: <strong>s₂ (b=−9) sai</strong>. (Se houvesse mais de uma linha negativa, a regra é sempre a <em>mais negativa</em> — em caso de empate, qualquer uma das empatadas serve.)</p>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">III</span><div class="phase-title">Critério de entrada — razão só nos coeficientes negativos da linha que sai</div></div>
+  <div class="phase-body">
+    <p>Olhe só a linha de s₂ (<code>[−7, 4, −5, 0, 1 | −9]</code>) e calcule |valor da linha −Z| ÷ |coeficiente|, <strong>só para coeficientes negativos</strong> dessa linha (coeficiente positivo não entra na disputa — entraria com valor negativo, o que não faz sentido):</p>
+    <table class="tab">
+      <thead><tr><th>Coluna</th><th>Valor linha −Z</th><th>Coef. na linha de s₂</th><th>Razão</th><th>Escolha?</th></tr></thead>
+      <tbody>
+        <tr class="hi"><td>x₁</td><td>−1</td><td>−7</td><td>|−1|÷|−7|=0,143</td><td>✓ menor → x₁ entra</td></tr>
+        <tr><td>x₂'</td><td>−7</td><td>4</td><td class="hi">coef. positivo — ignora</td><td>não</td></tr>
+        <tr><td>x₃</td><td>−6</td><td>−5</td><td>|−6|÷|−5|=1,2</td><td>não é a menor</td></tr>
+      </tbody>
+    </table>
+    <div class="pv-row" style="display:flex;gap:1.2rem;flex-wrap:wrap;margin:.7rem 0;">
+      <div><strong>Sai:</strong> s₂ &nbsp;|&nbsp; <strong>Entra:</strong> x₁ &nbsp;|&nbsp; <strong>Pivô:</strong> −7</div>
+    </div>
+    <table class="tab">
+      <thead><tr><th>Tableau ótimo (x₁ entrou, s₂ saiu)</th><th>x₁</th><th>x₂'</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead>
+      <tbody>
+        <tr><td><strong>−Z</strong></td><td>0</td><td>−7,571</td><td>−5,286</td><td>0</td><td>−0,143</td><td><strong>1,286</strong></td></tr>
+        <tr><td>s₁</td><td>0</td><td>−0,286</td><td>5,857</td><td>1</td><td>0,429</td><td>9,143</td></tr>
+        <tr><td>x₁</td><td>1</td><td>−0,571</td><td>0,714</td><td>0</td><td>−0,143</td><td>1,286</td></tr>
+      </tbody>
+    </table>
+    <div class="exemplo">Todas as células da linha −Z são ≤0 <strong>e</strong> todo b (9,143 e 1,286) é ≥0 → ótimo e viável em uma única iteração. −Z*=1,286 → <strong>Z*=−1,286</strong>, com x₁=1,286 (=9/7), x₂=x₃=0 (logo x₂'=0 também). Confirmação: Z=−1,286+7(0)−6(0)=−1,286 ✓.</div>
+  </div>
+</div>
+
+<div class="phase">
+  <div class="phase-head"><span class="phase-tag">IV</span><div class="phase-title">Pontos de atenção — quando o Dual Simplex trava</div></div>
+  <div class="phase-body">
+    <div class="attn"><b>Se todos os coeficientes da linha que sai forem ≥0</b> (nenhum negativo pra fazer o teste da razão): o problema é <strong>primal inviável de verdade</strong> — não existe solução que satisfaça as restrições originais. Não confunda com "ilimitado" (essa é uma condição do Simplex Primal, não do Dual Simplex).</div>
+    <div class="attn"><b>Empate no critério de saída</b> (duas linhas com o mesmo b mais negativo): qualquer uma pode sair, a resposta final não muda.</div>
+    <div class="attn"><b>Empate no critério de entrada</b> (mesma razão mínima em duas colunas): qualquer uma pode entrar; se uma gerar pivô degenerado (razão 0) e a prova pedir pra evitar ciclagem, prefira a que não degenera.</div>
+  </div>
 </div>
 
 <!-- ============================================================ -->
 <!-- DUAS FASES -->
 <!-- ============================================================ -->
-<h2 id="duasfases">① Método das Duas Fases — exemplo real da lista, com a notação do professor</h2>
+<h2 id="duasfases">④ Método das Duas Fases — exemplo real da lista, com a notação do professor</h2>
 
 <div class="alert alert-info">
 <strong>Para que serve, em uma frase:</strong> quando o problema tem restrições <code>=</code> ou <code>≥</code>, não existe uma base inicial "de graça" (identidade). O Duas Fases resolve isso em <strong>duas rodadas de simplex normal</strong>: a Fase I cria variáveis artificiais só para achar uma base viável (minimizando a soma delas até zerar), e a Fase II usa essa base como ponto de partida para otimizar a função objetivo de verdade.
@@ -288,7 +505,7 @@
 <!-- ============================================================ -->
 <!-- SENSIBILIDADE -->
 <!-- ============================================================ -->
-<h2 id="sensib">② Análise de Sensibilidade — Manual Passo a Passo</h2>
+<h2 id="sensib">⑤ Análise de Sensibilidade — Manual Passo a Passo</h2>
 
 <div class="alert alert-info">
 <strong>Para que serve, em uma frase:</strong> você já tem o tableau ótimo pronto. A pergunta é sempre a mesma disfarçada: <em>"esse tableau continua sendo ótimo e viável depois dessa mudança, ou preciso recalcular algo?"</em> Você NUNCA resolve o problema do zero de novo — sempre reaproveita o tableau ótimo dado.
@@ -333,7 +550,7 @@
 <div class="phase">
   <div class="phase-head"><span class="phase-tag">II</span><div class="phase-title">Classificar qual dos 7 casos a questão está pedindo</div></div>
   <div class="phase-body">
-    Toda questão de sensibilidade se encaixa em um destes 7 tipos (veja a tabela-resumo completa na seção ③ mais abaixo). Descubra qual ANTES de calcular qualquer coisa, porque cada um usa uma fórmula diferente:
+    Toda questão de sensibilidade se encaixa em um destes 7 tipos (veja a tabela-resumo completa na seção ⑥ mais abaixo). Descubra qual ANTES de calcular qualquer coisa, porque cada um usa uma fórmula diferente:
     <ol style="margin-left:1.3rem;">
       <li>Mudar custo (cⱼ) de variável <strong>fora</strong> da base (não-básica)</li>
       <li>Mudar custo (cⱼ) de variável <strong>dentro</strong> da base (básica)</li>
@@ -483,7 +700,7 @@
 </div>
 
 <!-- ============================================================ -->
-<h2 id="casos">③ Tabela-resumo dos 7 casos (cola rápida para revisão de última hora)</h2>
+<h2 id="casos">⑥ Tabela-resumo dos 7 casos (cola rápida para revisão de última hora)</h2>
 <div class="phase"><div class="phase-body">
 <table class="tab" style="text-align:left;">
 <thead><tr><th>Caso</th><th>O que recalcula</th><th>O que testa</th></tr></thead>
@@ -500,7 +717,7 @@
 </div></div>
 
 <!-- ============================================================ -->
-<h2 id="erros">④ Erros que mais derrubam nota nessa disciplina</h2>
+<h2 id="erros">⑦ Erros que mais derrubam nota nessa disciplina</h2>
 <div class="phase"><div class="phase-body">
 <div class="roman"><div class="roman-num">!</div><div class="roman-body">Não zerar a linha x₀ (Fase I) ou −Z (Fase II) na coluna da variável já básica antes de operar — o tableau inteiro fica errado a partir daí mesmo que o resto da conta esteja certo.</div></div>
 <div class="roman"><div class="roman-num">!</div><div class="roman-body">Esquecer de tratar variável irrestrita (xⱼ = xⱼ' − xⱼ'') antes de montar qualquer tableau.</div></div>
