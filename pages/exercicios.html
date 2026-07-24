@@ -456,8 +456,16 @@
 <div class="ex-mobile-nav" data-lista="1" style="display:none">
   <label for="ex-select-l1">Selecionar exercício</label>
   <select id="ex-select-l1">
+    <optgroup label="Simplex Primal">
+      <option value="l1-q13">Q13 — MAX · Simplex direto</option>
+      <option value="l1-q14">Q14 — MAX · Simplex · Ilimitado</option>
+      <option value="l1-q16">Q16 — MAX · Simplex · 4 variáveis</option>
+      <option value="l1-q17">Q17 — MIN · Simplex direto</option>
+    </optgroup>
     <optgroup label="Duas Fases">
       <option value="l1-q18">Q18 — MAX · restrições ≥ · Duas Fases</option>
+      <option value="l1-q19">Q19 — MIN · Duas Fases · empates</option>
+      <option value="l1-q21">Q21 — MAX · Duas Fases · x₂ irrestrito · Ilimitado</option>
     </optgroup>
   </select>
 </div>
@@ -499,13 +507,35 @@
 
   <!-- ── Sidebar Lista 1 ── -->
   <aside class="ex-sidebar" data-lista="1" style="display:none">
-    <div class="ex-sidebar-label">Duas Fases</div>
+    <div class="ex-sidebar-label">Simplex Primal</div>
+    <a href="#l1-q13" style="margin-top:.2rem;">
+      <span class="ex-num">13</span>
+      <div><div>Simplex Primal</div><div class="ex-sidebar-meta">MAX · direto</div></div>
+    </a>
+    <a href="#l1-q14" style="margin-top:.2rem;">
+      <span class="ex-num">14</span>
+      <div><div>Simplex Primal</div><div class="ex-sidebar-meta">MAX · Ilimitado</div></div>
+    </a>
+    <a href="#l1-q16" style="margin-top:.2rem;">
+      <span class="ex-num">16</span>
+      <div><div>Simplex Primal</div><div class="ex-sidebar-meta">MAX · 4 variáveis</div></div>
+    </a>
+    <a href="#l1-q17" style="margin-top:.2rem;">
+      <span class="ex-num">17</span>
+      <div><div>Simplex Primal</div><div class="ex-sidebar-meta">MIN · direto</div></div>
+    </a>
+    <div class="ex-sidebar-label" style="margin-top:.8rem;">Duas Fases</div>
     <a href="#l1-q18" style="margin-top:.2rem;">
       <span class="ex-num">18</span>
-      <div>
-        <div>Duas Fases</div>
-        <div class="ex-sidebar-meta">MAX · restrições ≥</div>
-      </div>
+      <div><div>Duas Fases</div><div class="ex-sidebar-meta">MAX · restrições ≥</div></div>
+    </a>
+    <a href="#l1-q19" style="margin-top:.2rem;">
+      <span class="ex-num">19</span>
+      <div><div>Duas Fases</div><div class="ex-sidebar-meta">MIN · empates</div></div>
+    </a>
+    <a href="#l1-q21" style="margin-top:.2rem;">
+      <span class="ex-num">21</span>
+      <div><div>Duas Fases</div><div class="ex-sidebar-meta">MAX · x₂ irrestrito · Ilimitado</div></div>
     </a>
   </aside>
 
@@ -4810,6 +4840,371 @@ End</div>
     <hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">
   </div><!-- /l1-q18 -->
 
+  <!-- ════════════════════════════════════════════════════════════
+       LISTA 1 · Q13 — Simplex Primal
+  ════════════════════════════════════════════════════════════ -->
+  <div id="l1-q13" style="display:none">
+    <div class="q-header">
+      <div class="q-label">Questão 13 — Lista 1</div>
+      <div class="q-title">Simplex Primal</div>
+      <div class="q-tags"><span class="q-tag qt-method">Simplex</span><span class="q-tag qt-result">Z*=17,143</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MAX &nbsp; Z = 5x₁ + 4x₂<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;x₁ + 2x₂ ≤ 6 &nbsp;(R1)<br>
+        &nbsp;&nbsp;−2x₁ + x₂ ≤ 4 &nbsp;(R2)<br>
+        &nbsp;&nbsp;5x₁ + 3x₂ ≤ 15 &nbsp;(R3)<br>
+        &nbsp;&nbsp;x₁, x₂ ≥ 0
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R1</span><span class="phase-title">Por que Simplex Primal direto</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>Todas as restrições já são ≤ com b≥0 → base de folgas {s₁,s₂,s₃} já é viável de graça. Converter pra MIN: <code>Minimizar −Z = −5x₁−4x₂</code>. Padrão: x₁+2x₂+s₁=6, −2x₁+x₂+s₂=4, 5x₁+3x₂+s₃=15.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R2</span><span class="phase-title">Iteração 1</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>Entra:</strong> maior célula positiva da linha −Z pronta <code>[5,4,0,0,0|0]</code> é x₁ (5).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₁</th><th>b</th><th>Razão</th><th>Escolha</th></tr></thead><tbody>
+          <tr><td>s₁</td><td>1</td><td>6</td><td>6</td><td>não</td></tr>
+          <tr><td>s₂</td><td>−2</td><td>4</td><td class="skip">negativo — ignora</td><td>não</td></tr>
+          <tr class="hi"><td>s₃</td><td>5</td><td>15</td><td>3</td><td>✓ menor → s₃ sai</td></tr>
+        </tbody></table>
+        <table class="tab"><thead><tr><th>Tableau (x₁ entrou, s₃ saiu)</th><th>x₁</th><th>x₂</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>−Z</strong></td><td>0</td><td class="hi">1</td><td>0</td><td>0</td><td>−1</td><td>−15</td></tr>
+          <tr><td>s₁</td><td>0</td><td>1,4</td><td>1</td><td>0</td><td>−0,2</td><td>3</td></tr>
+          <tr><td>s₂</td><td>0</td><td>2,2</td><td>0</td><td>1</td><td>0,4</td><td>10</td></tr>
+          <tr><td>x₁</td><td>1</td><td>0,6</td><td>0</td><td>0</td><td>0,2</td><td>3</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R3</span><span class="phase-title">Iteração 2 — ótimo</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>Entra:</strong> única célula positiva, x₂ (1).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₂</th><th>b</th><th>Razão</th><th>Escolha</th></tr></thead><tbody>
+          <tr class="hi"><td>s₁</td><td>1,4</td><td>3</td><td>2,143</td><td>✓ menor → s₁ sai</td></tr>
+          <tr><td>s₂</td><td>2,2</td><td>10</td><td>4,545</td><td>não</td></tr>
+          <tr><td>x₁</td><td>0,6</td><td>3</td><td>5</td><td>não</td></tr>
+        </tbody></table>
+        <table class="tab"><thead><tr><th>Tableau ótimo</th><th>x₁</th><th>x₂</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>−Z</strong></td><td>0</td><td>0</td><td>−0,714</td><td>0</td><td>−0,857</td><td><strong>−17,143</strong></td></tr>
+          <tr><td>x₂</td><td>0</td><td>1</td><td>0,714</td><td>0</td><td>−0,143</td><td>2,143</td></tr>
+          <tr><td>s₂</td><td>0</td><td>0</td><td>−1,571</td><td>1</td><td>0,714</td><td>5,286</td></tr>
+          <tr><td>x₁</td><td>1</td><td>0</td><td>−0,429</td><td>0</td><td>0,286</td><td>1,714</td></tr>
+        </tbody></table>
+        <div class="alert alert-success">Todas as células da linha −Z ≤0 → ótimo. <strong>Z*=17,143</strong> (=120/7), x₁=1,714 (=12/7), x₂=2,143 (=15/7). Confirmação: 5(1,714)+4(2,143)=8,571+8,571=17,143 ✓.</div>
+        <div class="alert alert-warning"><strong>⚠️ Pode ser diferente:</strong> nenhum empate ocorreu aqui, mas se a razão mínima empatasse entre duas linhas, qualquer uma poderia sair — só mudaria o caminho, não o Z* final.</div>
+      </div>
+    </div>
+  </div><!-- /l1-q13 -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       LISTA 1 · Q14 — Simplex Primal: problema ILIMITADO
+  ════════════════════════════════════════════════════════════ -->
+  <div id="l1-q14" style="display:none">
+    <div class="q-header">
+      <div class="q-label">Questão 14 — Lista 1</div>
+      <div class="q-title">Simplex Primal — Ilimitado</div>
+      <div class="q-tags"><span class="q-tag qt-method">Simplex</span><span class="q-tag qt-result">ILIMITADO</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MAX &nbsp; Z = 3x₁ + 2x₂ + x₃<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;2x₁ − 3x₂ + 2x₃ ≤ 3 &nbsp;(R1)<br>
+        &nbsp;&nbsp;−x₁ + x₂ + x₃ ≤ 5 &nbsp;(R2)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃ ≥ 0
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R1</span><span class="phase-title">Padronizar e iterar</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>Todas ≤ com b≥0 → Simplex direto. <code>Minimizar −Z = −3x₁−2x₂−x₃</code>. Padrão: 2x₁−3x₂+2x₃+s₁=3, −x₁+x₂+x₃+s₂=5.</p>
+        <p><strong>Entra:</strong> x₁ (célula 3, maior). Razão: s₁: 3÷2=1,5. s₂: coef. −1, negativo, ignora. → s₁ sai, pivô=2.</p>
+        <table class="tab"><thead><tr><th>Tableau depois do pivô</th><th>x₁</th><th>x₂</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>−Z</strong></td><td>0</td><td class="hi">6,5</td><td>−2</td><td>1,5</td><td>0</td><td>−4,5</td></tr>
+          <tr><td>x₁</td><td>1</td><td>−1,5</td><td>1</td><td>0,5</td><td>0</td><td>1,5</td></tr>
+          <tr><td>s₂</td><td>0</td><td>−0,5</td><td>2</td><td>0,5</td><td>1</td><td>6,5</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R2</span><span class="phase-title">Detectando o ilimitado</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>Entra:</strong> x₂ (única célula positiva, 6,5).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₂</th><th>b</th><th>Razão</th></tr></thead><tbody>
+          <tr><td>x₁</td><td>−1,5</td><td>1,5</td><td class="skip">negativo — ignora</td></tr>
+          <tr><td>s₂</td><td>−0,5</td><td>6,5</td><td class="skip">negativo — ignora</td></tr>
+        </tbody></table>
+        <div class="alert alert-warning" style="border-left-color:var(--danger);">
+          <strong>🛑 Nenhuma linha tem coeficiente positivo na coluna que entra (x₂).</strong> x₂ pode crescer indefinidamente sem violar nenhuma restrição → <strong>problema ILIMITADO</strong>, Z→+∞.
+        </div>
+        <p>Confirmação direta: com x₁=1,5+1,5x₂ e s₂=6,5+0,5x₂ (substituindo), ambos só crescem conforme x₂ cresce — nunca ficam negativos. Testando x₂=100: x₁=151,5, Z=3(151,5)+2(100)+0=654,5 — e sempre dá pra aumentar mais.</p>
+        <div class="alert alert-info"><strong>📌 Ponto de atenção:</strong> "ilimitado" é diagnosticado exatamente assim — a coluna que entraria tem <u>todos</u> os coeficientes ≤0 nas linhas de restrição, então o teste da razão não encontra nenhuma linha candidata a sair.</div>
+      </div>
+    </div>
+  </div><!-- /l1-q14 -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       LISTA 1 · Q16 — Simplex Primal, 4 variáveis
+  ════════════════════════════════════════════════════════════ -->
+  <div id="l1-q16" style="display:none">
+    <div class="q-header">
+      <div class="q-label">Questão 16 — Lista 1</div>
+      <div class="q-title">Simplex Primal</div>
+      <div class="q-tags"><span class="q-tag qt-method">Simplex</span><span class="q-tag qt-result">Z*=10</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MAX &nbsp; Z = 2x₁ + x₂ + 5x₃ − 3x₄<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;x₁ + 2x₂ + 4x₃ − x₄ ≤ 6 &nbsp;(R1)<br>
+        &nbsp;&nbsp;2x₁ + 3x₂ − x₃ + x₄ ≤ 12 &nbsp;(R2)<br>
+        &nbsp;&nbsp;x₁ + x₃ + x₄ ≤ 4 &nbsp;(R3)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃, x₄ ≥ 0
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R1</span><span class="phase-title">Iteração 1</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>Todas ≤, b≥0 → Simplex direto. <code>Min −Z=−2x₁−x₂−5x₃+3x₄</code>. <strong>Entra:</strong> x₃ (célula 5, maior de <code>[2,1,5,−3,0,0,0]</code>).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₃</th><th>b</th><th>Razão</th><th>Escolha</th></tr></thead><tbody>
+          <tr class="hi"><td>s₁</td><td>4</td><td>6</td><td>1,5</td><td>✓ menor → s₁ sai</td></tr>
+          <tr><td>s₂</td><td>−1</td><td>12</td><td class="skip">negativo</td><td>não</td></tr>
+          <tr><td>s₃</td><td>1</td><td>4</td><td>4</td><td>não</td></tr>
+        </tbody></table>
+        <table class="tab"><thead><tr><th>Tableau</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>−Z</strong></td><td class="hi">0,75</td><td>−1,5</td><td>0</td><td>−1,75</td><td>−1,25</td><td>0</td><td>0</td><td>−7,5</td></tr>
+          <tr><td>x₃</td><td>0,25</td><td>0,5</td><td>1</td><td>−0,25</td><td>0,25</td><td>0</td><td>0</td><td>1,5</td></tr>
+          <tr><td>s₂</td><td>2,25</td><td>3,5</td><td>0</td><td>0,75</td><td>0,25</td><td>1</td><td>0</td><td>13,5</td></tr>
+          <tr><td>s₃</td><td>0,75</td><td>−0,5</td><td>0</td><td>1,25</td><td>−0,25</td><td>0</td><td>1</td><td>2,5</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R2</span><span class="phase-title">Iteração 2 — ótimo</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>Entra:</strong> x₁ (única positiva, 0,75).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₁</th><th>b</th><th>Razão</th><th>Escolha</th></tr></thead><tbody>
+          <tr><td>x₃</td><td>0,25</td><td>1,5</td><td>6</td><td>não</td></tr>
+          <tr><td>s₂</td><td>2,25</td><td>13,5</td><td>6</td><td class="skip">empate com x₃!</td></tr>
+          <tr class="hi"><td>s₃</td><td>0,75</td><td>2,5</td><td>3,333</td><td>✓ menor → s₃ sai</td></tr>
+        </tbody></table>
+        <div class="alert alert-warning"><strong>⚠️ Pode ser diferente:</strong> x₃ e s₂ empatam em razão 6, mas nenhuma delas é a menor (s₃ com 3,333 vence) — não afeta essa iteração, mas é bom registrar que existia um empate no meio do caminho.</div>
+        <table class="tab"><thead><tr><th>Tableau ótimo</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>−Z</strong></td><td>0</td><td>−1</td><td>0</td><td>−3</td><td>−1</td><td>0</td><td>−1</td><td><strong>−10</strong></td></tr>
+          <tr><td>x₃</td><td>0</td><td>0,667</td><td>1</td><td>−0,667</td><td>0,333</td><td>0</td><td>−0,333</td><td>0,667</td></tr>
+          <tr><td>s₂</td><td>0</td><td>5</td><td>0</td><td>−3</td><td>1</td><td>1</td><td>−3</td><td>6</td></tr>
+          <tr><td>x₁</td><td>1</td><td>−0,667</td><td>0</td><td>1,667</td><td>−0,333</td><td>0</td><td>1,333</td><td>3,333</td></tr>
+        </tbody></table>
+        <div class="alert alert-success">Todas as células da linha −Z ≤0 → ótimo. <strong>Z*=10</strong>, x₁=3,333 (=10/3), x₃=0,667 (=2/3), x₂=x₄=0. Confirmação: 2(3,333)+0+5(0,667)−0=6,667+3,333=10 ✓.</div>
+      </div>
+    </div>
+  </div><!-- /l1-q16 -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       LISTA 1 · Q17 — Simplex Primal, já em MIN
+  ════════════════════════════════════════════════════════════ -->
+  <div id="l1-q17" style="display:none">
+    <div class="q-header">
+      <div class="q-label">Questão 17 — Lista 1</div>
+      <div class="q-title">Simplex Primal</div>
+      <div class="q-tags"><span class="q-tag qt-method">Simplex</span><span class="q-tag qt-result">Z*=−5,25</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MIN &nbsp; Z = −x₁ − 2x₂ + x₃<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;2x₁ + x₂ + x₃ ≤ 6 &nbsp;(R1)<br>
+        &nbsp;&nbsp;2x₂ − x₃ ≤ 3 &nbsp;(R2)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃ ≥ 0
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R1</span><span class="phase-title">Sem conversão — já é MIN</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>O problema já é <strong>Minimizar</strong> — não precisa da troca de sinal do Passo 0 (essa troca só é feita quando o original é MAX). Linha Z pronta direto: <code>[1,2,−1,0,0|0]</code> (cols x₁,x₂,x₃,s₁,s₂). <strong>Entra:</strong> x₂ (célula 2, maior).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₂</th><th>b</th><th>Razão</th><th>Escolha</th></tr></thead><tbody>
+          <tr><td>s₁</td><td>1</td><td>6</td><td>6</td><td>não</td></tr>
+          <tr class="hi"><td>s₂</td><td>2</td><td>3</td><td>1,5</td><td>✓ menor → s₂ sai</td></tr>
+        </tbody></table>
+        <table class="tab"><thead><tr><th>Tableau</th><th>x₁</th><th>x₂</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>Z</strong></td><td class="hi">1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>−3</td></tr>
+          <tr><td>s₁</td><td>2</td><td>0</td><td>1,5</td><td>1</td><td>−0,5</td><td>4,5</td></tr>
+          <tr><td>x₂</td><td>0</td><td>1</td><td>−0,5</td><td>0</td><td>0,5</td><td>1,5</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R2</span><span class="phase-title">Iteração 2 — ótimo</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p><strong>Entra:</strong> x₁ (única positiva, 1).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₁</th><th>b</th><th>Razão</th><th>Escolha</th></tr></thead><tbody>
+          <tr class="hi"><td>s₁</td><td>2</td><td>4,5</td><td>2,25</td><td>✓ menor → s₁ sai</td></tr>
+          <tr><td>x₂</td><td>0</td><td>1,5</td><td class="skip">coef. 0 — ignora</td><td>não</td></tr>
+        </tbody></table>
+        <table class="tab"><thead><tr><th>Tableau ótimo</th><th>x₁</th><th>x₂</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>Z</strong></td><td>0</td><td>0</td><td>−0,75</td><td>−0,5</td><td>−0,75</td><td><strong>−5,25</strong></td></tr>
+          <tr><td>x₁</td><td>1</td><td>0</td><td>0,75</td><td>0,5</td><td>−0,25</td><td>2,25</td></tr>
+          <tr><td>x₂</td><td>0</td><td>1</td><td>−0,5</td><td>0</td><td>0,5</td><td>1,5</td></tr>
+        </tbody></table>
+        <div class="alert alert-success">Todas as células da linha Z ≤0 → ótimo. <strong>Z*=−5,25</strong>, x₁=2,25 (=9/4), x₂=1,5 (=3/2), x₃=0. Confirmação: −2,25−2(1,5)+0=−2,25−3=−5,25 ✓.</div>
+        <div class="alert alert-info"><strong>📌 Ponto de atenção:</strong> como o problema já era MIN, a linha Z guarda <u>−c direto do enunciado</u>, sem passar pela troca de sinal do Passo 0 — não confunda com os exercícios que começam em MAX.</div>
+      </div>
+    </div>
+  </div><!-- /l1-q17 -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       LISTA 1 · Q19 — Duas Fases, empates e pivô degenerado
+  ════════════════════════════════════════════════════════════ -->
+  <div id="l1-q19" style="display:none">
+    <div class="q-header">
+      <div class="q-label">Questão 19 — Lista 1</div>
+      <div class="q-title">Método das Duas Fases</div>
+      <div class="q-tags"><span class="q-tag qt-method">Duas Fases</span><span class="q-tag qt-result">Z*=−1</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MIN &nbsp; Z = −2x₁ + 2x₂ + x₃ + x₄<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;x₁ + 2x₂ + x₃ + x₄ ≤ 2 &nbsp;(R1)<br>
+        &nbsp;&nbsp;x₁ − x₂ + x₃ + 2x₄ ≥ 3 &nbsp;(R2)<br>
+        &nbsp;&nbsp;2x₁ − x₂ + x₃ ≥ 2 &nbsp;(R3)<br>
+        &nbsp;&nbsp;x₁, x₂, x₃, x₄ ≥ 0
+      </div>
+      <div style="margin-top:.6rem;font-size:.85rem;color:var(--text-muted);">O enunciado original sugere Big-M como dica — aqui resolvemos por Duas Fases (o site foca nesse método).</div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R1</span><span class="phase-title">Padronizar (já é MIN) e montar Fase I</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>R1(≤): +s₁. R2(≥): −s₂+a₁. R3(≥): −s₃+a₂. Base inicial {s₁,a₁,a₂}. Fase I: <code>x₀ = a₁+a₂</code>.</p>
+        <table class="tab"><thead><tr><th>Tableau 0 — depois do Gauss (L0=L0+L(a₁)+L(a₂))</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>x₀</strong></td><td class="hi">3</td><td>−2</td><td>2</td><td class="hi">2</td><td>0</td><td>−1</td><td>−1</td><td>5</td></tr>
+          <tr><td>s₁</td><td>1</td><td>2</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>2</td></tr>
+          <tr><td>a₁</td><td>1</td><td>−1</td><td>1</td><td>2</td><td>0</td><td>−1</td><td>0</td><td>3</td></tr>
+          <tr><td>a₂</td><td>2</td><td>−1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>2</td></tr>
+        </tbody></table>
+        <p><strong>Entra:</strong> x₁ (célula 3, maior). Razão: R1=2÷1=2, a₁=3÷1=3, a₂=2÷2=1 (menor) → <strong>a₂ sai</strong>, pivô=2.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R2</span><span class="phase-title">Fase I — iteração 2 e detecção de empate</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <table class="tab"><thead><tr><th>Tableau depois de x₁ entrar</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>x₀</strong></td><td>0</td><td>−0,5</td><td>0,5</td><td class="hi">2</td><td>0</td><td>−1</td><td>0,5</td><td>2</td></tr>
+          <tr><td>s₁</td><td>0</td><td>2,5</td><td>0,5</td><td class="hi">1</td><td>1</td><td>0</td><td>−0,5</td><td>1</td></tr>
+          <tr><td>a₁</td><td>0</td><td>−0,5</td><td>0,5</td><td class="hi">2</td><td>0</td><td>−1</td><td>−0,5</td><td>2</td></tr>
+          <tr><td>x₁</td><td>1</td><td>−0,5</td><td>0,5</td><td>0</td><td>0</td><td>0</td><td>−0,5</td><td>1</td></tr>
+        </tbody></table>
+        <p><strong>Entra:</strong> x₄ (célula 2, única positiva).</p>
+        <div class="alert alert-warning"><strong>⚠️ Pode ser diferente — empate real:</strong> razão em s₁ = 1÷1=1 e em a₁ = 2÷2=1 — <strong>empate exato</strong>. Escolhendo s₁ para sair (qualquer uma serve, o resultado final não muda):</div>
+        <table class="tab"><thead><tr><th>Tableau — x₀*=0, mas a₁ fica básica com valor 0 (degenerado)</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>x₀</strong></td><td>0</td><td>−5,5</td><td>−0,5</td><td>0</td><td>−2</td><td>−1</td><td>0,5</td><td>0</td></tr>
+          <tr><td>x₄</td><td>0</td><td>2,5</td><td>0,5</td><td>1</td><td>1</td><td>0</td><td>−0,5</td><td>1</td></tr>
+          <tr><td>a₁</td><td>0</td><td>−5,5</td><td>−0,5</td><td>0</td><td>−2</td><td>−1</td><td>0,5</td><td>0</td></tr>
+          <tr><td>x₁</td><td>1</td><td>−0,5</td><td>0,5</td><td>0</td><td>0</td><td>0</td><td>−0,5</td><td>1</td></tr>
+        </tbody></table>
+        <div class="alert alert-info"><strong>📌 Ponto de atenção — artificial básica em zero:</strong> x₀*=0 confirma viabilidade, mas a₁ continua tecnicamente na base (valor 0). Antes de ir pra Fase II, "empurramos" a₁ pra fora com um pivô degenerado (troca a₁ por x₃, usando a própria linha de a₁ — o valor de nada muda, é só reorganização): base final da Fase I = <strong>{x₁, x₄, x₃}</strong>.</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R3</span><span class="phase-title">Fase II — 3 iterações até o ótimo</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>Apague as colunas a₁,a₂. Linha −Z pronta (depois do Gauss, zerando x₁,x₃,x₄): entra x₂ (única positiva). Depois de 3 iterações (com mais um pivô degenerado no meio — razão 0, comum quando a Fase I termina degenerada), chega no tableau ótimo:</p>
+        <table class="tab"><thead><tr><th>Tableau ótimo</th><th>x₁</th><th>x₂</th><th>x₃</th><th>x₄</th><th>s₁</th><th>s₂</th><th>s₃</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>Z</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>−5</td><td>−3</td><td>−3</td><td><strong>−1</strong></td></tr>
+          <tr><td>x₃</td><td>0</td><td>0</td><td>1</td><td>0</td><td>−1</td><td>1</td><td>0,455</td><td>0</td></tr>
+          <tr><td>x₂</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0,182</td><td>−0,364</td><td>−0,091</td><td>0</td></tr>
+          <tr><td>x₁</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0,091</td><td>0,091</td><td>−0,455</td><td>1</td></tr>
+        </tbody></table>
+        <div class="alert alert-success">Todas as células da linha Z ≤0 → ótimo. <strong>Z*=−1</strong>, x₁=1, x₄=1, x₂=x₃=0. Confirmação: −2(1)+0+0+1=−1 ✓. Restrições: R1: 1+0+0+1=2 ✓(tight). R2: 1−0+0+2=3 ✓(tight). R3: 2−0+0=2 ✓(tight).</div>
+        <div class="alert alert-warning"><strong>⚠️ Pode ser diferente na prova:</strong> esse exercício tem <u>dois</u> pontos de empate/degenerescência (Fase I e meio da Fase II) — se você escolher a outra linha empatada em qualquer um dos dois pontos, o caminho muda (mais ou menos iterações), mas o Z*=−1 final é sempre o mesmo. Se o professor pedir "mostre uma iteração degenerada", esse é o exercício clássico pra isso.</div>
+      </div>
+    </div>
+  </div><!-- /l1-q19 -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       LISTA 1 · Q21 — Duas Fases: variável irrestrita → ILIMITADO
+  ════════════════════════════════════════════════════════════ -->
+  <div id="l1-q21" style="display:none">
+    <div class="q-header">
+      <div class="q-label">Questão 21 — Lista 1</div>
+      <div class="q-title">Método das Duas Fases — Ilimitado</div>
+      <div class="q-tags"><span class="q-tag qt-method">Duas Fases</span><span class="q-tag qt-result">ILIMITADO</span></div>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--primary);">
+      <div class="card-title">Enunciado</div>
+      <div class="math-block">
+        MAX &nbsp; Z = 5x₁ − 2x₂ + x₃<br><br>
+        Sujeito a:<br>
+        &nbsp;&nbsp;x₁ + 4x₂ + x₃ ≤ 6 &nbsp;(R1)<br>
+        &nbsp;&nbsp;2x₁ + x₂ + 3x₃ ≥ 2 &nbsp;(R2)<br>
+        &nbsp;&nbsp;x₁, x₃ ≥ 0, &nbsp;<strong>x₂ irrestrito</strong>
+      </div>
+      <div style="margin-top:.6rem;font-size:.85rem;color:var(--text-muted);">O enunciado original sugere Big-M como dica — aqui resolvemos por Duas Fases.</div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R1</span><span class="phase-title">Tratar x₂ irrestrito ANTES de tudo</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>Substitua <code>x₂ = x₂' − x₂''</code>, com x₂',x₂''≥0: <code>Z = 5x₁−2x₂'+2x₂''+x₃</code>; R1: <code>x₁+4x₂'−4x₂''+x₃≤6</code>; R2: <code>2x₁+x₂'−x₂''+3x₃≥2</code>.</p>
+        <div class="alert alert-warning"><strong>⚠️ Ponto de atenção — o erro mais fácil de cometer aqui:</strong> se você esquecer de dividir x₂ e tratá-lo como uma variável comum (≥0), a resposta que sai é diferente da correta — nesse exercício em particular, <u>esconde</u> que o problema é ilimitado (você chegaria numa resposta finita, mas errada). É exatamente por isso que a variável irrestrita é sempre citada como pegadinha de prova.</div>
+        <p>Converter pra MIN: <code>Minimizar −Z = −5x₁+2x₂'−2x₂''−x₃</code>. Padrão: R1(≤) +s₁. R2(≥) −s₂+a₁. Base inicial {s₁,a₁}.</p>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R2</span><span class="phase-title">Fase I — 1 iteração até x₀*=0</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <table class="tab"><thead><tr><th>Tableau 0 pronto (depois do Gauss)</th><th>x₁</th><th>x₂'</th><th>x₂''</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>x₀</strong></td><td>2</td><td>1</td><td>−1</td><td class="hi">3</td><td>0</td><td>−1</td><td>2</td></tr>
+          <tr><td>s₁</td><td>1</td><td>4</td><td>−4</td><td>1</td><td>1</td><td>0</td><td>6</td></tr>
+          <tr><td class="hi">a₁</td><td>2</td><td>1</td><td>−1</td><td class="hi">3</td><td>0</td><td>−1</td><td>2</td></tr>
+        </tbody></table>
+        <p><strong>Entra:</strong> x₃ (célula 3, maior). Razão: s₁=6÷1=6, a₁=2÷3=0,667 (menor) → a₁ sai, pivô=3.</p>
+        <table class="tab"><thead><tr><th>Tableau — x₀*=0 (ótimo da Fase I)</th><th>x₁</th><th>x₂'</th><th>x₂''</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>x₀</strong></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>−1</td><td>0</td></tr>
+          <tr><td>s₁</td><td>0,333</td><td>3,667</td><td>−3,667</td><td>0</td><td>1</td><td>0,333</td><td>5,333</td></tr>
+          <tr><td>x₃</td><td>0,667</td><td>0,333</td><td>−0,333</td><td>1</td><td>0</td><td>−0,333</td><td>0,667</td></tr>
+        </tbody></table>
+        <div class="alert alert-success">x₀*=0 → viável. Base da Fase I: {x₃, s₁}, x₃=0,667, s₁=5,333.</div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">R3</span><span class="phase-title">Fase II — detectando o ilimitado</span><div class="phase-line"></div></div>
+      <div class="phase-body">
+        <p>Apague a coluna a₁. Linha −Z pronta (depois do Gauss, zerando x₃): <code>[4,333, −2,333, 2,333, 0, 0, 0,333 | −0,667]</code>. <strong>Entra:</strong> x₁ (4,333, maior).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₁</th><th>b</th><th>Razão</th></tr></thead><tbody>
+          <tr><td>s₁</td><td>0,333</td><td>5,333</td><td>16</td></tr>
+          <tr class="hi"><td>x₃</td><td>0,667</td><td>0,667</td><td>1 (menor) → x₃ sai</td></tr>
+        </tbody></table>
+        <table class="tab"><thead><tr><th>Tableau depois de x₁ entrar</th><th>x₁</th><th>x₂'</th><th>x₂''</th><th>x₃</th><th>s₁</th><th>s₂</th><th>b</th></tr></thead><tbody>
+          <tr><td><strong>−Z</strong></td><td>0</td><td>−4,5</td><td class="hi">4,5</td><td>−6,5</td><td>0</td><td>2,5</td><td>−5</td></tr>
+          <tr><td>s₁</td><td>0</td><td>3,5</td><td>−3,5</td><td>−0,5</td><td>1</td><td>0,5</td><td>5</td></tr>
+          <tr><td>x₁</td><td>1</td><td>0,5</td><td>−0,5</td><td>1,5</td><td>0</td><td>−0,5</td><td>1</td></tr>
+        </tbody></table>
+        <p><strong>Entra:</strong> x₂'' (célula 4,5, maior).</p>
+        <table class="tab"><thead><tr><th>Linha</th><th>Coef. x₂''</th><th>b</th><th>Razão</th></tr></thead><tbody>
+          <tr><td>s₁</td><td>−3,5</td><td>5</td><td class="skip">negativo — ignora</td></tr>
+          <tr><td>x₁</td><td>−0,5</td><td>1</td><td class="skip">negativo — ignora</td></tr>
+        </tbody></table>
+        <div class="alert alert-warning" style="border-left-color:var(--danger);">
+          <strong>🛑 Nenhuma linha tem coeficiente positivo na coluna x₂''</strong> → <strong>problema ILIMITADO</strong>. Como x₂''=−x₂ (a parte negativa de x₂), x₂'' crescendo sem limite significa <strong>x₂→−∞</strong>, e como Z tem o termo −2x₂ (Max), isso faz Z→+∞.
+        </div>
+        <p>Confirmação direta: fazendo x₂=−100 (x₂''=100), x₃=34, x₁=0: R1: 0+4(−100)+34=−366≤6 ✓ (folga enorme). R2: 0−100+3(34)=−100+102=2 ✓ (tight). Z=0−2(−100)+34=200+34=234 — e cresce mais quanto mais negativo x₂ ficar.</p>
+        <div class="alert alert-info"><strong>📌 Ponto de atenção — por que isso não aparece se você não dividir x₂:</strong> tratando x₂ incorretamente como ≥0 (esquecendo que é irrestrito), você nunca deixa x₂ ficar negativo, e o Simplex "acha" um ótimo finito falso. A divisão x₂=x₂'−x₂'' é o que expõe a direção ilimitada de verdade.</div>
+      </div>
+    </div>
+  </div><!-- /l1-q21 -->
+
   </div><!-- /content -->
 </div><!-- /ex-layout -->
 
@@ -4818,7 +5213,7 @@ End</div>
 <script>
   (function () {
     var sectionsByLista = {
-      '1': ['l1-q18'],
+      '1': ['l1-q13', 'l1-q14', 'l1-q16', 'l1-q17', 'l1-q18', 'l1-q19', 'l1-q21'],
       '2': ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11', 'q12', 'q13', 'q14', 'q15', 'q16', 'q17']
     };
     var allSections = sectionsByLista['1'].concat(sectionsByLista['2']);
